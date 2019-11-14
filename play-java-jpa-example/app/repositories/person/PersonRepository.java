@@ -14,9 +14,9 @@ public interface PersonRepository {
 
     CompletionStage<Boolean> credentialsAreValid(String username, String password);
 
-
-
     CompletionStage<Stream<Person>>  findByUsername(String username);
 
     CompletionStage<Stream<Person>> list();
+
+//    CompletionStage<Person> save(Person p);
 }

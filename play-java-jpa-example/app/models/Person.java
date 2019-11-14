@@ -3,26 +3,23 @@ package models;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Person {
 
-    public Person(){
-
+    public static String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
+
+    public Person(){}
 
     public Person(@Constraints.Required String name, @Constraints.Required String username, @Constraints.Required String password) {
         this.name = name;
         this.username = username;
         this.hash = hashPassword(password);
-    }
-
-    public static String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     @Id
@@ -38,6 +35,16 @@ public class Person {
     @Constraints.Required
     private String hash;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Post> posts = new ArrayList<>();
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -80,6 +87,10 @@ public class Person {
 
     public boolean validatePassword(String plainTextPassword) {
         return BCrypt.checkpw(plainTextPassword, this.hash);
+    }
+
+    public void addPost(Post post){
+        this.posts.add(post);
     }
 
     @Override

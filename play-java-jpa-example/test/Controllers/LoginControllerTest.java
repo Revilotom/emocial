@@ -57,7 +57,7 @@ public class LoginControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenUsernameIsMissing() throws ExecutionException, InterruptedException {
+    public void testWhenUsernameIsMissing() {
 
         l.setUsername(null);
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));
@@ -68,7 +68,7 @@ public class LoginControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenPasswordIsMissing() throws ExecutionException, InterruptedException {
+    public void testWhenPasswordIsMissing() {
 
         l.setPassword(null);
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));

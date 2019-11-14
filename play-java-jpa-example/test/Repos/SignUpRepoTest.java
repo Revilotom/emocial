@@ -13,7 +13,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 public class SignUpRepoTest extends WithApplication {
-    private JPAPersonRepository personRepository;
     private JPASignUpRepository signUpRepository;
 
     @Before

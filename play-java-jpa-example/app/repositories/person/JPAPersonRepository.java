@@ -40,6 +40,15 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
         return supplyAsync(() -> wrap(em -> list(em)), executionContext);
     }
 
+//    @Override
+//    public CompletionStage<Person> save(Person p) {
+//        return supplyAsync(() -> wrap(em -> save(em, p)), executionContext);
+//    }
+
+    private Person save (EntityManager em, Person person){
+        em.persist(person);
+        return person;
+    }
 
     private boolean credentialsAreValid(EntityManager em, String username, String password){
        return getbyUsername(em, username).anyMatch(person -> person.validatePassword(password));

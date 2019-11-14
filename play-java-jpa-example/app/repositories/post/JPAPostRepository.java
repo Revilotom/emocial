@@ -3,6 +3,8 @@ package repositories.post;
 import models.Person;
 import models.Post;
 import play.db.jpa.JPAApi;
+import repositories.JPADefaultRepository;
+import repositories.person.DatabaseExecutionContext;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -17,15 +19,11 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 /**
  * Provide JPA operations running inside of a thread pool sized to the connection pool
  */
-public class JPAPostRepository implements PostRepository {
-
-    private final JPAApi jpaApi;
-    private final DatabaseExecutionContext executionContext;
+public class JPAPostRepository extends JPADefaultRepository implements PostRepository {
 
     @Inject
     public JPAPostRepository(JPAApi jpaApi, DatabaseExecutionContext executionContext) {
-        this.jpaApi = jpaApi;
-        this.executionContext = executionContext;
+        super(jpaApi, executionContext);
     }
 
     @Override
@@ -33,8 +31,4 @@ public class JPAPostRepository implements PostRepository {
         return null;
     }
 
-    @Override
-    public CompletionStage<Stream<Post>> list() {
-        return null;
-    }
 }

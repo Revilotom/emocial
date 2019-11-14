@@ -2,10 +2,7 @@ package models;
 
 import play.data.validation.Constraints;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Post {
@@ -13,6 +10,9 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
+
+    @ManyToOne
+    public Person person;
 
     @Constraints.Required
     public String content;
@@ -38,5 +38,14 @@ public class Post {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id=" + id +
+                ", person=" + person +
+                ", content='" + content + '\'' +
+                '}';
     }
 }

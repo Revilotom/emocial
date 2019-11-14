@@ -11,7 +11,6 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.test.Helpers;
 import play.test.WithServer;
-import repositories.person.JPAPersonRepository;
 import repositories.signUp.JPASignUpRepository;
 
 import java.util.concurrent.ExecutionException;
@@ -71,7 +70,7 @@ public class SignUpControllerTest extends WithServer {
 
 
     @Test
-    public void testWhenPasswordIsNotAlphanumeric() throws ExecutionException, InterruptedException {
+    public void testWhenPasswordIsNotAlphanumeric() {
         s.setPassword1("***********");
         s.setPassword2("***********");
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
@@ -82,7 +81,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenUsernameIsNotAlphanumeric() throws ExecutionException, InterruptedException {
+    public void testWhenUsernameIsNotAlphanumeric() {
         s.setUsername("***********");
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
 
@@ -92,7 +91,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenNameToShort() throws ExecutionException, InterruptedException {
+    public void testWhenNameToShort() {
         s.setName("1");
 
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
@@ -103,7 +102,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenUsernameToShort() throws ExecutionException, InterruptedException {
+    public void testWhenUsernameToShort() {
 
         s.setUsername("1");
 
@@ -115,7 +114,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenPassword2ToShort() throws ExecutionException, InterruptedException {
+    public void testWhenPassword2ToShort() {
         s.setPassword2("1");
 
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
@@ -126,7 +125,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenPassword1ToShort() throws ExecutionException, InterruptedException {
+    public void testWhenPassword1ToShort() {
         s.setPassword1("1");
 
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
@@ -138,7 +137,7 @@ public class SignUpControllerTest extends WithServer {
 
 
     @Test
-    public void testWhenFieldIsMissing() throws ExecutionException, InterruptedException {
+    public void testWhenFieldIsMissing() {
 
         s.setUsername(null);
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
@@ -149,7 +148,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenValidNoError() throws ExecutionException, InterruptedException {
+    public void testWhenValidNoError() {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -157,7 +156,7 @@ public class SignUpControllerTest extends WithServer {
     }
 
     @Test
-    public void testWhenPasswordsAreDifferentErrorsAreShown() throws ExecutionException, InterruptedException {
+    public void testWhenPasswordsAreDifferentErrorsAreShown()  {
 
         s.setPassword1("SDASSDADSA");
 
