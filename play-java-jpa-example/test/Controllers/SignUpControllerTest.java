@@ -16,7 +16,6 @@ import repositories.person.JPAPersonRepository;
 import java.util.concurrent.ExecutionException;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static play.test.Helpers.*;
@@ -36,7 +35,8 @@ public class SignUpControllerTest extends WithServer {
 
         post = Helpers.fakeRequest()
                 .method(POST)
-                .uri("/signUp");
+                .uri("/signUp")
+                .header("Raw-Request-URI", "/signUp");
     }
 
     @Test
@@ -53,7 +53,8 @@ public class SignUpControllerTest extends WithServer {
     public void testFieldsAreRendered() {
         Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(GET)
-                .uri("/signUp");
+                .uri("/signUp")
+                .header("Raw-Request-URI", "/signUp");
 
         // XXX This should be play.test.CSRFTokenHelper
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(request);

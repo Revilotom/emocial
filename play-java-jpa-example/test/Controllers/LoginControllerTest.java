@@ -2,8 +2,7 @@ package Controllers;
 
 import models.Login;
 import models.Person;
-import models.SignUp;
-import org.eclipse.jetty.http.HttpStatus;
+
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +14,9 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
-import java.net.http.HttpClient;
 import java.util.concurrent.ExecutionException;
 
+import static junit.framework.TestCase.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -37,7 +36,8 @@ public class LoginControllerTest extends WithServer {
         l = new Login("username", "password");
         post = Helpers.fakeRequest()
                 .method(POST)
-                .uri("/login");
+                .uri("/login")
+                .header("Raw-Request-URI", "/login");
     }
 
     @Test
@@ -84,5 +84,18 @@ public class LoginControllerTest extends WithServer {
         final String body = contentAsString(result);
         MatcherAssert.assertThat(body, is(""));
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
+        assertTrue(result.session().getOptional("loggedIn").isPresent());
+    }
+
+    @Test
+    public void testFailedLogin() {
+        l.setPassword("dasdasdasdasdasdas");
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));
+        Result result = route(app, tokenRequest);
+        MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
+        assertNull(result.session());
+        final String body = contentAsString(result);
+        MatcherAssert.assertThat(body.toLowerCase(), containsString("invalid credentials"));
     }
 }
