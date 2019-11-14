@@ -36,6 +36,7 @@ public class SignUpController extends Controller {
 
     public CompletionStage<Result> submitSignUp(final Http.Request request) {
         Form<SignUp> signUpForm = formFactory.form(SignUp.class).bindFromRequest(request);
+
         if (signUpForm.hasErrors() || signUpForm.hasGlobalErrors()) {
             return CompletableFuture.supplyAsync(() -> badRequest(views.html.signUp.render(signUpForm)), ec.current());
         }

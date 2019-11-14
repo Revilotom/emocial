@@ -1,6 +1,14 @@
+
 @main("Welcome to Play") {
-    <h1>Logout</h1>
-            <form method="POST" action="@routes.LoginController.logout()">
+    <h1>Logout poop</h1>
+
+
+    @form(CSRF(routes.LoginController.logout())) {
+
+
                 <button>Logout</button>
-            </form>
+    }
+
 }
+@import views.html.helper.CSRF
+@import views.html.helper.form

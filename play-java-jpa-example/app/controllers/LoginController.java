@@ -1,8 +1,6 @@
 package controllers;
 
-import com.mysql.jdbc.log.Log;
 import models.Login;
-import models.SignUp;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
@@ -53,11 +51,13 @@ public class LoginController extends Controller {
 
     public Result logoutPage() {
         return ok(views.html.logout.render());
-
     }
 
-    public CompletionStage<Result> logout(final Http.Request request) {
+    public CompletionStage<Result> logout() {
         return CompletableFuture.supplyAsync(() ->
-                redirect(routes.LoginController.index()).removingFromSession(request, "loggedIn"), ec.current());
+                redirect(routes.LoginController.index())
+                        .withNewSession()
+                ,
+                ec.current());
     }
 }
