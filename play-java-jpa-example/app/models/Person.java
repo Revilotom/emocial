@@ -35,7 +35,7 @@ public class Person {
     @Constraints.Required
     private String hash;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "owner")
     List<Post> posts = new ArrayList<>();
 
     public List<Post> getPosts() {

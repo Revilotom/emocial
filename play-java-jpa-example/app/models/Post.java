@@ -12,7 +12,15 @@ public class Post {
     public Long id;
 
     @ManyToOne
-    public Person person;
+    public Person owner;
+
+    public Person getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
 
     @Constraints.Required
     public String content;
@@ -44,7 +52,7 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", person=" + person +
+                ", person=" + owner +
                 ", content='" + content + '\'' +
                 '}';
     }

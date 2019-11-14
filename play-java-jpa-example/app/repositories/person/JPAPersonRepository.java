@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -31,8 +32,8 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
     }
 
     @Override
-    public CompletionStage<Stream<Person>> findByUsername(String username) {
-        return supplyAsync(() -> wrap(em -> getbyUsername(em, username)), executionContext);
+    public CompletionStage<Optional<Person>> findByUsername(String username) {
+        return supplyAsync(() -> wrap(em -> getbyUsername(em, username).findAny()), executionContext);
     }
 
     @Override
@@ -40,13 +41,16 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
         return supplyAsync(() -> wrap(em -> list(em)), executionContext);
     }
 
-//    @Override
-//    public CompletionStage<Person> save(Person p) {
-//        return supplyAsync(() -> wrap(em -> save(em, p)), executionContext);
-//    }
+    @Override
+    public CompletionStage<Person> save(Person p) {
+        return supplyAsync(() -> wrap(em -> save(em, p)), executionContext);
+    }
 
     private Person save (EntityManager em, Person person){
-        em.persist(person);
+        person = em.merge(person);
+        em.flush();
+//        em.persist(person);
+        System.out.println(person.getPosts());
         return person;
     }
 

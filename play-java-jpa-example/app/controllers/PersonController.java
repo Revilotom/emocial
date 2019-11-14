@@ -1,6 +1,9 @@
 package controllers;
 
+import forms.SignUp;
 import models.Person;
+import models.Post;
+import play.data.Form;
 import repositories.person.PersonRepository;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
@@ -10,6 +13,8 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -37,4 +42,46 @@ public class PersonController extends Controller {
         return ok(views.html.people.render(people));
     }
 
+    public CompletionStage<Result> getPosts(final Http.Request request) {
+        return request.session().getOptional("loggedIn")
+                .map(personRepository::findByUsername).get()
+                .thenApplyAsync(maybePerson ->
+                        ok(views.html.posts.render( maybePerson.get().getPosts())));
+    }
+
+
+    public Result makePost(){
+        return ok(views.html.makePost.render(formFactory.form(Post.class)));
+    }
+
+    public CompletionStage<Result> submitMakePost(final Http.Request request) {
+
+        Form<Post> postForm = formFactory.form(Post.class).bindFromRequest(request);
+
+        if (postForm.hasErrors() || postForm.hasGlobalErrors()) {
+            return CompletableFuture.supplyAsync(() -> badRequest(views.html.makePost.render(postForm)), ec.current());
+        }
+
+        Post post = postForm.get();
+
+        System.out.println(request.session().getOptional("loggedIn"));
+
+        return request.session().getOptional("loggedIn")
+                .map(personRepository::findByUsername).get()
+                .thenApplyAsync(maybePerson -> {
+                    Person person = maybePerson.get();
+                    post.setOwner(person);
+                    person.addPost(post);
+                    try {
+                        personRepository.save(person).toCompletableFuture().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("SAVED");
+
+                    return redirect(routes.PersonController.getPosts());
+                });
+    }
 }

@@ -3,6 +3,7 @@ package repositories.person;
 import com.google.inject.ImplementedBy;
 import models.Person;
 
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Stream;
 
@@ -14,9 +15,9 @@ public interface PersonRepository {
 
     CompletionStage<Boolean> credentialsAreValid(String username, String password);
 
-    CompletionStage<Stream<Person>>  findByUsername(String username);
+    CompletionStage<Optional<Person>> findByUsername(String username);
 
     CompletionStage<Stream<Person>> list();
 
-//    CompletionStage<Person> save(Person p);
+    CompletionStage<Person> save(Person p);
 }

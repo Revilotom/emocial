@@ -1,0 +1,11 @@
+@(posts: List[Post])
+
+@main("Your Posts") {
+    <h1>Your posts </h1>
+    <ul>
+    @for(p <- posts){
+        <li>@p.content</li>
+    }
+    </ul>
+    <a href="/makePost">Make a post</a>
+}
