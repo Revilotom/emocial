@@ -1,0 +1,14 @@
+@(form: Form[Login])
+
+    @main("Welcome to Play") {
+        <h1>Please login or sign up!</h1>
+                <a href="/signUp">HERE</a>
+                <form method="POST" action="@routes.LoginController.login()">
+                    <ul>
+                        @item("username")
+                        @item("password")
+                    </ul>
+                    @errors(form)
+                    <button>Login</button>
+                </form>
+    }

@@ -1,0 +1,19 @@
+@(form: Form[SignUp])
+
+
+
+
+    @main("Welcome to Play") {
+        <h1>Sign up here!</h1>
+                <form method="POST" action="@routes.SignUpController.submitSignUp()">
+                    <ul>
+                        @item("name")
+                        @item("username")
+                        @item("password1")
+                        @item("password2")
+                    </ul>
+
+                    @errors(form)
+                    <button>Submit</button>
+                </form>
+    }

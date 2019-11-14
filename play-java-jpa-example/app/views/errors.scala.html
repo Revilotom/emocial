@@ -1,0 +1,22 @@
+@(form: Form[_])
+
+<div>
+    @if(form.hasGlobalErrors || form.hasErrors) {
+
+        @for(error <- form.errors) {
+            <div class="alert alert-danger">
+                <strong>
+                    @error.key @error.messages
+                </strong>
+            </div>
+        }
+
+        @for(error <- form.globalErrors) {
+            <div class="alert alert-danger">
+                <strong>
+                    @error.key @error.messages
+                </strong>
+            </div>
+        }
+    }
+</div>
