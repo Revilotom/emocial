@@ -1,4 +1,4 @@
-package models;
+package forms;
 
 import play.data.validation.Constraints;
 

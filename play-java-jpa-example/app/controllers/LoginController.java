@@ -1,6 +1,6 @@
 package controllers;
 
-import models.Login;
+import forms.Login;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;

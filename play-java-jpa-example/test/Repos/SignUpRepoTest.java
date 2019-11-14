@@ -18,13 +18,12 @@ public class SignUpRepoTest extends WithApplication {
 
     @Before
     public void before() {
-        personRepository = app.injector().instanceOf(JPAPersonRepository.class);
         signUpRepository = app.injector().instanceOf(JPASignUpRepository.class);
 
         Person person = new Person("tom", "revilotom", "blah");
-        personRepository.add(person);
+        signUpRepository.add(person);
         Person person2 = new Person("kunal", "userk", " blah");
-        personRepository.add(person2);
+        signUpRepository.add(person2);
     }
 
     @Test

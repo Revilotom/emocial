@@ -1,7 +1,9 @@
 package repositories.person;
 
 import models.Person;
+import play.db.jpa.DefaultJPAApi;
 import play.db.jpa.JPAApi;
+import repositories.JPADefaultRepository;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -16,25 +18,16 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 /**
  * Provide JPA operations running inside of a thread pool sized to the connection pool
  */
-public class JPAPersonRepository implements PersonRepository {
-
-    private final JPAApi jpaApi;
-    private final DatabaseExecutionContext executionContext;
+public class JPAPersonRepository extends JPADefaultRepository implements PersonRepository {
 
     @Inject
     public JPAPersonRepository(JPAApi jpaApi, DatabaseExecutionContext executionContext) {
-        this.jpaApi = jpaApi;
-        this.executionContext = executionContext;
+        super(jpaApi, executionContext);
     }
 
     @Override
     public CompletionStage<Boolean> credentialsAreValid(String username, String password) {
         return supplyAsync(() -> wrap(em -> credentialsAreValid(em, username, password)), executionContext);
-    }
-
-    @Override
-    public CompletionStage<Person> add(Person person) {
-        return supplyAsync(() -> wrap(em -> insert(em, person)), executionContext);
     }
 
     @Override
@@ -48,17 +41,8 @@ public class JPAPersonRepository implements PersonRepository {
     }
 
 
-    private <T> T wrap(Function<EntityManager, T> function) {
-        return jpaApi.withTransaction(function);
-    }
-
     private boolean credentialsAreValid(EntityManager em, String username, String password){
        return getbyUsername(em, username).anyMatch(person -> person.validatePassword(password));
-    }
-
-    private Person insert(EntityManager em, Person person) {
-        em.persist(person);
-        return person;
     }
 
     private Stream<Person> list(EntityManager em) {
@@ -66,9 +50,4 @@ public class JPAPersonRepository implements PersonRepository {
         return persons.stream();
     }
 
-    private Stream<Person> getbyUsername(EntityManager em, String username) {
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.username = :username", Person.class);
-        List<Person> persons = query.setParameter("username", username).getResultList();
-        return persons.stream();
-    }
 }

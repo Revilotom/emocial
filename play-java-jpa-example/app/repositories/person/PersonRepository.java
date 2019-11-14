@@ -14,7 +14,7 @@ public interface PersonRepository {
 
     CompletionStage<Boolean> credentialsAreValid(String username, String password);
 
-    CompletionStage<Person> add(Person person);
+
 
     CompletionStage<Stream<Person>>  findByUsername(String username);
 

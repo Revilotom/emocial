@@ -5,6 +5,7 @@ import models.Person;
 import org.junit.Before;
 import org.junit.Test;
 import play.test.WithApplication;
+import repositories.signUp.JPASignUpRepository;
 
 import java.util.concurrent.ExecutionException;
 
@@ -18,10 +19,11 @@ public class PersonRepoTest extends WithApplication {
     @Before
     public void before() {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
+        JPASignUpRepository signUpRepository = app.injector().instanceOf(JPASignUpRepository.class);
         Person person = new Person("tom oliver", "revilotom", "123456789");
-        repo.add(person);
+        signUpRepository.add(person);
         Person person2 = new Person("kunal", "userk", "123456789");
-        repo.add(person2);
+        signUpRepository.add(person2);
     }
 
     @Test

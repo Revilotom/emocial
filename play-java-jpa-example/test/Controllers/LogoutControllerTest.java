@@ -18,7 +18,6 @@ import static play.test.Helpers.*;
 
 public class LogoutControllerTest extends WithServer {
 
-
     @Test
     public void testLogoutDeletesSession() {
 

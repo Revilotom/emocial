@@ -1,6 +1,6 @@
 package Controllers;
 
-import models.Login;
+import forms.Login;
 import models.Person;
 
 import org.hamcrest.MatcherAssert;
@@ -13,6 +13,7 @@ import play.mvc.Result;
 import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
+import repositories.signUp.JPASignUpRepository;
 
 import java.util.concurrent.ExecutionException;
 
@@ -26,11 +27,11 @@ import static play.test.Helpers.contentAsString;
 public class LoginControllerTest extends WithServer {
     private Login l;
     private Http.RequestBuilder post;
-    private JPAPersonRepository repo;
+    private JPASignUpRepository repo;
 
     @Before
     public void setUp() {
-        repo = app.injector().instanceOf(JPAPersonRepository.class);
+        repo = app.injector().instanceOf(JPASignUpRepository.class);
         repo.add(new Person("hackme", "username", "password"));
 
         l = new Login("username", "password");

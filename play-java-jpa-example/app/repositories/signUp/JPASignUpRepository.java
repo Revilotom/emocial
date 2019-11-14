@@ -1,5 +1,6 @@
 package repositories.signUp;
 
+import repositories.JPADefaultRepository;
 import repositories.person.DatabaseExecutionContext;
 import models.Person;
 import play.db.jpa.JPAApi;
@@ -14,14 +15,11 @@ import java.util.stream.Stream;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-public class JPASignUpRepository implements SignUpRepository {
-    private final JPAApi jpaApi;
-    private final DatabaseExecutionContext executionContext;
+public class JPASignUpRepository extends JPADefaultRepository implements SignUpRepository  {
 
     @Inject
     public JPASignUpRepository(JPAApi jpaApi, DatabaseExecutionContext executionContext) {
-        this.jpaApi = jpaApi;
-        this.executionContext = executionContext;
+        super(jpaApi, executionContext);
     }
 
     @Override
@@ -29,13 +27,13 @@ public class JPASignUpRepository implements SignUpRepository {
         return supplyAsync(() -> wrap(em -> getbyUsername(em, username).count() > 0), executionContext);
     }
 
-    private <T> T wrap(Function<EntityManager, T> function) {
-        return jpaApi.withTransaction(function);
+    @Override
+    public CompletionStage<Person> add(Person person) {
+        return supplyAsync(() -> wrap(em -> insert(em, person)), executionContext);
     }
 
-    private Stream<Person> getbyUsername(EntityManager em, String username) {
-        TypedQuery<Person> query = em.createQuery("SELECT p FROM Person p WHERE p.username = :username", Person.class);
-        List<Person> persons = query.setParameter("username", username).getResultList();
-        return persons.stream();
+    private Person insert(EntityManager em, Person person) {
+        em.persist(person);
+        return person;
     }
 }

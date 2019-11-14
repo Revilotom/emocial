@@ -2,7 +2,7 @@ package controllers;
 
 import models.Person;
 import repositories.person.PersonRepository;
-import models.SignUp;
+import forms.SignUp;
 import repositories.signUp.SignUpRepository;
 import play.data.Form;
 import play.data.FormFactory;
@@ -19,14 +19,13 @@ public class SignUpController extends Controller {
 
     private final FormFactory formFactory;
     private final SignUpRepository signUpRepository;
-    private final PersonRepository personRepository;
+
     private final HttpExecutionContext ec;
 
     @Inject
-    public SignUpController(FormFactory formFactory, SignUpRepository signUpRepository, PersonRepository personRepository, HttpExecutionContext ec) {
+    public SignUpController(FormFactory formFactory, SignUpRepository signUpRepository, HttpExecutionContext ec) {
         this.formFactory = formFactory;
         this.signUpRepository = signUpRepository;
-        this.personRepository = personRepository;
         this.ec = ec;
     }
 
@@ -50,7 +49,7 @@ public class SignUpController extends Controller {
             }
 
             Person p = new Person(s.getName(), s.getUsername(), s.getPassword1());
-            personRepository.add(p);
+            signUpRepository.add(p);
             return redirect(routes.PersonController.getPersons());
         }, ec.current());
     }

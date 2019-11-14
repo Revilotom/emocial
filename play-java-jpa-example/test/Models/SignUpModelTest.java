@@ -1,6 +1,6 @@
 package Models;
 
-import models.SignUp;
+import forms.SignUp;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
