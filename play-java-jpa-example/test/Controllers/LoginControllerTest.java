@@ -98,4 +98,6 @@ public class LoginControllerTest extends WithServer {
         final String body = contentAsString(result);
         MatcherAssert.assertThat(body.toLowerCase(), containsString("invalid credentials"));
     }
+
+
 }

@@ -49,15 +49,5 @@ public class LoginController extends Controller {
 
     }
 
-    public Result logoutPage() {
-        return ok(views.html.logout.render());
-    }
 
-    public CompletionStage<Result> logout() {
-        return CompletableFuture.supplyAsync(() ->
-                redirect(routes.LoginController.index())
-                        .withNewSession()
-                ,
-                ec.current());
-    }
 }
