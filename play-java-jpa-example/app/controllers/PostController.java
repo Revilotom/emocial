@@ -17,11 +17,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-/**
- * The controller keeps all database operations behind the repository, and uses
- * {@link play.libs.concurrent.HttpExecutionContext} to provide access to the
- * {@link play.mvc.Http.Context} methods like {@code request()} and {@code flash()}.
- */
 public class PostController extends Controller {
 
     private final FormFactory formFactory;
@@ -38,7 +33,7 @@ public class PostController extends Controller {
     public CompletionStage<Result> getPersons() {
         return personRepository.stream().thenApplyAsync(stream ->
                 stream.collect(Collectors.toList())).thenApplyAsync(people ->
-                ok(views.html.people.render(people)));
+                ok(views.html.persons.render(people)));
     }
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
@@ -49,7 +44,7 @@ public class PostController extends Controller {
     }
 
 
-    public Result makePost() {
+    public Result makePostPage() {
         return ok(views.html.makePost.render(formFactory.form(Post.class)));
     }
 

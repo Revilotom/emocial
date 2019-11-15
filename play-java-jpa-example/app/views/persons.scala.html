@@ -1,9 +1,9 @@
-@(people: List[Person])
+@(persons: List[Person])
 
 @main("Welcome to Play") {
-    <h1>Here are the people </h1>
+    <h1>Here are the persons </h1>
     <ul>
-    @for(p <- people){
+    @for(p <- persons){
         <li>@p.name @p.username</li>
     }
     </ul>

@@ -28,13 +28,12 @@ public class PostControllerTest extends WithServer {
     private Http.RequestBuilder post;
     private Http.RequestBuilder get;
     private JPAPersonRepository repo;
-    private Person person;
 
     @Before
     public void setUp() throws ExecutionException, InterruptedException {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
 
-        person = new Person("hackme", "username", "password");
+        Person person = new Person("hackme", "username", "password");
         Post firstPost = new Post("thisIsATest");
         firstPost.setOwner(person);
         person.addPost(firstPost);

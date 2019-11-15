@@ -1,5 +1,6 @@
 package Repos;
 
+import Helpers.TestHelper;
 import models.Post;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
@@ -8,7 +9,6 @@ import models.Person;
 import org.junit.Before;
 import org.junit.Test;
 import play.test.WithApplication;
-import repositories.post.JPAPostRepository;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -24,27 +24,7 @@ public class PersonRepoTest extends WithApplication {
 
     @Before
     public void before() {
-        repo = app.injector().instanceOf(JPAPersonRepository.class);
-
-        Person person2 = new Person("kunal", "userk", "123456789");
-        Post post2 = new Post("Goddbye");
-        post2.setOwner(person2);
-        person2.addPost(post2);
-
-        repo.update(person2);
-
-        Person person = new Person("tom oliver", "revilotom", "123456789");
-        Post post = new Post("Hello");
-        post.setOwner(person);
-        person.addPost(post);
-        repo.update(person);
-
-        Person p1 = new Person("dasdasd", "robertrick", "1231231231");
-        repo.update(p1);
-
-        Person p2 = new Person("dasdasd", "richard231312", "1231231231");
-        repo.update(p2);
-
+        repo = TestHelper.setup(app);
     }
 
     @After
@@ -81,7 +61,7 @@ public class PersonRepoTest extends WithApplication {
     @Test
     public void testListUsers() throws ExecutionException, InterruptedException {
         long count = repo.stream().toCompletableFuture().get().count();
-        assertEquals(2, count);
+        assertEquals(4, count);
     }
 
     @Test
@@ -115,8 +95,8 @@ public class PersonRepoTest extends WithApplication {
     }
 
     @Test
-    public void testPartialSearch4Results() throws ExecutionException, InterruptedException {
+    public void testPartialSearch3Results() throws ExecutionException, InterruptedException {
         List<Person> list = repo.search("r").toCompletableFuture().get().collect(Collectors.toList());
-        MatcherAssert.assertThat(list.size(), is(4));
+        MatcherAssert.assertThat(list.size(), is(3));
     }
 }

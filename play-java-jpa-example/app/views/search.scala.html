@@ -1,0 +1,17 @@
+@import forms.Search
+@(form: Form[Search], persons: List[Person])
+
+@main("Make your post") {
+    <form method="POST" action="@routes.SearchController.submitSearch()">
+        <ul>
+            @item("searchTerms")
+        </ul>
+        <ul>
+        @for(p <- persons){
+            <li>@p.name @p.username</li>
+        }
+        </ul>
+        @errors(form)
+        <button>Submit</button>
+    </form>
+}
