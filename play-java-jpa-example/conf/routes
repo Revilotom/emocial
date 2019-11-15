@@ -11,11 +11,11 @@ POST    /logout                     controllers.LogoutController.logout()
 GET     /signUp                     controllers.SignUpController.signUp()
 POST    /signUp                     controllers.SignUpController.submitSignUp(req: Request)
 
-GET     /posts                      controllers.PersonController.getPosts(req: Request)
-GET     /makePost                   controllers.PersonController.makePost()
-POST    /makePost                   controllers.PersonController.submitMakePost(req: Request)
+GET     /posts                      controllers.PostController.getPosts(req: Request)
+GET     /makePost                   controllers.PostController.makePost()
+POST    /makePost                   controllers.PostController.submitMakePost(req: Request)
 
-GET     /persons                    controllers.PersonController.getPersons()
+GET     /persons                    controllers.PostController.getPersons()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

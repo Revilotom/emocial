@@ -21,14 +21,14 @@ import java.util.stream.Collectors;
  * {@link play.libs.concurrent.HttpExecutionContext} to provide access to the
  * {@link play.mvc.Http.Context} methods like {@code request()} and {@code flash()}.
  */
-public class PersonController extends Controller {
+public class PostController extends Controller {
 
     private final FormFactory formFactory;
     private final PersonRepository personRepository;
     private final HttpExecutionContext ec;
 
     @Inject
-    public PersonController(FormFactory formFactory, PersonRepository personRepository, HttpExecutionContext ec) {
+    public PostController(FormFactory formFactory, PersonRepository personRepository, HttpExecutionContext ec) {
         this.formFactory = formFactory;
         this.personRepository = personRepository;
         this.ec = ec;
@@ -79,7 +79,7 @@ public class PersonController extends Controller {
                     }
                     System.out.println("SAVED");
 
-                    return redirect(routes.PersonController.getPosts());
+                    return redirect(routes.PostController.getPosts());
                 });
     }
 }

@@ -1,5 +1,6 @@
 
 import Controllers.LoginControllerTest;
+import Controllers.PostControllerTest;
 import Controllers.SignUpControllerTest;
 import Models.PersonModelTest;
 import Models.SignUpModelTest;
@@ -14,13 +15,14 @@ import org.junit.runners.Suite;
         SignUpModelTest.class,
         SignUpControllerTest.class,
         LoginControllerTest.class,
+        PostControllerTest.class,
 
         PersonRepoTest.class,
         PersonModelTest.class,
 
-        AcceptanceTest.class,
-        IntegrationTest.class,
-        UnitTest.class,
+//        AcceptanceTest.class,
+//        IntegrationTest.class,
+//        UnitTest.class,
 })
 
 public class Runner {

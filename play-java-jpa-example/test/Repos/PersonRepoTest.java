@@ -2,6 +2,7 @@ package Repos;
 
 import models.Post;
 import org.hamcrest.MatcherAssert;
+import org.junit.After;
 import repositories.person.JPAPersonRepository;
 import models.Person;
 import org.junit.Before;
@@ -25,7 +26,6 @@ public class PersonRepoTest extends WithApplication {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
 
         Person person2 = new Person("kunal", "userk", "123456789");
-
         Post post2 = new Post("Goddbye");
         post2.setOwner(person2);
         person2.addPost(post2);
@@ -35,10 +35,13 @@ public class PersonRepoTest extends WithApplication {
         Person person = new Person("tom oliver", "revilotom", "123456789");
         Post post = new Post("Hello");
         post.setOwner(person);
-
         person.addPost(post);
         repo.update(person);
+    }
 
+    @After
+    public void after(){
+        repo = null;
     }
 
     @Test

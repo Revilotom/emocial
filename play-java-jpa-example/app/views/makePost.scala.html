@@ -2,7 +2,7 @@
 @(form: Form[Post])
 
 @main("Make your post") {
-    <form method="POST" action="@routes.PersonController.submitMakePost()">
+    <form method="POST" action="@routes.PostController.submitMakePost()">
         <ul>
             @item("content")
         </ul>

@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.is;
 import static play.test.Helpers.*;
 import static play.test.Helpers.contentAsString;
 
-public class PersonControllerTest extends WithServer {
+public class PostControllerTest extends WithServer {
     private Http.RequestBuilder post;
     private Http.RequestBuilder get;
     private JPAPersonRepository repo;
@@ -38,15 +38,10 @@ public class PersonControllerTest extends WithServer {
         Post firstPost = new Post("thisIsATest");
         firstPost.setOwner(person);
         person.addPost(firstPost);
-
         repo.update(person);
 
-        Http.RequestBuilder req = fakeRequest()
-                .session("loggedIn", "username");
-
-        post = req.method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
-
-        get = req.method(GET).uri("/posts").header("Raw-Request-URI", "/posts");
+        get = fakeRequest().session("loggedIn", "username").method(GET).uri("/posts").header("Raw-Request-URI", "/posts");
+        post = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
 
         System.out.println(repo.findByUsername("username").toCompletableFuture().get().get().getPosts());
 
@@ -56,19 +51,15 @@ public class PersonControllerTest extends WithServer {
     @Test
     public void canMakePost() throws ExecutionException, InterruptedException {
 
-        Post firstPost = new Post("rasdsadsa");
-//        firstPost.setOwner(person);
+        Post firstPost = new Post("second post");
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(firstPost)));
-
         Result result = route(app, tokenRequest);
-        final String body = contentAsString(result);
-        System.out.println(body);
 
-//
-//        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
-//        MatcherAssert.assertThat(result.header("Location").get(), is("/posts"));
-//
-//        System.out.println(repo.findByUsername("revilotom").toCompletableFuture().get().get().getPosts());
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/posts"));
+        MatcherAssert.assertThat(
+                repo.findByUsername("username").toCompletableFuture().get().get().getPosts().get(1).content,
+                is("second post"));
     }
 
     @Test
