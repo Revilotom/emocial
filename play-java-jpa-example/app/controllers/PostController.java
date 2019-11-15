@@ -11,6 +11,7 @@ import play.mvc.Result;
 import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -62,24 +63,14 @@ public class PostController extends Controller {
 
         Post post = postForm.get();
 
-        System.out.println(request.session().getOptional("loggedIn"));
-
         return request.session().getOptional("loggedIn")
                 .map(personRepository::findByUsername).get()
-                .thenApplyAsync(maybePerson -> {
-                    Person person = maybePerson.get();
-                    post.setOwner(person);
-                    person.addPost(post);
-                    try {
-                        personRepository.update(person).toCompletableFuture().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("SAVED");
-
-                    return redirect(routes.PostController.getPosts());
-                });
+                .thenApplyAsync(Optional::get)
+                .thenApplyAsync(person -> {
+                            post.setOwner(person);
+                            person.addPost(post);
+                            return person;
+                }).thenApplyAsync(personRepository::update)
+                .thenApplyAsync(personCompletionStage -> redirect(routes.PostController.getPosts()));
     }
 }

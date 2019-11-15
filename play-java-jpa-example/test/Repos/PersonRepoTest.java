@@ -94,6 +94,8 @@ public class PersonRepoTest extends WithApplication {
     }
 
 
+    @Test
+    public void testSearchNoResults() {
 
-
+    }
 }

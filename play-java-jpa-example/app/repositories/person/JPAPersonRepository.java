@@ -51,11 +51,14 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
         return supplyAsync(() -> wrap(em -> getbyUsername(em, username).isPresent()), executionContext);
     }
 
+    @Override
+    public CompletionStage<Stream<Person>> search(String searchTerms) {
+        return null;
+    }
+
     private Person update(EntityManager em, Person person){
         person = em.merge(person);
         em.flush();
-//        em.persist(person);
-//        System.out.println(person.getPosts());
         return person;
     }
 

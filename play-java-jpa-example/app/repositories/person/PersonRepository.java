@@ -22,4 +22,6 @@ public interface PersonRepository {
     CompletionStage<Person> update(Person p);
 
     CompletionStage<Boolean> isTaken(String username);
+
+    CompletionStage<Stream<Person>> search(String searchTerms);
 }
