@@ -30,7 +30,7 @@ public class PersonRepoTest extends WithApplication {
         post2.setOwner(person2);
         person2.addPost(post2);
 
-        repo.add(person2);
+        repo.update(person2);
 
         Person person = new Person("tom oliver", "revilotom", "123456789");
         Post post = new Post("Hello");

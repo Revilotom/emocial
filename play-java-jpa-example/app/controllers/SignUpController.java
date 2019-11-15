@@ -47,7 +47,7 @@ public class SignUpController extends Controller {
             }
 
             Person p = new Person(signUpFields.getName(), signUpFields.getUsername(), signUpFields.getPassword1());
-            personRepository.add(p);
+            personRepository.update(p);
             return redirect(routes.LoginController.index());
 
         }, ec.current());

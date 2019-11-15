@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
@@ -37,6 +38,7 @@ public class Person {
     @Constraints.Required
     private String hash;
 
+    @JsonSerialize
     @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner", fetch = FetchType.EAGER)
     List<Post> posts = new ArrayList<>();
 

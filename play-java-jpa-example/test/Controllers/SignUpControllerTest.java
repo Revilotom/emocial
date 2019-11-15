@@ -27,7 +27,7 @@ public class SignUpControllerTest extends WithServer {
     @Before
     public void setUp() {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
-        repo.add(new Person("mattori", "mimichu", "1233123"));
+        repo.update(new Person("mattori", "mimichu", "1233123"));
 
         signUp = new SignUp("tom oliver", "revilotom", "123456789", "123456789");
 

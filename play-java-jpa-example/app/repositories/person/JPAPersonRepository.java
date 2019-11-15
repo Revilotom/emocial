@@ -51,17 +51,6 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
         return supplyAsync(() -> wrap(em -> getbyUsername(em, username).isPresent()), executionContext);
     }
 
-    @Override
-    public CompletionStage<Person> add(Person person) {
-        return supplyAsync(() -> wrap(em -> add(em, person)), executionContext);
-    }
-
-    private Person add(EntityManager em, Person person) {
-        em.persist(person);
-        em.flush();
-        return person;
-    }
-
     private Person update(EntityManager em, Person person){
         person = em.merge(person);
         em.flush();

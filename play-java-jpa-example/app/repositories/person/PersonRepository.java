@@ -22,6 +22,4 @@ public interface PersonRepository {
     CompletionStage<Person> update(Person p);
 
     CompletionStage<Boolean> isTaken(String username);
-
-    CompletionStage<Person> add(Person person);
 }

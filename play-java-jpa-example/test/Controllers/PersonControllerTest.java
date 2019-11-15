@@ -15,6 +15,8 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.concurrent.ExecutionException;
+
 import static junit.framework.TestCase.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -23,21 +25,21 @@ import static play.test.Helpers.*;
 import static play.test.Helpers.contentAsString;
 
 public class PersonControllerTest extends WithServer {
-    private Login l;
     private Http.RequestBuilder post;
     private Http.RequestBuilder get;
     private JPAPersonRepository repo;
+    private Person person;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ExecutionException, InterruptedException {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
 
-        Person person = new Person("hackme", "username", "password");
-        Post firstPost = new Post("TEst post");
-
+        person = new Person("hackme", "username", "password");
+        Post firstPost = new Post("thisIsATest");
+        firstPost.setOwner(person);
         person.addPost(firstPost);
 
-        repo.add(person);
+        repo.update(person);
 
         Http.RequestBuilder req = fakeRequest()
                 .session("loggedIn", "username");
@@ -45,34 +47,35 @@ public class PersonControllerTest extends WithServer {
         post = req.method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
 
         get = req.method(GET).uri("/posts").header("Raw-Request-URI", "/posts");
+
+        System.out.println(repo.findByUsername("username").toCompletableFuture().get().get().getPosts());
+
     }
 
 
     @Test
-    public void canMakePost() {
+    public void canMakePost() throws ExecutionException, InterruptedException {
 
-        Post firstPost = new Post("blah blah blah...");
+        Post firstPost = new Post("rasdsadsa");
+//        firstPost.setOwner(person);
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(firstPost)));
-        Result result = route(app, tokenRequest);
-//        final String body = contentAsString(result);
-        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
-        MatcherAssert.assertThat(result.header("Location").get(), is("/posts"));
-//        System.out.println(body);
 
+        Result result = route(app, tokenRequest);
+        final String body = contentAsString(result);
+        System.out.println(body);
+
+//
+//        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+//        MatcherAssert.assertThat(result.header("Location").get(), is("/posts"));
+//
+//        System.out.println(repo.findByUsername("revilotom").toCompletableFuture().get().get().getPosts());
     }
 
     @Test
     public void canViewPosts() {
-
-
-        Post firstPost = new Post("blah blah blah...");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(firstPost)));
-        Result result = route(app, tokenRequest);
-
         Http.RequestBuilder newTokenRequest = CSRFTokenHelper.addCSRFToken(get);
         Result newResult = route(app, newTokenRequest);
         final String body = contentAsString(newResult);
-        System.out.println(body);
-
+        MatcherAssert.assertThat(body, containsString("thisIsATest"));
     }
 }

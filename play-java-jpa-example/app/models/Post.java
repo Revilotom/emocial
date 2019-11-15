@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ public class Post {
 
     @ManyToOne( cascade = CascadeType.MERGE)
     @JoinColumn
+    @JsonBackReference
     public Person owner;
 
     public Person getOwner() {

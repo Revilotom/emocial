@@ -29,7 +29,7 @@ public class LoginControllerTest extends WithServer {
     @Before
     public void setUp() {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
-        repo.add(new Person("hackme", "username", "password"));
+        repo.update(new Person("hackme", "username", "password"));
 
         login = new Login("username", "password");
         post = Helpers.fakeRequest()
