@@ -11,7 +11,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    @ManyToOne
+    @ManyToOne( cascade = CascadeType.MERGE)
+    @JoinColumn
     public Person owner;
 
     public Person getOwner() {

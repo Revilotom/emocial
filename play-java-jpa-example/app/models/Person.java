@@ -31,12 +31,13 @@ public class Person {
     public String name;
 
     @Constraints.Required
+    @Column (nullable = false, unique = true)
     public String username;
 
     @Constraints.Required
     private String hash;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "owner")
+    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner", fetch = FetchType.EAGER)
     List<Post> posts = new ArrayList<>();
 
     public List<Post> getPosts() {
@@ -100,6 +101,8 @@ public class Person {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
+                ", hash='" + hash + '\'' +
+                ", posts=" + posts.size() +
                 '}';
     }
 }

@@ -1,13 +1,16 @@
 package Repos;
 
 import models.Post;
+import org.hamcrest.MatcherAssert;
 import repositories.person.JPAPersonRepository;
 import models.Person;
 import org.junit.Before;
 import org.junit.Test;
 import play.test.WithApplication;
+import repositories.post.JPAPostRepository;
 
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -15,31 +18,46 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 
 public class PersonRepoTest extends WithApplication {
-    JPAPersonRepository repo;
+    private JPAPersonRepository repo;
 
     @Before
     public void before() {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
 
-        Person person = new Person("tom oliver", "revilotom", "123456789");
-        Post post = new Post("Hello");
-        person.addPost(post);
-//        repo.update(person);
-        repo.add(person);
-
-
+        Person person2 = new Person("kunal", "userk", "123456789");
 
         Post post2 = new Post("Goddbye");
-        Person person2 = new Person("kunal", "userk", "123456789");
+        post2.setOwner(person2);
         person2.addPost(post2);
 
         repo.add(person2);
 
+        Person person = new Person("tom oliver", "revilotom", "123456789");
+        Post post = new Post("Hello");
+        post.setOwner(person);
+
+        person.addPost(post);
+        repo.update(person);
+
     }
 
     @Test
-    public void testCredentialsInvalid() throws ExecutionException, InterruptedException {
+    public void testPostsAreAdded() throws ExecutionException, InterruptedException {
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        MatcherAssert.assertThat(person.getPosts().size(), is(1));
+        Post post = person.getPosts().get(0);
+        MatcherAssert.assertThat(post.getContent(), is("Hello"));
+    }
+
+    @Test
+    public void testCredentialsInvalidPassword() throws ExecutionException, InterruptedException {
         boolean isValid = repo.credentialsAreValid("revilotom", "dasdasdasads").toCompletableFuture().get();
+        assertFalse(isValid);
+    }
+
+    @Test
+    public void testCredentialsInvalidUsername() throws ExecutionException, InterruptedException {
+        boolean isValid = repo.credentialsAreValid("blah", "dasdasdasads").toCompletableFuture().get();
         assertFalse(isValid);
     }
 
@@ -51,7 +69,7 @@ public class PersonRepoTest extends WithApplication {
 
     @Test
     public void testListUsers() throws ExecutionException, InterruptedException {
-        long count = repo.list().toCompletableFuture().get().count();
+        long count = repo.stream().toCompletableFuture().get().count();
         assertEquals(2, count);
     }
 
@@ -71,14 +89,8 @@ public class PersonRepoTest extends WithApplication {
         Boolean taken = repo.isTaken("jojo").toCompletableFuture().get();
         assertFalse(taken);
     }
-//
-//    @Test
-//    public void testPostsAreAdded() throws ExecutionException, InterruptedException {
-//        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
-//        MatcherAssert.assertThat(person.getPosts().size(), is(1));
-//        Post post = person.getPosts().get(0);
-//        MatcherAssert.assertThat(post.getContent(), is("Hello"));
-//    }
+
+
 
 
 }

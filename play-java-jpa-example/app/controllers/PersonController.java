@@ -35,7 +35,7 @@ public class PersonController extends Controller {
     }
 
     public CompletionStage<Result> getPersons() {
-        return personRepository.list().thenApplyAsync(stream ->
+        return personRepository.stream().thenApplyAsync(stream ->
                 stream.collect(Collectors.toList())).thenApplyAsync(people ->
                 ok(views.html.people.render(people)));
     }

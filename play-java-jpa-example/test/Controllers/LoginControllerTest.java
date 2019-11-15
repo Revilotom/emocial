@@ -22,7 +22,7 @@ import static play.test.Helpers.*;
 import static play.test.Helpers.contentAsString;
 
 public class LoginControllerTest extends WithServer {
-    private Login l;
+    private Login login;
     private Http.RequestBuilder post;
     private JPAPersonRepository repo;
 
@@ -31,7 +31,7 @@ public class LoginControllerTest extends WithServer {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
         repo.add(new Person("hackme", "username", "password"));
 
-        l = new Login("username", "password");
+        login = new Login("username", "password");
         post = Helpers.fakeRequest()
                 .method(POST)
                 .uri("/login")
@@ -56,8 +56,8 @@ public class LoginControllerTest extends WithServer {
     @Test
     public void testWhenUsernameIsMissing() {
 
-        l.setUsername(null);
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));
+        login.setUsername(null);
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(login)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -67,8 +67,8 @@ public class LoginControllerTest extends WithServer {
     @Test
     public void testWhenPasswordIsMissing() {
 
-        l.setPassword(null);
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));
+        login.setPassword(null);
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(login)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -77,7 +77,7 @@ public class LoginControllerTest extends WithServer {
 
     @Test
     public void testSuccessfulLogin() {
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(login)));
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
         MatcherAssert.assertThat(body, is(""));
@@ -88,8 +88,8 @@ public class LoginControllerTest extends WithServer {
 
     @Test
     public void testFailedLogin() {
-        l.setPassword("dasdasdasdasdasdas");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(l)));
+        login.setPassword("dasdasdasdasdasdas");
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(login)));
         Result result = route(app, tokenRequest);
         MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
         assertNull(result.session());

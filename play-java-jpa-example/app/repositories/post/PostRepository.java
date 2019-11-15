@@ -12,5 +12,5 @@ import java.util.stream.Stream;
  */
 @ImplementedBy(JPAPostRepository.class)
 public interface PostRepository {
-    CompletionStage<Stream<Post>> findByUsername(String username);
+    CompletionStage<Stream<Post>> stream();
 }

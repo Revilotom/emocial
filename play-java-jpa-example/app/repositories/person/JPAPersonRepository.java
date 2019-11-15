@@ -1,9 +1,7 @@
 package repositories.person;
 
 import models.Person;
-import org.checkerframework.checker.nullness.Opt;
 import org.hibernate.Hibernate;
-import play.db.jpa.DefaultJPAApi;
 import play.db.jpa.JPAApi;
 import repositories.JPADefaultRepository;
 
@@ -14,7 +12,6 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -40,13 +37,13 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
     }
 
     @Override
-    public CompletionStage<Stream<Person>> list() {
-        return supplyAsync(() -> wrap(em -> list(em)), executionContext);
+    public CompletionStage<Stream<Person>> stream() {
+        return supplyAsync(() -> wrap(em -> stream(em)), executionContext);
     }
 
     @Override
     public CompletionStage<Person> update(Person p) {
-        return supplyAsync(() -> wrap(em -> save(em, p)), executionContext);
+        return supplyAsync(() -> wrap(em -> update(em, p)), executionContext);
     }
 
     @Override
@@ -56,19 +53,20 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
 
     @Override
     public CompletionStage<Person> add(Person person) {
-        return supplyAsync(() -> wrap(em -> insert(em, person)), executionContext);
+        return supplyAsync(() -> wrap(em -> add(em, person)), executionContext);
     }
 
-    private Person insert(EntityManager em, Person person) {
+    private Person add(EntityManager em, Person person) {
         em.persist(person);
+        em.flush();
         return person;
     }
 
-    private Person save (EntityManager em, Person person){
+    private Person update(EntityManager em, Person person){
         person = em.merge(person);
         em.flush();
 //        em.persist(person);
-        System.out.println(person.getPosts());
+//        System.out.println(person.getPosts());
         return person;
     }
 
@@ -76,8 +74,9 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
         return getbyUsername(em, username).map(person -> person.validatePassword(password)).orElse(false);
     }
 
-    private Stream<Person> list(EntityManager em) {
+    private Stream<Person> stream(EntityManager em) {
         List<Person> persons = em.createQuery("select p from Person p", Person.class).getResultList();
+        persons.forEach(person -> Hibernate.initialize(person.getPosts()));
         return persons.stream();
     }
 

@@ -1,18 +1,13 @@
-import controllers.PersonController;
 import models.Person;
 import repositories.person.PersonRepository;
 import org.junit.Test;
 import play.api.test.CSRFTokenHelper;
-import play.data.FormFactory;
-import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
-import play.mvc.Result;
 import play.test.Helpers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
 import java.util.stream.Collectors;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -20,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.contentAsString;
 
 /**
@@ -60,9 +54,9 @@ public class UnitTest extends EndpointTest {
         person.name = "Steve";
         List<Person> ps = new ArrayList<>();
         ps.add(person);
-        when(repository.list()).thenReturn(supplyAsync(() -> ps.stream()));
+        when(repository.stream()).thenReturn(supplyAsync(() -> ps.stream()));
 
-        System.out.println(repository.list().toCompletableFuture().get().collect(Collectors.toList()));
+        System.out.println(repository.stream().toCompletableFuture().get().collect(Collectors.toList()));
     }
 
 //    @Test

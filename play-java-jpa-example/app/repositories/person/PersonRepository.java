@@ -17,7 +17,7 @@ public interface PersonRepository {
 
     CompletionStage<Optional<Person>> findByUsername(String username);
 
-    CompletionStage<Stream<Person>> list();
+    CompletionStage<Stream<Person>> stream();
 
     CompletionStage<Person> update(Person p);
 

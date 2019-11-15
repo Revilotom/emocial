@@ -2,6 +2,7 @@ package repositories.post;
 
 import models.Person;
 import models.Post;
+import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
 import repositories.JPADefaultRepository;
 import repositories.person.DatabaseExecutionContext;
@@ -27,8 +28,12 @@ public class JPAPostRepository extends JPADefaultRepository implements PostRepos
     }
 
     @Override
-    public CompletionStage<Stream<Post>> findByUsername(String username) {
-        return null;
+    public CompletionStage<Stream<Post>> stream() {
+        return supplyAsync(() -> wrap(em -> stream(em)), executionContext);
     }
 
+    private Stream<Post> stream(EntityManager em) {
+        List<Post> posts = em.createQuery("select p from Post p", Post.class).getResultList();
+        return posts.stream();
+    }
 }
