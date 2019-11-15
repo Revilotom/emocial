@@ -1,0 +1,6 @@
+@(id: String, placeholder: String)
+<div class="form-group">
+    @helper.CSRF.formField
+<input name="@id" type="@id" class="form-control form-control-user" id="exampleInputPassword" placeholder="@placeholder">
+</div>
+
