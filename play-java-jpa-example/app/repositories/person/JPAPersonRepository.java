@@ -8,6 +8,7 @@ import repositories.JPADefaultRepository;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,12 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
 
     @Override
     public CompletionStage<Stream<Person>> search(String searchTerms) {
-        return null;
+        return supplyAsync(() -> wrap(em -> search(em, searchTerms)), executionContext);
+    }
+
+    private Stream<Person> search(EntityManager em, String searchTerms){
+        return em.createQuery("select p From Person as p where username like :searchterms", Person.class)
+                .setParameter("searchterms", "%" + searchTerms + "%").getResultList().stream();
     }
 
     private Person update(EntityManager em, Person person){

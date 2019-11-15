@@ -10,6 +10,7 @@ import org.junit.Test;
 import play.test.WithApplication;
 import repositories.post.JPAPostRepository;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,13 @@ public class PersonRepoTest extends WithApplication {
         post.setOwner(person);
         person.addPost(post);
         repo.update(person);
+
+        Person p1 = new Person("dasdasd", "robertrick", "1231231231");
+        repo.update(p1);
+
+        Person p2 = new Person("dasdasd", "richard231312", "1231231231");
+        repo.update(p2);
+
     }
 
     @After
@@ -95,7 +103,20 @@ public class PersonRepoTest extends WithApplication {
 
 
     @Test
-    public void testSearchNoResults() {
+    public void testSearchNoResults() throws ExecutionException, InterruptedException {
+        List<Person> list = repo.search("nothing").toCompletableFuture().get().collect(Collectors.toList());
+        MatcherAssert.assertThat(list.isEmpty(), is(true));
+    }
 
+    @Test
+    public void testPartialSearch1Result() throws ExecutionException, InterruptedException {
+        List<Person> list = repo.search("rev").toCompletableFuture().get().collect(Collectors.toList());
+        MatcherAssert.assertThat(list.get(0).getUsername(), is("revilotom"));
+    }
+
+    @Test
+    public void testPartialSearch4Results() throws ExecutionException, InterruptedException {
+        List<Person> list = repo.search("r").toCompletableFuture().get().collect(Collectors.toList());
+        MatcherAssert.assertThat(list.size(), is(4));
     }
 }

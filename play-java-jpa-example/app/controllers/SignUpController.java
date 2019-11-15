@@ -31,7 +31,12 @@ public class SignUpController extends Controller {
         return ok(views.html.signUp.render(formFactory.form(SignUp.class)));
     }
 
+
+
     public CompletionStage<Result> submitSignUp(final Http.Request request) {
+
+        // TODO abstract out this error handling
+
         Form<SignUp> signUpForm = formFactory.form(SignUp.class).bindFromRequest(request);
 
         if (signUpForm.hasErrors() || signUpForm.hasGlobalErrors()) {
