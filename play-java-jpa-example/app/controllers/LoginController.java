@@ -31,7 +31,7 @@ public class LoginController extends Controller {
         return ok(views.html.login.render(formFactory.form(Login.class)));
     }
 
-    public CompletionStage<Result> login(final Http.Request request) {
+    public CompletionStage<Result> submitLogin(final Http.Request request) {
         Form<Login> loginForm = formFactory.form(Login.class).bindFromRequest(request);
 
         if (loginForm.hasErrors() || loginForm.hasGlobalErrors()) {

@@ -8,7 +8,7 @@
 GET     /home                       controllers.HomeController.home()
 
 GET     /                           controllers.LoginController.index()
-POST    /login                      controllers.LoginController.login(req: Request)
+POST    /login                      controllers.LoginController.submitLogin(req: Request)
 
 GET     /logout                     controllers.LogoutController.logoutPage()
 POST    /logout                     controllers.LogoutController.logout()

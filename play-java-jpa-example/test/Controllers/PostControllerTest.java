@@ -5,6 +5,7 @@ import models.Person;
 
 import models.Post;
 import org.hamcrest.MatcherAssert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import play.api.test.CSRFTokenHelper;
@@ -46,6 +47,10 @@ public class PostControllerTest extends WithServer {
 
     }
 
+    @After
+    public void tearDown(){
+        repo = null;
+    }
 
     @Test
     public void canMakePost() throws ExecutionException, InterruptedException {
