@@ -1,3 +1,6 @@
 play-java-jpa-example/project
 play-java-jpa-example/target/
 play-java-jpa-example/logs/
+play-java-jpa-example/.idea
+play-java-jpa-example/app/models/target/
+

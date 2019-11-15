@@ -1,19 +1,16 @@
 package controllers;
 
-import forms.SignUp;
 import models.Person;
 import models.Post;
 import play.data.Form;
-import repositories.person.PersonRepository;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -37,20 +34,21 @@ public class PersonController extends Controller {
         this.ec = ec;
     }
 
-    public Result getPersons() throws ExecutionException, InterruptedException {
-        List<Person> people = personRepository.list().toCompletableFuture().get().collect(Collectors.toList());
-        return ok(views.html.people.render(people));
+    public CompletionStage<Result> getPersons() {
+        return personRepository.list().thenApplyAsync(stream ->
+                stream.collect(Collectors.toList())).thenApplyAsync(people ->
+                ok(views.html.people.render(people)));
     }
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
         return request.session().getOptional("loggedIn")
                 .map(personRepository::findByUsername).get()
                 .thenApplyAsync(maybePerson ->
-                        ok(views.html.posts.render( maybePerson.get().getPosts())));
+                        ok(views.html.posts.render(maybePerson.get().getPosts())));
     }
 
 
-    public Result makePost(){
+    public Result makePost() {
         return ok(views.html.makePost.render(formFactory.form(Post.class)));
     }
 
@@ -73,7 +71,7 @@ public class PersonController extends Controller {
                     post.setOwner(person);
                     person.addPost(post);
                     try {
-                        personRepository.save(person).toCompletableFuture().get();
+                        personRepository.update(person).toCompletableFuture().get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {

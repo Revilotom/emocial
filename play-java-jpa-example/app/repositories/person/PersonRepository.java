@@ -19,5 +19,9 @@ public interface PersonRepository {
 
     CompletionStage<Stream<Person>> list();
 
-    CompletionStage<Person> save(Person p);
+    CompletionStage<Person> update(Person p);
+
+    CompletionStage<Boolean> isTaken(String username);
+
+    CompletionStage<Person> add(Person person);
 }

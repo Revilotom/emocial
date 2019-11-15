@@ -1,13 +1,11 @@
 package Repos;
 
 import models.Post;
-import org.hamcrest.MatcherAssert;
 import repositories.person.JPAPersonRepository;
 import models.Person;
 import org.junit.Before;
 import org.junit.Test;
 import play.test.WithApplication;
-import repositories.signUp.JPASignUpRepository;
 
 import java.util.concurrent.ExecutionException;
 
@@ -22,19 +20,20 @@ public class PersonRepoTest extends WithApplication {
     @Before
     public void before() {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
-        JPASignUpRepository signUpRepository = app.injector().instanceOf(JPASignUpRepository.class);
 
         Person person = new Person("tom oliver", "revilotom", "123456789");
         Post post = new Post("Hello");
         person.addPost(post);
+//        repo.update(person);
+        repo.add(person);
 
-        signUpRepository.add(person);
+
 
         Post post2 = new Post("Goddbye");
         Person person2 = new Person("kunal", "userk", "123456789");
         person2.addPost(post2);
 
-        signUpRepository.add(person2);
+        repo.add(person2);
 
     }
 
@@ -58,17 +57,28 @@ public class PersonRepoTest extends WithApplication {
 
     @Test
     public void testCanFindAUser() throws ExecutionException, InterruptedException {
-        long count = repo.findByUsername("revilotom").toCompletableFuture().get().count();
-        assertEquals(1, count);
+        assertTrue(repo.findByUsername("revilotom").toCompletableFuture().get().isPresent());
     }
 
     @Test
-    public void testPostsAreAdded() throws ExecutionException, InterruptedException {
-        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().findAny().get();
-        MatcherAssert.assertThat(person.getPosts().size(), is(1));
-        Post post = person.getPosts().get(0);
-        MatcherAssert.assertThat(post.getContent(), is("Hello"));
+    public void testUsernameIsTaken() throws ExecutionException, InterruptedException {
+        Boolean taken = repo.isTaken("revilotom").toCompletableFuture().get();
+        assertTrue(taken);
     }
+
+    @Test
+    public void testUsernameIsNotTaken() throws ExecutionException, InterruptedException {
+        Boolean taken = repo.isTaken("jojo").toCompletableFuture().get();
+        assertFalse(taken);
+    }
+//
+//    @Test
+//    public void testPostsAreAdded() throws ExecutionException, InterruptedException {
+//        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+//        MatcherAssert.assertThat(person.getPosts().size(), is(1));
+//        Post post = person.getPosts().get(0);
+//        MatcherAssert.assertThat(post.getContent(), is("Hello"));
+//    }
 
 
 }

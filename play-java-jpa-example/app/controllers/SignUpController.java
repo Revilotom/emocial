@@ -1,15 +1,14 @@
 package controllers;
 
 import models.Person;
-import repositories.person.PersonRepository;
 import forms.SignUp;
-import repositories.signUp.SignUpRepository;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
@@ -18,14 +17,13 @@ import java.util.concurrent.CompletionStage;
 public class SignUpController extends Controller {
 
     private final FormFactory formFactory;
-    private final SignUpRepository signUpRepository;
-
+    private final PersonRepository personRepository;
     private final HttpExecutionContext ec;
 
     @Inject
-    public SignUpController(FormFactory formFactory, SignUpRepository signUpRepository, HttpExecutionContext ec) {
+    public SignUpController(FormFactory formFactory, PersonRepository signUpRepository, HttpExecutionContext ec) {
         this.formFactory = formFactory;
-        this.signUpRepository = signUpRepository;
+        this.personRepository = signUpRepository;
         this.ec = ec;
     }
 
@@ -40,17 +38,18 @@ public class SignUpController extends Controller {
             return CompletableFuture.supplyAsync(() -> badRequest(views.html.signUp.render(signUpForm)), ec.current());
         }
 
-        SignUp s = signUpForm.get();
+        SignUp signUpFields = signUpForm.get();
 
-        return signUpRepository.isTaken(s.getUsername()).thenApplyAsync(taken -> {
+        return personRepository.isTaken(signUpFields.getUsername()).thenApplyAsync(taken -> {
 
             if (taken){
                 return badRequest(views.html.signUp.render(signUpForm.withError("Alert", "USERNAME TAKEN")));
             }
 
-            Person p = new Person(s.getName(), s.getUsername(), s.getPassword1());
-            signUpRepository.add(p);
-            return redirect(routes.PersonController.getPersons());
+            Person p = new Person(signUpFields.getName(), signUpFields.getUsername(), signUpFields.getPassword1());
+            personRepository.add(p);
+            return redirect(routes.LoginController.index());
+
         }, ec.current());
     }
 }

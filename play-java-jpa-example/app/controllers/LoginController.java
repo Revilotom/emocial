@@ -46,8 +46,5 @@ public class LoginController extends Controller {
             }
             return badRequest(views.html.login.render(loginForm.withError("Alert", "INVALID CREDENTIALS!")));
         }, ec.current());
-
     }
-
-
 }

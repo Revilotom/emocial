@@ -18,6 +18,8 @@ public class ActionCreator implements play.http.ActionCreator {
     private final FormFactory formFactory;
     private final HttpExecutionContext ec;
 
+    private List<String> publics = new ArrayList<>(Arrays.asList("/signUp", "/login", "/logout"));
+
     @Inject
     public ActionCreator(FormFactory formFactory, HttpExecutionContext ec) {
         this.formFactory = formFactory;
@@ -30,16 +32,18 @@ public class ActionCreator implements play.http.ActionCreator {
         return new Action.Simple() {
             @Override
             public CompletionStage<Result> call(Http.Request req) {
-                List<String> publics = new ArrayList<>(Arrays.asList("/signUp", "/login", "/logout"));
-                return req.getHeaders().get("Raw-Request-URI").filter(publics::contains)
+                return req.getHeaders().get("Raw-Request-URI")
+                        // Does the requested page require authentication?
+                        .filter(uri -> publics.contains(uri) ||
+                                // Is the user logged in?
+                                req.session().getOptional("loggedIn").isPresent())
+                        // If either the user is logged or the page does not require authentication then forward the request.
                         .map(uri -> delegate.call(req))
-                        .orElseGet(() -> req.session().getOptional("loggedIn")
-                                .map(x -> delegate.call(req))
-                                .orElseGet(() ->
-                                        CompletableFuture
-                                                .supplyAsync(() ->
-                                                        ok(views.html.login.render(formFactory.form(Login.class))), ec.current()))
-                        );
+                        // Otherwise send the user to the login page.
+                        .orElseGet(() ->
+                                CompletableFuture
+                                        .supplyAsync(() ->
+                                                ok(views.html.login.render(formFactory.form(Login.class))), ec.current()));
             }
         };
 

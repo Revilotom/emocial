@@ -11,9 +11,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.test.Helpers;
 import play.test.WithServer;
-import repositories.signUp.JPASignUpRepository;
-
-import java.util.concurrent.ExecutionException;
+import repositories.person.JPAPersonRepository;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,16 +20,16 @@ import static play.test.Helpers.*;
 
 public class SignUpControllerTest extends WithServer {
 
-    private SignUp s;
+    private SignUp signUp;
     private Http.RequestBuilder post;
-    JPASignUpRepository repo;
+    private JPAPersonRepository repo;
 
     @Before
     public void setUp() {
-        repo = app.injector().instanceOf(JPASignUpRepository.class);
+        repo = app.injector().instanceOf(JPAPersonRepository.class);
         repo.add(new Person("mattori", "mimichu", "1233123"));
 
-        s = new SignUp("tom oliver", "revilotom", "123456789", "123456789");
+        signUp = new SignUp("tom oliver", "revilotom", "123456789", "123456789");
 
         post = Helpers.fakeRequest()
                 .method(POST)
@@ -41,8 +39,8 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenUsernameTaken() {
-        s.setUsername("mimichu");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        signUp.setUsername("mimichu");
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
         MatcherAssert.assertThat(body.toLowerCase(), containsString("username taken"));
@@ -71,9 +69,9 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenPasswordIsNotAlphanumeric() {
-        s.setPassword1("***********");
-        s.setPassword2("***********");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        signUp.setPassword1("***********");
+        signUp.setPassword2("***********");
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -82,8 +80,8 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenUsernameIsNotAlphanumeric() {
-        s.setUsername("***********");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        signUp.setUsername("***********");
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -92,9 +90,9 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenNameToShort() {
-        s.setName("1");
+        signUp.setName("1");
 
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -104,9 +102,9 @@ public class SignUpControllerTest extends WithServer {
     @Test
     public void testWhenUsernameToShort() {
 
-        s.setUsername("1");
+        signUp.setUsername("1");
 
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -115,9 +113,9 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenPassword2ToShort() {
-        s.setPassword2("1");
+        signUp.setPassword2("1");
 
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -126,9 +124,9 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenPassword1ToShort() {
-        s.setPassword1("1");
+        signUp.setPassword1("1");
 
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -139,8 +137,8 @@ public class SignUpControllerTest extends WithServer {
     @Test
     public void testWhenFieldIsMissing() {
 
-        s.setUsername(null);
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        signUp.setUsername(null);
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
@@ -149,7 +147,7 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenValidNoError() {
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
         MatcherAssert.assertThat(body, is(""));
@@ -158,9 +156,9 @@ public class SignUpControllerTest extends WithServer {
     @Test
     public void testWhenPasswordsAreDifferentErrorsAreShown()  {
 
-        s.setPassword1("SDASSDADSA");
+        signUp.setPassword1("SDASSDADSA");
 
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(s)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
