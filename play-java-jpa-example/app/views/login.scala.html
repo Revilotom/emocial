@@ -5,23 +5,15 @@
 
 @main("Welcome") {
 
-    @card(){
-        <div class="text-center">
-        <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-    </div>
+        @formCard("Welcome back!", "Login", routes.LoginController.submitLogin)     {
 
-    <form class="user" method="POST" action="@routes.LoginController.submitLogin()">
-
-        @formItem("username", "Enter Username")
-        @formItem("password", "Enter Password")
-        @errors(form)
-
-        <button href="/home" class="btn btn-primary btn-user btn-block">
-            Login
-        </button>
-    </form>
+            @formItem("username", "Enter Username")
+            @formItem("password", "Enter Password")
+            @errors(form)
+        }
     <hr>
     <div class="text-center">
         <a class="small" href="/signUp">Create an Account!</a>
     </div>
+
 }
