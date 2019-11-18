@@ -1,18 +1,22 @@
 @import forms.SignUp
 @import views.html.components._
+@import views.html.templates._
 
 @(form: Form[SignUp])
 
-    @main("Welcome to Play") {
-        @formCard("Sign up here!", "Create account", routes.SignUpController.submitSignUp){
-            @formItem("name", "Enter Name")
-            @formItem("username", "Enter Username")
-            @formItem("password1", "Enter Password")
-            @formItem("password2", "Enter Password Confirmation")
-            @errors(form)
+@main("Welcome") {
+        @cardForm(form, "Please create an account", "Sign up!",  routes.SignUpController.submitSignUp() ){
+            @textField(form, "name")
+            @textField(form, "username")
+            @textField(form, "password1")
+            @textField(form, "password2")
+        }{
+                <hr>
+        <div class="text-center">
+                <a class="small" href="/"> Already have an account? Login! </a>
+        </div>
         }
-    }
-
+}
 
 
 

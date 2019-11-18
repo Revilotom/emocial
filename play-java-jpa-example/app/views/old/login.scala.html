@@ -5,15 +5,13 @@
 @(form: Form[Login])
 
 @main("Welcome") {
-
-        @testComp(form, "Welcome back!", "Login",  routes.LoginController.submitLogin() ){
+        @cardForm(form, "Welcome back!", "Login",  routes.LoginController.submitLogin() ){
             @textField(form, "username")
             @textField(form, "password")
         }{
-            <hr>
+                <hr>
         <div class="text-center">
                 <a class="small" href="/signUp">Create an Account!</a>
         </div>
         }
-
 }
