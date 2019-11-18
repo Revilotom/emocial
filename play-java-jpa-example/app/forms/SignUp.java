@@ -1,9 +1,13 @@
 package forms;
 
 import play.data.validation.Constraints;
+import play.data.validation.ValidationError;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Constraints.Validate
-public class SignUp implements Constraints.Validatable<String> {
+public class SignUp implements Constraints.Validatable<List<ValidationError>> {
 
     // Alphanumeric + space
     private final static String regexPattern = "^[a-zA-Z0-9 ]*$";
@@ -72,10 +76,14 @@ public class SignUp implements Constraints.Validatable<String> {
     }
 
     @Override
-    public String validate() {
+    public List<ValidationError> validate() {
+
+        List<ValidationError> errorList = new ArrayList<>();
 
         if (!password1.equals(password2)) {
-            return "Passwords dont match!";
+            errorList.add(new ValidationError("password1", "Passwords dont match!"));
+            errorList.add(new ValidationError("password2", "Passwords dont match!"));
+            return errorList;
         }
         return null;
     }
