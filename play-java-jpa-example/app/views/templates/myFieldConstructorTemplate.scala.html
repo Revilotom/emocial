@@ -5,12 +5,10 @@
         <div class = "row">
             <input name="@elements.id" type="@elements.id" class="form-control form-control-user" id="exampleInputPassword" placeholder="@elements.id">
         </div>
-
         @if(elements.hasErrors){
             <div class = "row">
-                <div class="errors alert alert-danger">@elements.errors.mkString(", ")</div>
+                <div class="errors alert alert-danger">Error[@elements.id]: @elements.errors.mkString(", ")</div>
             </div>
         }
-        @* <span class="help">@elements.infos.mkString(", ")</span>*@
     </div>
 </div>

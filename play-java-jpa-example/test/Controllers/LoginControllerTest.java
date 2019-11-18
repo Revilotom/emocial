@@ -61,7 +61,7 @@ public class LoginControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("username [error.required]"));
+        MatcherAssert.assertThat(body, containsString("Error[username]: This field is required"));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class LoginControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("password [error.required]"));
+        MatcherAssert.assertThat(body, containsString("Error[password]: This field is required"));
     }
 
     @Test

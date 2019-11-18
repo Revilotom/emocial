@@ -48,7 +48,7 @@ public class SignUpController extends Controller {
         return personRepository.isTaken(signUpFields.getUsername()).thenApplyAsync(taken -> {
 
             if (taken){
-                return badRequest(views.html.old.signUp.render(signUpForm.withError("Alert", "USERNAME TAKEN")));
+                return badRequest(views.html.old.signUp.render(signUpForm.withError("username", "USERNAME TAKEN")));
             }
 
             Person p = new Person(signUpFields.getName(), signUpFields.getUsername(), signUpFields.getPassword1());

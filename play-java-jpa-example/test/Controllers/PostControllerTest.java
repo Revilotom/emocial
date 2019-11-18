@@ -52,6 +52,8 @@ public class PostControllerTest extends WithServer {
         repo = null;
     }
 
+    //TODO sometimes test randomly fail
+
     @Test
     public void canMakePost() throws ExecutionException, InterruptedException {
 

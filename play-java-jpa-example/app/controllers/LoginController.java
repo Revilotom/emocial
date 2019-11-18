@@ -46,7 +46,15 @@ public class LoginController extends Controller {
             if (isValid){
                 return redirect(routes.HomeController.home()).addingToSession(request, "loggedIn", login.getUsername());
             }
-            return badRequest(views.html.old.login.render(loginForm.withError("Alert", "INVALID CREDENTIALS!")));
+
+            String invalidCredentials = "INVALID CREDENTIALS!";
+
+            return badRequest(
+                    views.html.old.login.render(loginForm
+                        .withError("username", invalidCredentials)
+                        .withError("password", invalidCredentials)
+                    )
+            );
         }, ec.current());
     }
 }

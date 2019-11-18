@@ -75,7 +75,7 @@ public class SignUpControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("password1 [error.pattern]"));
+        MatcherAssert.assertThat(body, containsString("Error[password2]: Must satisfy ^[a-zA-Z0-9 ]*$"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class SignUpControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("username [error.pattern]"));
+        MatcherAssert.assertThat(body, containsString("Error[username]: Must satisfy ^[a-zA-Z0-9 ]*$"));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class SignUpControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("name [error.minLength]"));
+        MatcherAssert.assertThat(body, containsString("Error[name]: Minimum length is 5"));
     }
 
     @Test
@@ -108,29 +108,18 @@ public class SignUpControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("username [error.minLength]"));
+        MatcherAssert.assertThat(body, containsString("Error[username]: Minimum length is 5"));
     }
 
     @Test
-    public void testWhenPassword2ToShort() {
+    public void testWhenPasswordToShort() {
         signUp.setPassword2("1");
 
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("password2 [error.minLength]"));
-    }
-
-    @Test
-    public void testWhenPassword1ToShort() {
-        signUp.setPassword1("1");
-
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));
-
-        Result result = route(app, tokenRequest);
-        final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("password1 [error.minLength]"));
+        MatcherAssert.assertThat(body, containsString("Error[password2]: Minimum length is 8"));
     }
 
 
@@ -142,7 +131,7 @@ public class SignUpControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("username [error.required]"));
+        MatcherAssert.assertThat(body, containsString("Error[username]: This field is required"));
     }
 
     @Test
@@ -162,7 +151,7 @@ public class SignUpControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
-        MatcherAssert.assertThat(body, containsString("[Passwords dont match!]"));
+        MatcherAssert.assertThat(body, containsString("Passwords dont match!"));
 
     }
 }
