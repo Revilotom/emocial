@@ -33,19 +33,19 @@ public class PostController extends Controller {
     public CompletionStage<Result> getPersons() {
         return personRepository.stream().thenApplyAsync(stream ->
                 stream.collect(Collectors.toList())).thenApplyAsync(people ->
-                ok(views.html.persons.render(people)));
+                ok(views.html.old.persons.render(people)));
     }
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
         return request.session().getOptional("loggedIn")
                 .map(personRepository::findByUsername).get()
                 .thenApplyAsync(maybePerson ->
-                        ok(views.html.posts.render(maybePerson.get().getPosts())));
+                        ok(views.html.old.posts.render(maybePerson.get().getPosts())));
     }
 
 
     public Result makePostPage() {
-        return ok(views.html.makePost.render(formFactory.form(Post.class)));
+        return ok(views.html.old.makePost.render(formFactory.form(Post.class)));
     }
 
     public CompletionStage<Result> submitMakePost(final Http.Request request) {
@@ -53,7 +53,7 @@ public class PostController extends Controller {
         Form<Post> postForm = formFactory.form(Post.class).bindFromRequest(request);
 
         if (postForm.hasErrors() || postForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.makePost.render(postForm)), ec.current());
+            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.makePost.render(postForm)), ec.current());
         }
 
         Post post = postForm.get();

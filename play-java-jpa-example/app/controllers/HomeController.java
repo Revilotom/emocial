@@ -23,6 +23,6 @@ public class HomeController extends Controller {
     }
 
     public Result home() {
-        return ok(views.html.home.render());
+        return ok(views.html.old.home.render());
     }
 }

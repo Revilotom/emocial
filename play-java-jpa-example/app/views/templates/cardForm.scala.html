@@ -1,0 +1,16 @@
+@import views.html.components.card
+
+@(myForm: Form[_], header: String, buttonText:String, func: play.api.mvc.Call)(content1: Html)(content2:Html)
+
+@card() {
+    @helper.form(action = func) {
+        <div class="text-center">
+            <h1 class="h4 text-gray-900 mb-4">@header</h1>
+        </div>
+        @content1
+
+        <input class="btn btn-primary btn-user btn-block" type="submit" value="@buttonText"/>
+
+        @content2
+    }
+}

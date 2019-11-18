@@ -43,7 +43,7 @@ public class ActionCreator implements play.http.ActionCreator {
                         .orElseGet(() ->
                                 CompletableFuture
                                         .supplyAsync(() ->
-                                                ok(views.html.login.render(formFactory.form(Login.class))), ec.current()));
+                                                ok(views.html.old.login.render(formFactory.form(Login.class))), ec.current()));
             }
         };
 

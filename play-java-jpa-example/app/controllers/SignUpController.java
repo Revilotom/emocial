@@ -28,7 +28,7 @@ public class SignUpController extends Controller {
     }
 
     public Result signUp() {
-        return ok(views.html.signUp.render(formFactory.form(SignUp.class)));
+        return ok(views.html.old.signUp.render(formFactory.form(SignUp.class)));
     }
 
 
@@ -40,7 +40,7 @@ public class SignUpController extends Controller {
         Form<SignUp> signUpForm = formFactory.form(SignUp.class).bindFromRequest(request);
 
         if (signUpForm.hasErrors() || signUpForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.signUp.render(signUpForm)), ec.current());
+            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.signUp.render(signUpForm)), ec.current());
         }
 
         SignUp signUpFields = signUpForm.get();
@@ -48,7 +48,7 @@ public class SignUpController extends Controller {
         return personRepository.isTaken(signUpFields.getUsername()).thenApplyAsync(taken -> {
 
             if (taken){
-                return badRequest(views.html.signUp.render(signUpForm.withError("Alert", "USERNAME TAKEN")));
+                return badRequest(views.html.old.signUp.render(signUpForm.withError("Alert", "USERNAME TAKEN")));
             }
 
             Person p = new Person(signUpFields.getName(), signUpFields.getUsername(), signUpFields.getPassword1());

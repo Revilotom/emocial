@@ -29,7 +29,7 @@ public class SearchController extends Controller {
     }
 
     public Result searchPage(){
-        return ok(views.html.search.render(formFactory.form(Search.class), new ArrayList<>()));
+        return ok(views.html.old.search.render(formFactory.form(Search.class), new ArrayList<>()));
     }
 
     public CompletionStage<Result> submitSearch(final Http.Request request) {
@@ -37,11 +37,11 @@ public class SearchController extends Controller {
         Form<Search> searchForm = formFactory.form(Search.class).bindFromRequest(request);
 
         if (searchForm.hasErrors() || searchForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.search.render(searchForm, new ArrayList<>())), ec.current());
+            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.search.render(searchForm, new ArrayList<>())), ec.current());
         }
 
         return personRepository.search(searchForm.get().getSearchTerms())
-                .thenApplyAsync(stream -> ok(views.html.search.render(formFactory.form(Search.class),
+                .thenApplyAsync(stream -> ok(views.html.old.search.render(formFactory.form(Search.class),
                         stream.collect(Collectors.toList()))), ec.current());
     }
 

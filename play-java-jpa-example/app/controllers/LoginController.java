@@ -28,14 +28,16 @@ public class LoginController extends Controller {
     }
 
     public Result index() {
-        return ok(views.html.login.render(formFactory.form(Login.class)));
+        return ok(views.html.old.login.render(formFactory.form(Login.class)));
     }
 
     public CompletionStage<Result> submitLogin(final Http.Request request) {
         Form<Login> loginForm = formFactory.form(Login.class).bindFromRequest(request);
 
+//        loginForm.field()
+
         if (loginForm.hasErrors() || loginForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.login.render(loginForm)), ec.current());
+            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.login.render(loginForm)), ec.current());
         }
 
         Login login = loginForm.get();
@@ -44,7 +46,7 @@ public class LoginController extends Controller {
             if (isValid){
                 return redirect(routes.HomeController.home()).addingToSession(request, "loggedIn", login.getUsername());
             }
-            return badRequest(views.html.login.render(loginForm.withError("Alert", "INVALID CREDENTIALS!")));
+            return badRequest(views.html.old.login.render(loginForm.withError("Alert", "INVALID CREDENTIALS!")));
         }, ec.current());
     }
 }

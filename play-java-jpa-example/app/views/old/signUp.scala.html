@@ -1,0 +1,18 @@
+@import forms.SignUp
+@import views.html.components._
+
+@(form: Form[SignUp])
+
+    @main("Welcome to Play") {
+        @formCard("Sign up here!", "Create account", routes.SignUpController.submitSignUp){
+            @formItem("name", "Enter Name")
+            @formItem("username", "Enter Username")
+            @formItem("password1", "Enter Password")
+            @formItem("password2", "Enter Password Confirmation")
+            @errors(form)
+        }
+    }
+
+
+
+

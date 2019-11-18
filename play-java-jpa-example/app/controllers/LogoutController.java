@@ -25,7 +25,7 @@ public class LogoutController extends Controller {
     }
 
     public Result logoutPage() {
-        return ok(views.html.logout.render());
+        return ok(views.html.old.logout.render());
     }
 
     public CompletionStage<Result> logout() {

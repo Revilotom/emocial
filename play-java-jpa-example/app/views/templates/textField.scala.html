@@ -1,0 +1,9 @@
+@import views.html.templates.myFieldConstructorTemplate
+@import views.html.helper.FieldConstructor
+
+@(f: Form[_], id: String)
+
+@implicitField = @{ FieldConstructor(myFieldConstructorTemplate.f) }
+
+@helper.CSRF.formField
+@helper.inputText(f(id))
