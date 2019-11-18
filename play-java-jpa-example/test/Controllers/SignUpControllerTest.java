@@ -113,6 +113,7 @@ public class SignUpControllerTest extends WithServer {
 
     @Test
     public void testWhenPasswordToShort() {
+        signUp.setPassword1("1");
         signUp.setPassword2("1");
 
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(signUp)));

@@ -14,24 +14,16 @@ import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-public class SignUpController extends Controller {
-
-    private final FormFactory formFactory;
-    private final PersonRepository personRepository;
-    private final HttpExecutionContext ec;
+public class SignUpController extends DefaultController {
 
     @Inject
-    public SignUpController(FormFactory formFactory, PersonRepository signUpRepository, HttpExecutionContext ec) {
-        this.formFactory = formFactory;
-        this.personRepository = signUpRepository;
-        this.ec = ec;
+    public SignUpController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
+        super(formFactory, repository, ec);
     }
 
     public Result signUp() {
         return ok(views.html.old.signUp.render(formFactory.form(SignUp.class)));
     }
-
-
 
     public CompletionStage<Result> submitSignUp(final Http.Request request) {
 
@@ -45,14 +37,14 @@ public class SignUpController extends Controller {
 
         SignUp signUpFields = signUpForm.get();
 
-        return personRepository.isTaken(signUpFields.getUsername()).thenApplyAsync(taken -> {
+        return repository.isTaken(signUpFields.getUsername()).thenApplyAsync(taken -> {
 
             if (taken){
                 return badRequest(views.html.old.signUp.render(signUpForm.withError("username", "USERNAME TAKEN")));
             }
 
             Person p = new Person(signUpFields.getName(), signUpFields.getUsername(), signUpFields.getPassword1());
-            personRepository.update(p);
+            repository.update(p);
             return redirect(routes.LoginController.index());
 
         }, ec.current());

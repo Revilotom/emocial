@@ -11,17 +11,11 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 
-public class LogoutController extends Controller {
-
-    private final FormFactory formFactory;
-    private final PersonRepository repository;
-    private final HttpExecutionContext ec;
+public class LogoutController extends DefaultController {
 
     @Inject
     public LogoutController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
-        this.formFactory = formFactory;
-        this.repository = repository;
-        this.ec = ec;
+        super(formFactory, repository, ec);
     }
 
     public Result logoutPage() {

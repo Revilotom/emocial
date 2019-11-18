@@ -9,17 +9,12 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 
-public class HomeController extends Controller {
+public class HomeController extends DefaultController {
 
-    private final FormFactory formFactory;
-    private final PersonRepository personRepository;
-    private final HttpExecutionContext ec;
 
     @Inject
-    public HomeController(FormFactory formFactory, PersonRepository personRepository, HttpExecutionContext ec) {
-        this.formFactory = formFactory;
-        this.personRepository = personRepository;
-        this.ec = ec;
+    public HomeController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
+        super(formFactory, repository, ec);
     }
 
     public Result home() {

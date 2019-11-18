@@ -11,36 +11,33 @@ import play.mvc.Result;
 import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-public class PostController extends Controller {
+public class PostController extends DefaultController {
 
-    private final FormFactory formFactory;
-    private final PersonRepository personRepository;
-    private final HttpExecutionContext ec;
 
     @Inject
-    public PostController(FormFactory formFactory, PersonRepository personRepository, HttpExecutionContext ec) {
-        this.formFactory = formFactory;
-        this.personRepository = personRepository;
-        this.ec = ec;
+    public PostController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
+        super(formFactory, repository, ec);
     }
 
     public CompletionStage<Result> getPersons() {
-        return personRepository.stream().thenApplyAsync(stream ->
+        return repository.stream().thenApplyAsync(stream ->
                 stream.collect(Collectors.toList())).thenApplyAsync(people ->
                 ok(views.html.old.persons.render(people)));
     }
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
         return request.session().getOptional("loggedIn")
-                .map(personRepository::findByUsername).get()
-                .thenApplyAsync(maybePerson ->
-                        ok(views.html.old.posts.render(maybePerson.get().getPosts())));
+                .map(repository::findByUsername).get()
+                .thenApply(person -> person.map(Person::getPosts))
+                .thenApplyAsync(posts ->
+                        ok(views.html.old.posts.render(posts.orElseGet(ArrayList::new))));
     }
 
 
@@ -59,13 +56,13 @@ public class PostController extends Controller {
         Post post = postForm.get();
 
         return request.session().getOptional("loggedIn")
-                .map(personRepository::findByUsername).get()
+                .map(repository::findByUsername).get()
                 .thenApplyAsync(Optional::get)
-                .thenApplyAsync(person -> {
+                .thenApply(person -> {
                             post.setOwner(person);
                             person.addPost(post);
                             return person;
-                }).thenApplyAsync(personRepository::update)
+                }).thenApplyAsync(repository::update)
                 .thenApplyAsync(personCompletionStage -> redirect(routes.PostController.getPosts()));
     }
 }
