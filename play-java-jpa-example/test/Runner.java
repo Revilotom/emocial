@@ -1,4 +1,5 @@
 
+import Controllers.FollowControllerTest;
 import Controllers.LoginControllerTest;
 import Controllers.PostControllerTest;
 import Controllers.SignUpControllerTest;
@@ -16,6 +17,7 @@ import org.junit.runners.Suite;
         SignUpControllerTest.class,
         LoginControllerTest.class,
         PostControllerTest.class,
+        FollowControllerTest.class,
 
         PersonRepoTest.class,
         PersonModelTest.class,

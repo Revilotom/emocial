@@ -23,20 +23,14 @@ public class TestHelper {
         post2.setOwner(person2);
         person2.addPost(post2);
 
-        repo.update(person2);
-        repo.update(person);
+        repo.update(person2).toCompletableFuture().get();
+        repo.update(person).toCompletableFuture().get();
 
+        Person p1 = new Person("dasdasd", "robertrick", "1231231231");
+        repo.update(p1).toCompletableFuture().get();
 
-
-//        System.out.println(repo.findByUsername("revilotom").toCompletableFuture().get().get().getFollowers());
-
-
-//
-//        Person p1 = new Person("dasdasd", "robertrick", "1231231231");
-//        repo.update(p1);
-//
-//        Person p2 = new Person("dasdasd", "richard231312", "1231231231");
-//        repo.update(p2);
+        Person p2 = new Person("dasdasd", "richard231312", "1231231231");
+        repo.update(p2).toCompletableFuture().get();
 
 
         return repo;

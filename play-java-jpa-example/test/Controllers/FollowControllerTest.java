@@ -58,10 +58,10 @@ public class FollowControllerTest extends WithServer {
         repo = null;
     }
 
-    //TODO sometimes test randomly fail ~ Think Ive fixed it...
+    //TODO sometimes test randomly fail
 
     @Test
-    public void canMakePost() throws ExecutionException, InterruptedException {
+    public void canFollowPerson() throws ExecutionException, InterruptedException {
 
         Follow follow = new Follow();
         follow.setNameOfPersonToFollow("followMe");
@@ -76,10 +76,20 @@ public class FollowControllerTest extends WithServer {
     }
 
     @Test
-    public void canViewPosts() {
+    public void canViewFollowing() {
         Http.RequestBuilder newTokenRequest = CSRFTokenHelper.addCSRFToken(getFollowing);
         Result newResult = route(app, newTokenRequest);
         final String body = contentAsString(newResult);
-        MatcherAssert.assertThat(body, containsString("thisIsATest"));
+        MatcherAssert.assertThat(body, containsString("anonymous"));
     }
+
+    @Test
+    public void canViewFollowers() {
+        Http.RequestBuilder newTokenRequest = CSRFTokenHelper.addCSRFToken(getFollowers);
+        Result newResult = route(app, newTokenRequest);
+        final String body = contentAsString(newResult);
+        MatcherAssert.assertThat(body, containsString("username"));
+    }
+
+    
 }
