@@ -5,7 +5,6 @@ import models.Post;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class PostController extends DefaultController {

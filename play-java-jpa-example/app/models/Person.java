@@ -39,8 +39,12 @@ public class Person {
     private String hash;
 
     @JsonSerialize
-    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner")
     List<Post> posts = new ArrayList<>();
+
+//    @JsonSerialize
+//    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner")
+//    List<Post> following = new ArrayList<>();
 
     public List<Post> getPosts() {
         return posts;
