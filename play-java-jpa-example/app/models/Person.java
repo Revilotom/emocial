@@ -1,13 +1,14 @@
 package models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Person {
@@ -39,12 +40,60 @@ public class Person {
     private String hash;
 
     @JsonSerialize
-    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner")
+    @OneToMany( cascade = CascadeType.ALL, mappedBy = "owner")
+    private
     List<Post> posts = new ArrayList<>();
 
-//    @JsonSerialize
-//    @OneToMany( cascade = CascadeType.MERGE, mappedBy = "owner")
-//    List<Post> following = new ArrayList<>();
+    @JsonSerialize
+    @OneToMany(mappedBy="to", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private
+    List<FollowRelation> followers = new ArrayList<>();
+
+    @JsonSerialize
+    @OneToMany(mappedBy="from", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private
+    List<FollowRelation> following = new ArrayList<>();
+
+    public void addFollower(FollowRelation f){
+        f.setTo(this);
+        this.followers.add(f);
+    }
+
+    public void addFollowing(FollowRelation f){
+        f.setFrom(this);
+        this.following.add(f);
+    }
+
+//    public void follow(Person follower){
+//        following.add(new FollowRelation(this, follower));
+//    }
+
+//    public void addFollower(Person followee){
+//        followers.add(new FollowRelation(followee, this));
+//    }
+
+//    public List<Person> getFollowers() {
+//        return followers.stream().map(FollowRelation::getFrom).collect(Collectors.toList());
+//    }
+
+    public void setFollowers(List<FollowRelation> followers) {
+        this.followers = followers;
+    }
+
+    public List<FollowRelation> getFollowers() {
+        return followers;
+    }
+
+    public List<FollowRelation> getFollowing() {
+        return following;
+    }
+//    public List<Person> getFollowing() {
+//        return following.stream().map(FollowRelation::getTo).collect(Collectors.toList());
+//    }
+
+    public void setFollowing(List<FollowRelation> following) {
+        this.following = following;
+    }
 
     public List<Post> getPosts() {
         return posts;
@@ -108,7 +157,9 @@ public class Person {
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
                 ", hash='" + hash + '\'' +
-                ", posts=" + posts.size() +
+                ", posts=" + posts +
+                ", followers=" + followers +
+                ", following=" + following +
                 '}';
     }
 }

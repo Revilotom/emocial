@@ -12,6 +12,8 @@ import play.mvc.Result;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static play.test.Helpers.*;
@@ -22,7 +24,7 @@ public class SearchControllerTest extends WithServer {
     private JPAPersonRepository repo;
 
     @Before
-    public void before() {
+    public void before() throws ExecutionException, InterruptedException {
         repo = TestHelper.setup(app);
         get = fakeRequest().session("loggedIn", "username").method(GET).uri("/search").header("Raw-Request-URI", "/search");
         post = fakeRequest().session("loggedIn", "username").method(POST).uri("/search").header("Raw-Request-URI", "/search");

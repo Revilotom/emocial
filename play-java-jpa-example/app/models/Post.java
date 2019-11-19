@@ -12,7 +12,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    @ManyToOne( cascade = CascadeType.MERGE)
+    @ManyToOne( cascade = CascadeType.ALL)
     @JoinColumn
     @JsonBackReference
     public Person owner;
@@ -55,7 +55,7 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", person=" + owner +
+                ", person=" + owner.getUsername() +
                 ", content='" + content + '\'' +
                 '}';
     }

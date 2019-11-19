@@ -1,6 +1,7 @@
 package Repos;
 
 import Helpers.TestHelper;
+import models.FollowRelation;
 import models.Post;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
@@ -23,7 +24,7 @@ public class PersonRepoTest extends WithApplication {
     private JPAPersonRepository repo;
 
     @Before
-    public void before() {
+    public void before() throws ExecutionException, InterruptedException {
         repo = TestHelper.setup(app);
     }
 
@@ -31,6 +32,40 @@ public class PersonRepoTest extends WithApplication {
     public void after(){
         repo = null;
     }
+
+
+    @Test
+    public void testFollowersAreAdded() throws ExecutionException, InterruptedException {
+
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+//        MatcherAssert.assertThat(person.getFollowers().size(), is(1));
+//        Post post = person.getPosts().get(0);
+//        MatcherAssert.assertThat(post.getContent(), is("Hello"));
+
+        FollowRelation f = new FollowRelation();
+        f.setFrom(person2);
+        f.setTo(person);
+//
+        person.addFollower(f);
+        person2.addFollowing(f);
+
+        repo.update(person);
+        repo.update(person2);
+
+        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
+        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
+
+        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
+
+        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
+
+        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
+
+
+    }
+
 
     @Test
     public void testPostsAreAdded() throws ExecutionException, InterruptedException {
