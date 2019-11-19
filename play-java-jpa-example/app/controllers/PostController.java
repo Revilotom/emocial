@@ -31,8 +31,7 @@ public class PostController extends DefaultController {
     }
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
-        return request.session().getOptional("loggedIn")
-                .map(repository::findByUsername).get()
+        return getLoggedInUser(request)
                 .thenApply(person -> person.map(Person::getPosts))
                 .thenApplyAsync(posts ->
                         ok(views.html.old.posts.render(posts.orElseGet(ArrayList::new))));
@@ -53,8 +52,7 @@ public class PostController extends DefaultController {
 
         Post post = postForm.get();
 
-        return request.session().getOptional("loggedIn")
-                .map(repository::findByUsername).get()
+        return getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(person -> {
                             post.setOwner(person);

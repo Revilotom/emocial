@@ -23,24 +23,22 @@ public class FollowController extends DefaultController {
         super(formFactory, repository, ec);
     }
 
-    // add following form
-
     public Result makeFollowPage() {
         return ok(views.html.old.followPerson.render(formFactory.form(Follow.class)));
     }
 
-    public CompletionStage<Result> getFollowing(final Http.Request request) {
-        return request.session().getOptional("loggedIn")
-                .map(repository::findByUsername).get()
-                .thenApply(person -> person.map(Person::getFollowing))
+    private CompletionStage<Result> getRelevantPeople(final Http.Request request, boolean following){
+        return getLoggedInUser(request)
+                .thenApply(person -> person.map(following ? Person::getFollowing : Person::getFollowers))
                 .thenApplyAsync(list -> ok(views.html.old.persons.render(list.orElseGet(ArrayList::new))));
     }
 
+    public CompletionStage<Result> getFollowing(final Http.Request request) {
+        return getRelevantPeople(request, true);
+    }
+
     public CompletionStage<Result> getFollowers(final Http.Request request) {
-        return request.session().getOptional("loggedIn")
-                .map(repository::findByUsername).get()
-                .thenApply(person -> person.map(Person::getFollowers))
-                .thenApplyAsync(list -> ok(views.html.old.persons.render(list.orElseGet(ArrayList::new))));
+        return getRelevantPeople(request, false);
     }
 
     public CompletionStage<Result> submitFollow(final Http.Request request) {
@@ -53,8 +51,7 @@ public class FollowController extends DefaultController {
 
         Follow follow = followForm.get();
 
-        return request.session().getOptional("loggedIn")
-                .map(repository::findByUsername).get()
+        return getLoggedInUser(request)
                 .thenApplyAsync(Optional::get)
                 .thenAcceptAsync(loggedInUser -> repository.findByUsername(follow.getNameOfPersonToFollow())
                         .thenApply(Optional::get)
