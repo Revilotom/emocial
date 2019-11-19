@@ -1,7 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
@@ -54,42 +53,22 @@ public class Person {
     private
     List<FollowRelation> following = new ArrayList<>();
 
-    public void addFollower(FollowRelation f){
-        f.setTo(this);
-        this.followers.add(f);
+    public Person addFollowing(Person personToFollow){
+        this.following.add(new FollowRelation(this, personToFollow));
+        return this;
     }
-
-    public void addFollowing(FollowRelation f){
-        f.setFrom(this);
-        this.following.add(f);
-    }
-
-//    public void follow(Person follower){
-//        following.add(new FollowRelation(this, follower));
-//    }
-
-//    public void addFollower(Person followee){
-//        followers.add(new FollowRelation(followee, this));
-//    }
-
-//    public List<Person> getFollowers() {
-//        return followers.stream().map(FollowRelation::getFrom).collect(Collectors.toList());
-//    }
 
     public void setFollowers(List<FollowRelation> followers) {
         this.followers = followers;
     }
 
-    public List<FollowRelation> getFollowers() {
-        return followers;
+    public List<Person> getFollowers() {
+        return followers.stream().map(FollowRelation::getFrom).collect(Collectors.toList());
     }
 
-    public List<FollowRelation> getFollowing() {
-        return following;
+    public List<Person> getFollowing() {
+        return following.stream().map(FollowRelation::getTo).collect(Collectors.toList());
     }
-//    public List<Person> getFollowing() {
-//        return following.stream().map(FollowRelation::getTo).collect(Collectors.toList());
-//    }
 
     public void setFollowing(List<FollowRelation> following) {
         this.following = following;

@@ -1,9 +1,7 @@
 package controllers;
 
 import forms.Follow;
-import models.FollowRelation;
 import models.Person;
-import models.Post;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.stream.Collectors;
 
 
 public class FollowController extends DefaultController {
@@ -38,20 +35,14 @@ public class FollowController extends DefaultController {
     public CompletionStage<Result> getFollowing(final Http.Request request) {
         return request.session().getOptional("loggedIn")
                 .map(repository::findByUsername).get()
-                .thenApply(person ->
-                        person.map(Person::getFollowing)
-                                .map(following -> following.stream().map(FollowRelation::getTo)))
-                .thenApplyAsync(following -> following.map(f -> f.collect(Collectors.toList())))
+                .thenApply(person -> person.map(Person::getFollowing))
                 .thenApplyAsync(list -> ok(views.html.old.persons.render(list.orElseGet(ArrayList::new))));
     }
 
     public CompletionStage<Result> getFollowers(final Http.Request request) {
         return request.session().getOptional("loggedIn")
                 .map(repository::findByUsername).get()
-                .thenApply(person ->
-                        person.map(Person::getFollowers)
-                                .map(followers -> followers.stream().map(FollowRelation::getFrom)))
-                .thenApplyAsync(followers -> followers.map(f -> f.collect(Collectors.toList())))
+                .thenApply(person -> person.map(Person::getFollowers))
                 .thenApplyAsync(list -> ok(views.html.old.persons.render(list.orElseGet(ArrayList::new))));
     }
 
@@ -68,18 +59,11 @@ public class FollowController extends DefaultController {
         return request.session().getOptional("loggedIn")
                 .map(repository::findByUsername).get()
                 .thenApplyAsync(Optional::get)
-                .thenApplyAsync(loggedInUser -> {
-                    repository.findByUsername(follow.getNameOfPersonToFollow())
-                            .thenApplyAsync(Optional::get)
-                            .thenApplyAsync(personToFollow -> new FollowRelation(loggedInUser, personToFollow))
-                            .thenAcceptAsync(followRelation -> {
-                                followRelation.getFrom().addFollowing(followRelation);
-//                                followRelation.getTo().addFollower(followRelation);
-                                repository.update(followRelation.getFrom()).toCompletableFuture();
-                                repository.update(followRelation.getTo());
-                            });
-                    return redirect(routes.FollowController.getFollowing());
-                });
+                .thenAcceptAsync(loggedInUser -> repository.findByUsername(follow.getNameOfPersonToFollow())
+                        .thenApply(Optional::get)
+                        .thenApply(loggedInUser::addFollowing)
+                        .thenApply(repository::update)
+                ).thenApplyAsync(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
     }
 }
 

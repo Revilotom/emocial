@@ -39,31 +39,15 @@ public class PersonRepoTest extends WithApplication {
 
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
         Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+        person2.addFollowing(person);
 
-//        MatcherAssert.assertThat(person.getFollowers().size(), is(1));
-//        Post post = person.getPosts().get(0);
-//        MatcherAssert.assertThat(post.getContent(), is("Hello"));
+        repo.update(person2).toCompletableFuture().get();
 
-        FollowRelation f = new FollowRelation();
-        f.setFrom(person2);
-        f.setTo(person);
-//
-        person.addFollower(f);
-        person2.addFollowing(f);
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 
-        repo.update(person);
-        repo.update(person2);
-
-        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
-        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
-
-        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
-
-        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
-
-        System.out.println(repo.stream().toCompletableFuture().get().map(x -> x.getFollowers()).collect(Collectors.toList()));
-
-
+        MatcherAssert.assertThat(person.getFollowers().get(0).getUsername(), is(person2.username));
+        MatcherAssert.assertThat(person2.getFollowing().get(0).getUsername(), is(person.username));
     }
 
 

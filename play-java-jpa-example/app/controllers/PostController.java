@@ -55,12 +55,13 @@ public class PostController extends DefaultController {
 
         return request.session().getOptional("loggedIn")
                 .map(repository::findByUsername).get()
-                .thenApplyAsync(Optional::get)
+                .thenApply(Optional::get)
                 .thenApply(person -> {
                             post.setOwner(person);
                             person.addPost(post);
                             return person;
-                }).thenApplyAsync(repository::update)
+                })
+                .thenApply(repository::update)
                 .thenApplyAsync(personCompletionStage -> redirect(routes.PostController.getPosts()));
     }
 }
