@@ -225,3 +225,9 @@ Please see the schedule [here](<https://docs.google.com/spreadsheets/d/10fHqSS7Z
 <!-- Write that H2 database is for local environment. -->
 <!-- Explain why you chose that age range. -->
 <!-- What will the users do? How would they use it? -->
+
+Check what kind of search I can do?
+
+
+
+

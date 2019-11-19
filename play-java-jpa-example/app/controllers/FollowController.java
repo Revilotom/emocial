@@ -52,12 +52,12 @@ public class FollowController extends DefaultController {
         Follow follow = followForm.get();
 
         return getLoggedInUser(request)
-                .thenApplyAsync(Optional::get)
-                .thenAcceptAsync(loggedInUser -> repository.findByUsername(follow.getNameOfPersonToFollow())
-                        .thenApply(Optional::get)
-                        .thenApply(loggedInUser::addFollowing)
-                        .thenApply(repository::update))
-                .thenApplyAsync(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
+                .thenApply(Optional::get)
+                .thenApply(loggedInUser -> repository.findByUsername(follow.getNameOfPersonToFollow())
+                .thenApply(Optional::get)
+                .thenApply(loggedInUser::addFollowing)
+                .thenApply(repository::update))
+                .thenApply(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
     }
 }
 

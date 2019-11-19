@@ -18,7 +18,6 @@ public class ActionCreator implements play.http.ActionCreator {
     private final FormFactory formFactory;
     private final HttpExecutionContext ec;
 
-    private List<String> publics = new ArrayList<>(Arrays.asList("/signUp", "/login", "/logout"));
 
     @Inject
     public ActionCreator(FormFactory formFactory, HttpExecutionContext ec) {
@@ -29,9 +28,11 @@ public class ActionCreator implements play.http.ActionCreator {
     @Override
     public Action createAction(Http.Request request, Method actionMethod) {
 
+        List<String> publics = new ArrayList<>(Arrays.asList("/signUp", "/login", "/logout"));
+
         return new Action.Simple() {
-            @Override
-            public CompletionStage<Result> call(Http.Request req) {
+
+            CompletionStage<Result> getRoute(Http.Request req){
                 return req.getHeaders().get("Raw-Request-URI")
                         // Does the requested page require authentication?
                         .filter(uri -> publics.contains(uri) ||
@@ -44,6 +45,22 @@ public class ActionCreator implements play.http.ActionCreator {
                                 CompletableFuture
                                         .supplyAsync(() ->
                                                 ok(views.html.old.login.render(formFactory.form(Login.class))), ec.current()));
+            }
+
+
+            @Override
+            public CompletionStage<Result> call(Http.Request req) {
+                return getRoute(req);
+//                try{
+//                    return getRoute(req);
+//                }
+//                catch (Exception e){
+//                    System.out.println("HERER");
+//                }
+//
+//                return CompletableFuture
+//                        .supplyAsync(() ->
+//                                ok(views.html.old.login.render(formFactory.form(Login.class))), ec.current());
             }
         };
 

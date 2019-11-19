@@ -44,12 +44,12 @@ public class Person {
     List<Post> posts = new ArrayList<>();
 
     @JsonSerialize
-    @OneToMany(mappedBy="to", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="to", cascade = CascadeType.ALL)
     private
     List<FollowRelation> followers = new ArrayList<>();
 
     @JsonSerialize
-    @OneToMany(mappedBy="from", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy="from", cascade = CascadeType.ALL)
     private
     List<FollowRelation> following = new ArrayList<>();
 

@@ -1,7 +1,11 @@
 @import views.html.components._
 
+@(username: String)
+
 @main("Welcome to Play") {
     @navbar()
+
+    <h1>@username 's</h1>
 
     <h1>HOME</h1>
             <a href="/logout">Logout</a>

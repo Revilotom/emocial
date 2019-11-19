@@ -5,8 +5,9 @@
 # Home page
 
 
-GET     /home                       controllers.HomeController.home()
+GET     /home                       controllers.HomeController.home(req: Request)
 
+GET     /sse                       controllers.LoginController.sse()
 GET     /                           controllers.LoginController.index()
 POST    /login                      controllers.LoginController.submitLogin(req: Request)
 
