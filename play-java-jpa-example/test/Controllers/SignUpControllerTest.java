@@ -13,6 +13,8 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.concurrent.ExecutionException;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,9 +27,10 @@ public class SignUpControllerTest extends WithServer {
     private JPAPersonRepository repo;
 
     @Before
-    public void setUp() {
+    public void setUp() throws ExecutionException, InterruptedException {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
-        repo.update(new Person("mattori", "mimichu", "1233123"));
+        repo.update(new Person("mattori", "mimichu", "1233123"))
+                .toCompletableFuture().get();
 
         signUp = new SignUp("tom oliver", "revilotom", "123456789", "123456789");
 

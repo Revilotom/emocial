@@ -18,7 +18,6 @@ import java.util.concurrent.CompletionStage;
 
 public class FollowController extends DefaultController {
 
-
     @Inject
     public FollowController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
         super(formFactory, repository, ec);
@@ -29,8 +28,6 @@ public class FollowController extends DefaultController {
     public Result makeFollowPage() {
         return ok(views.html.old.followPerson.render(formFactory.form(Follow.class)));
     }
-
-
 
     public CompletionStage<Result> getFollowing(final Http.Request request) {
         return request.session().getOptional("loggedIn")
@@ -62,8 +59,8 @@ public class FollowController extends DefaultController {
                 .thenAcceptAsync(loggedInUser -> repository.findByUsername(follow.getNameOfPersonToFollow())
                         .thenApply(Optional::get)
                         .thenApply(loggedInUser::addFollowing)
-                        .thenApply(repository::update)
-                ).thenApplyAsync(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
+                        .thenApply(repository::update))
+                .thenApplyAsync(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
     }
 }
 
