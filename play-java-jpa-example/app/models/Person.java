@@ -133,7 +133,7 @@ public class Person {
         Collections.sort(postList, new Comparator<Post>() {
             @Override
             public int compare(Post o1, Post o2) {
-                return Math.toIntExact(o1.timeStamp - o2.timeStamp);
+                return Math.toIntExact(o2.timeStamp - o1.timeStamp);
             }
         });
 

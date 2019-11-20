@@ -60,9 +60,9 @@ public class PersonModelTest {
         List<Post> newsFeed = user.getNewsFeed();
 
         MatcherAssert.assertThat(newsFeed.size(), is(3));
-        MatcherAssert.assertThat(newsFeed.get(0).getOwner().getUsername(), is("person1"));
+        MatcherAssert.assertThat(newsFeed.get(0).getOwner().getUsername(), is("person2"));
         MatcherAssert.assertThat(newsFeed.get(1).getOwner().getUsername(), is("User"));
-        MatcherAssert.assertThat(newsFeed.get(2).getOwner().getUsername(), is("person2"));
+        MatcherAssert.assertThat(newsFeed.get(2).getOwner().getUsername(), is("person1"));
     }
 
 
