@@ -16,6 +16,7 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 import static junit.framework.TestCase.*;
@@ -63,6 +64,21 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(
                 repo.findByUsername("username").toCompletableFuture().get().get().getPosts().get(1).content,
                 is("second post"));
+    }
+
+    @Test
+    public void cannotMakePostIfMaxLengthIsExceeded() throws ExecutionException, InterruptedException {
+
+        char[] chars = new char[300];
+        Arrays.fill(chars, '@');
+
+        Post firstPost = new Post(new String(chars));
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(firstPost)));
+        Result result = route(app, tokenRequest);
+
+        MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
+        MatcherAssert.assertThat(contentAsString(result), containsString("max"));
     }
 
     @Test

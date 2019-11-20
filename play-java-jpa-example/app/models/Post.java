@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.time.Instant;
 
 @Entity
@@ -38,6 +39,7 @@ public class Post {
     }
 
     @Constraints.Required
+    @Constraints.MaxLength(200)
     public String content;
 
     public Post() {
