@@ -1,6 +1,7 @@
 package controllers;
 
 import forms.Search;
+import models.Person;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class SearchController extends DefaultController {
@@ -26,7 +28,10 @@ public class SearchController extends DefaultController {
         return ok(views.html.old.search.render(formFactory.form(Search.class), new ArrayList<>()));
     }
 
-    public CompletionStage<Result> submitSearch(final Http.Request request) {
+    public CompletionStage<Result> submitSearch(final Http.Request request) throws ExecutionException, InterruptedException {
+
+
+
 
         Form<Search> searchForm = formFactory.form(Search.class).bindFromRequest(request);
 
@@ -35,9 +40,12 @@ public class SearchController extends DefaultController {
                     badRequest(views.html.old.search.render(searchForm, new ArrayList<>())), ec.current());
         }
 
+        //TODO this is probably bad
+        Person logggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
+
         return repository.search(searchForm.get().getSearchTerms())
                 .thenApplyAsync(stream -> ok(views.html.old.search.render(formFactory.form(Search.class),
-                        stream.collect(Collectors.toList()))), ec.current());
+                        stream.filter(p -> !p.getUsername().equals(logggedInUser.getUsername())).collect(Collectors.toList()))), ec.current());
     }
 
 }

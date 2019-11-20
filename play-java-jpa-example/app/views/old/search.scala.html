@@ -40,19 +40,18 @@
 
             <form method="POST" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
             action="@routes.SearchController.submitSearch()">
-                           <div class="input-group">
+                           <div class="input-group col">
                                @helper.CSRF.formField
                              <input type="text" name="searchTerms" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                                <div class="input-group-append">
                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="Go!" />
                                </div>
                            </div>
-                <ul>
                 @errors(form)
             </form>
 
             <hr>
-            <ul  class="list-group">
+            <ul  class="list-group" style="padding-inline-start: 0px">
             @for(p <- persons){
                 <li class="list-group-item">
                     <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-gray-400"></i>
