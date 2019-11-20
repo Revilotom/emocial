@@ -1,6 +1,7 @@
 package controllers;
 
 import models.Person;
+import models.Post;
 import play.mvc.Http;
 import repositories.person.PersonRepository;
 
@@ -10,8 +11,11 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 public class HomeController extends DefaultController {
 
@@ -23,7 +27,12 @@ public class HomeController extends DefaultController {
 
     public CompletionStage<Result> home(final Http.Request request) {
         return getLoggedInUser(request)
-                .thenApplyAsync(user -> user.map(Person::getUsername))
-                .thenApplyAsync(username -> ok(views.html.old.home.render(username.orElse(""))));
+                .thenApplyAsync(user ->{
+                            String username = user.map(Person::getUsername).get();
+                            List<Post> postList = user.get().getPosts();
+                            postList.addAll(user.get().getFollowing().stream()
+                                    .map(Person::getPosts).flatMap(List::stream).collect(Collectors.toList()));
+                            return ok(views.html.old.home.render(username, postList));
+                        });
     }
 }

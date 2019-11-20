@@ -1,14 +1,42 @@
 @import views.html.components._
 
-@(username: String)
+@(username: String, posts: List[Post])
 
 @main("Welcome to Play") {
-    @navbar()
 
-    <h1>@username 's</h1>
+    <div id="wrapper">
 
-    <h1>HOME</h1>
-            <a href="/logout">Logout</a>
-            <a href="/posts">Posts</a>
+        @navbar()
+
+        <ul>
+        @for(p <- posts){
+            <li>@post(p)</li>
+        }
+        </ul>
+
+
+
+@*        <div class="container">*@
+@*            <div class="row justify-content-center">*@
+@*                <div class="col-8">*@
+@*                    <div class="card o-hidden border-0 shadow-lg my-5">*@
+@*                        <div class="card">*@
+@*                            <img class="card-img-top" sr"c="... alt="Card image cap">*@
+@*                            <div class="card-body">*@
+@*                                <h5 class="card-title">Card title</h5>*@
+@*                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>*@
+@*                            </div>*@
+@*                        </div>*@
+@*                    </div>*@
+@*                </div>*@
+@*            </div>*@
+@*        </div>*@
+
+        <h1>@username 's</h1>
+
+        <h1>HOME</h1>
+                <a href="/logout">Logout</a>
+                <a href="/posts">Posts</a>
+    </div>
 }
 
