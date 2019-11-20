@@ -19,7 +19,7 @@ POST    /signUp                     controllers.SignUpController.submitSignUp(re
 
 GET     /posts                      controllers.PostController.getPosts(req: Request)
 GET     /makePost                   controllers.PostController.makePostPage()
-POST    /makePost                   controllers.PostController.submitMakePost(req: Request)
+POST    /makePost                   controllers.PostController.submitPost(req: Request)
 GET     /persons                    controllers.PostController.getPersons()
 
 GET     /search                     controllers.SearchController.searchPage()

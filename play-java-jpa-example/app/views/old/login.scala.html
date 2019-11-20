@@ -5,13 +5,17 @@
 @(form: Form[Login])
 
 @main("Welcome") {
-        @cardForm(form, "Welcome back!", "Login",  routes.LoginController.submitLogin() ){
-            @textField(form, "username")
-            @textField(form, "password")
-        }{
-                <hr>
-        <div class="text-center">
-                <a class="small" href="/signUp">Create an Account!</a>
+        <div class="jumbotron verticle-center horizontal-center" style="height: 100%">
+            <div class="">
+                @cardForm(form, "Welcome back!", "Login",  routes.LoginController.submitLogin() ){
+                    @textField(form, "username")
+                    @textField(form, "password")
+                }{
+                    <hr>
+                <div class="text-center">
+                        <a class="small" href="/signUp">Create an Account!</a>
+                </div>
+            }
+            </div>
         </div>
-        }
 }

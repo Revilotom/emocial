@@ -88,6 +88,8 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
             Hibernate.initialize(person.getPosts());
             Hibernate.initialize(person.getFollowers());
             Hibernate.initialize(person.getFollowing());
+            person.getFollowers().forEach((f) -> Hibernate.initialize(f.getPosts()));
+            person.getFollowing().forEach((f) -> Hibernate.initialize(f.getPosts()));
             return Optional.of(person);
         }
         catch (NoResultException e){

@@ -14,7 +14,9 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class HomeController extends DefaultController {
@@ -25,12 +27,11 @@ public class HomeController extends DefaultController {
         super(formFactory, repository, ec);
     }
 
-    public CompletionStage<Result> home(final Http.Request request) {
-        return getLoggedInUser(request)
-                .thenApplyAsync(maybeUser ->{
-                    Person user = maybeUser.orElse(null);
-                    assert user != null;
-                    return ok(views.html.old.home.render(user.getUsername(), user.getNewsFeed()));
-                });
+    public Result home(final Http.Request request) throws ExecutionException, InterruptedException {
+        Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
+        Person user = maybe.get();
+        String username = user.getUsername();
+        List<Post> nF = user.getNewsFeed();
+        return ok(views.html.old.home.render(username,nF));
     }
 }
