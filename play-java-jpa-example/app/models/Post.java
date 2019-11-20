@@ -1,9 +1,11 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.joda.time.DateTime;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 public class Post {
@@ -17,6 +19,16 @@ public class Post {
     @JsonBackReference
     public Person owner;
 
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public long timeStamp;
+
     public Person getOwner() {
         return owner;
     }
@@ -29,9 +41,11 @@ public class Post {
     public String content;
 
     public Post() {
+        this.timeStamp = Instant.now().toEpochMilli();
     }
 
     public Post(@Constraints.Required String content) {
+        this();
         this.content = content;
     }
 
