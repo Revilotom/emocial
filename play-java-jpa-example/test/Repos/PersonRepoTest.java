@@ -34,6 +34,31 @@ public class PersonRepoTest extends WithApplication {
     }
 
 
+//    @Test
+//    public void testNewsFeed() throws ExecutionException, InterruptedException {
+//        Person p1 = new Person("adssa", "person1", "dasd");
+//        Post post1 = new Post("person1's post");
+//        p1.addPost(post1);
+//
+//        Person p2 = new Person("adssa", "person2", "dasd");
+//        Post post2 = new Post("person2's post");
+//        post2.timeStamp += 23123214;
+//        p2.addPost(post2);
+//
+//        Person user = new Person("Assa", "User", "dasdas");
+//
+//        user.addFollowing(p1);
+//        user.addFollowing(p2);
+//
+//        repo.update(p1).toCompletableFuture().get();
+//        repo.update(p2).toCompletableFuture().get();
+//        repo.update(user).toCompletableFuture().get();
+//
+//        repo.g
+//
+//
+//    }
+
     @Test
     public void testFollowersAreAdded() throws ExecutionException, InterruptedException {
 

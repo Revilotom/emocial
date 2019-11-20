@@ -2,6 +2,7 @@ package repositories.person;
 
 import com.google.inject.ImplementedBy;
 import models.Person;
+import models.Post;
 
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;

@@ -27,12 +27,10 @@ public class HomeController extends DefaultController {
 
     public CompletionStage<Result> home(final Http.Request request) {
         return getLoggedInUser(request)
-                .thenApplyAsync(user ->{
-                            String username = user.map(Person::getUsername).get();
-                            List<Post> postList = user.get().getPosts();
-                            postList.addAll(user.get().getFollowing().stream()
-                                    .map(Person::getPosts).flatMap(List::stream).collect(Collectors.toList()));
-                            return ok(views.html.old.home.render(username, postList));
-                        });
+                .thenApplyAsync(maybeUser ->{
+                    Person user = maybeUser.orElse(null);
+                    assert user != null;
+                    return ok(views.html.old.home.render(user.getUsername(), user.getNewsFeed()));
+                });
     }
 }

@@ -1,6 +1,7 @@
 package repositories.person;
 
 import models.Person;
+import models.Post;
 import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
 import repositories.JPADefaultRepository;
@@ -56,6 +57,7 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
     public CompletionStage<Stream<Person>> search(String searchTerms) {
         return supplyAsync(() -> wrap(em -> search(em, searchTerms)), executionContext);
     }
+
 
     private Stream<Person> search(EntityManager em, String searchTerms){
         return em.createQuery("select p From Person as p where username like :searchterms", Person.class)

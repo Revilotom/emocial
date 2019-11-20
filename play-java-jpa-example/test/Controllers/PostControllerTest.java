@@ -42,9 +42,6 @@ public class PostControllerTest extends WithServer {
 
         get = fakeRequest().session("loggedIn", "username").method(GET).uri("/posts").header("Raw-Request-URI", "/posts");
         post = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
-
-        System.out.println(repo.findByUsername("username").toCompletableFuture().get().get().getPosts());
-
     }
 
     @After

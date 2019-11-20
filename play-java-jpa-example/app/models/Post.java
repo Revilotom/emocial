@@ -73,4 +73,5 @@ public class Post {
                 ", content='" + content + '\'' +
                 '}';
     }
+
 }

@@ -6,6 +6,8 @@ import play.data.validation.Constraints;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,11 +123,29 @@ public class Person {
         return this.hash;
     }
 
+    public List<Post> getNewsFeed(){
+        List<Post> postList = getPosts();
+        postList.addAll(getFollowing().stream()
+                .map(Person::getPosts)
+                .flatMap(List::stream)
+                .collect(Collectors.toList()));
+
+        Collections.sort(postList, new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                return Math.toIntExact(o1.timeStamp - o2.timeStamp);
+            }
+        });
+
+        return postList;
+    }
+
     public boolean validatePassword(String plainTextPassword) {
         return BCrypt.checkpw(plainTextPassword, this.hash);
     }
 
     public void addPost(Post post){
+        post.setOwner(this);
         this.posts.add(post);
     }
 
