@@ -28,7 +28,8 @@ POST    /search                     controllers.SearchController.submitSearch(re
 
 GET     /followers                  controllers.FollowController.getFollowers(req: Request)
 GET     /following                  controllers.FollowController.getFollowing(req: Request)
-POST     /following                  controllers.FollowController.submitFollow(req: Request)
+POST    /following                  controllers.FollowController.submitFollow(req: Request)
+POST    /follow/:username           controllers.FollowController.submitFollowWithUsername(req: Request, username: String)
 GET     /follow                     controllers.FollowController.makeFollowPage()
 
 

@@ -30,7 +30,9 @@ public class FollowController extends DefaultController {
     private CompletionStage<Result> getRelevantPeople(final Http.Request request, boolean following){
         return getLoggedInUser(request)
                 .thenApply(person -> person.map(following ? Person::getFollowing : Person::getFollowers))
-                .thenApplyAsync(list -> ok(views.html.old.persons.render(list.orElseGet(ArrayList::new))));
+                .thenApplyAsync(list ->
+                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new),
+                                following ? "Following" : "Followers")));
     }
 
     public CompletionStage<Result> getFollowing(final Http.Request request) {
@@ -39,6 +41,16 @@ public class FollowController extends DefaultController {
 
     public CompletionStage<Result> getFollowers(final Http.Request request) {
         return getRelevantPeople(request, false);
+    }
+    public CompletionStage<Result> submitFollowWithUsername(final Http.Request request, String username) {
+
+        return getLoggedInUser(request)
+                .thenApply(Optional::get)
+                .thenApply(loggedInUser -> repository.findByUsername(username)
+                        .thenApply(Optional::get)
+                        .thenApply(loggedInUser::addFollowing)
+                        .thenApply(repository::update))
+                .thenApply(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
     }
 
     public CompletionStage<Result> submitFollow(final Http.Request request) {

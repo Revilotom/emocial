@@ -1,13 +1,14 @@
-@import views.html.components.main
+@import views.html.components._
 @import models.Person
 
-@(persons: List[Person])
+@(persons: List[Person], title: String)
 
 @main("Welcome to Play") {
-    <h1>Here are the persons </h1>
-    <ul>
+    @navbar()
+    <h1>@title </h1>
+    <ul  class="list-group" style="padding-inline-start: 0px">
     @for(p <- persons){
-        <li>@p.name @p.username</li>
+        @person(p)
     }
     </ul>
 
