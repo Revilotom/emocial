@@ -17,10 +17,11 @@ POST    /logout                     controllers.LogoutController.logout()
 GET     /signUp                     controllers.SignUpController.signUp()
 POST    /signUp                     controllers.SignUpController.submitSignUp(req: Request)
 
-GET     /myPosts                     controllers.PostController.getPosts(req: Request)
+GET     /myPosts                    controllers.PostController.getPosts(req: Request)
 GET     /makePost                   controllers.PostController.makePostPage()
 POST    /makePost                   controllers.PostController.submitPost(req: Request)
 GET     /persons                    controllers.PostController.getPersons()
+POST    /deletePost/:postId         controllers.PostController.deletePost(req: Request, postId: Long)
 
 GET     /search                     controllers.SearchController.searchPage()
 POST    /search                     controllers.SearchController.submitSearch(req: Request)

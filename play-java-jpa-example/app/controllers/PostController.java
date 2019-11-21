@@ -38,6 +38,13 @@ public class PostController extends DefaultController {
                         ok(views.html.old.myPosts.render(posts.orElseGet(ArrayList::new))));
     }
 
+    public CompletionStage<Result> deletePost(final Http.Request request, long postId) {
+        return getLoggedInUser(request)
+                .thenApply(Optional::get)
+                .thenApply(person -> {person.deletePost(postId); return person;})
+                .thenAccept(repository::update)
+                .thenApplyAsync(posts -> redirect(routes.PostController.getPosts()));
+    }
 
     public Result makePostPage() {
         return ok(views.html.old.makePost.render(formFactory.form(Post.class)));

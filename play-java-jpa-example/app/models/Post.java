@@ -15,7 +15,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
 
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne( cascade = CascadeType.MERGE)
     @JoinColumn
     @JsonBackReference
     public Person owner;
