@@ -77,6 +77,8 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
     private Stream<Person> stream(EntityManager em) {
         List<Person> persons = em.createQuery("select p from Person p", Person.class).getResultList();
         persons.forEach(person -> Hibernate.initialize(person.getPosts()));
+        persons.forEach(person -> Hibernate.initialize(person.getFollowing()));
+        persons.forEach(person -> Hibernate.initialize(person.getFollowers()));
         return persons.stream();
     }
 

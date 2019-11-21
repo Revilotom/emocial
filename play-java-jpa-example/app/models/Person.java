@@ -64,8 +64,8 @@ public class Person {
         this.followers = followers;
     }
 
-    public void unFollow(int index){
-        this.following.remove(index).setTo(null);
+    public void unFollow(String username){
+        this.following.removeIf(p -> p.getTo().getUsername().equals(username));
     }
 
     public List<Person> getFollowers() {
@@ -156,11 +156,8 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
-                ", hash='" + hash + '\'' +
-                ", posts=" + posts +
+                ", posts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
                 ", followers=" + followers +
                 ", following=" + following +
                 '}';

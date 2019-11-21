@@ -36,24 +36,24 @@ public class PersonRepoTest extends WithApplication {
 
     @Test
     public void testFollowersAreRemoved() throws ExecutionException, InterruptedException {
-//
-//        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
-//        Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
-//
-//        person2.addFollowing(person);
-//        repo.update(person2).toCompletableFuture().get();
-//
-//        person2.unFollow(0);
-//
-////        person2.setFollowing(new ArrayList<>());
-//
-//        repo.update(person2).toCompletableFuture().get();
-//
-////        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
-//        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
-//
-////        MatcherAssert.assertThat(person.getFollowers().size(), is(0));
-//        MatcherAssert.assertThat(person2.getFollowing().size(), is(0));
+
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        person2.addFollowing(person);
+
+        repo.update(person2).toCompletableFuture().get();
+
+        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        person2.unFollow("revilotom");
+
+        repo.update(person2).toCompletableFuture().get();
+
+        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        MatcherAssert.assertThat(person2.getFollowing().size(), is(0));
+        MatcherAssert.assertThat(person.getFollowers().size(), is(0));
     }
 
     @Test
