@@ -31,7 +31,7 @@ GET     /following                  controllers.FollowController.getFollowing(re
 POST    /following                  controllers.FollowController.submitFollow(req: Request)
 POST    /follow/:username           controllers.FollowController.submitFollowWithUsername(req: Request, username: String)
 GET     /follow                     controllers.FollowController.makeFollowPage()
-
+POST    /unFollow/:username         controllers.FollowController.unFollow(req: Request, username: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

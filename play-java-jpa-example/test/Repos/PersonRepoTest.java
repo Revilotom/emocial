@@ -37,6 +37,9 @@ public class PersonRepoTest extends WithApplication {
     @Test
     public void testFollowersAreRemoved() throws ExecutionException, InterruptedException {
 
+//        repo.stream().toCompletableFuture().get().collect(Collectors.toList()).forEach(x -> System.out.println(x));
+
+
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
         Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 
@@ -54,6 +57,10 @@ public class PersonRepoTest extends WithApplication {
 
         MatcherAssert.assertThat(person2.getFollowing().size(), is(0));
         MatcherAssert.assertThat(person.getFollowers().size(), is(0));
+
+//        repo.stream().toCompletableFuture().get().collect(Collectors.toList()).forEach(x -> System.out.println(x));
+        MatcherAssert.assertThat(repo.findByUsername("revilotom").toCompletableFuture().get().isPresent(), is(true));
+
     }
 
     @Test

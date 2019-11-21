@@ -43,17 +43,14 @@ public class FollowController extends DefaultController {
         return getRelevantPeople(request, false);
     }
 
+    public CompletionStage<Result> unFollow(final Http.Request request, String username) {
+        getLoggedInUser(request)
+                .thenApply(Optional::get)
+                .thenApply(loggedInUser -> {loggedInUser.unFollow(username); return loggedInUser;})
+                .thenAccept(repository::update);
 
-//    public CompletionStage<Result> deleteFollower(final Http.Request request, String username) {
-//        return getLoggedInUser(request)
-//                .thenApply(Optional::get)
-//                .thenApply(loggedInUser -> {
-//                    loggedInUser.getFollowing()
-//                }
-//
-//
-//    }
-
+        return CompletableFuture.supplyAsync(() -> redirect(routes.FollowController.getFollowing()));
+    }
 
     public CompletionStage<Result> writeFollowToDB(final Http.Request request, String username) {
 

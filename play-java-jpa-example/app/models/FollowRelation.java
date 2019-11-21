@@ -20,12 +20,12 @@ public class FollowRelation {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn
     @JsonBackReference
     private Person from;
 
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne( cascade = CascadeType.MERGE)
     @JoinColumn
     @JsonBackReference
     private Person to;

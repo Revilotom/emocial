@@ -17,6 +17,7 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static junit.framework.TestCase.*;
@@ -28,7 +29,8 @@ import static play.test.Helpers.contentAsString;
 
 public class FollowControllerTest extends WithServer {
 
-    private Http.RequestBuilder post;
+    private Http.RequestBuilder postFollow;
+    private Http.RequestBuilder postUnfollow;
     private Http.RequestBuilder getFollowing;
     private Http.RequestBuilder getFollowers;
     private JPAPersonRepository repo;
@@ -43,6 +45,7 @@ public class FollowControllerTest extends WithServer {
         person1.addFollowing(person2);
 
         repo.update(person1).toCompletableFuture().get();
+
         Person person3 = new Person("random", "followMe", "password");
         repo.update(person3).toCompletableFuture().get();
 
@@ -50,7 +53,9 @@ public class FollowControllerTest extends WithServer {
         getFollowing = fakeRequest().session("loggedIn", "username").method(GET).uri("/following").header("Raw-Request-URI", "/following");
         getFollowers = fakeRequest().session("loggedIn", "anonymous").method(GET).uri("/followers").header("Raw-Request-URI", "/followers");
 
-        post = fakeRequest().session("loggedIn", "username").method(POST).uri("/follow/followMe").header("Raw-Request-URI", "/follow");
+        postFollow = fakeRequest().session("loggedIn", "username").method(POST).uri("/follow/followMe").header("Raw-Request-URI", "/follow");
+        postUnfollow = fakeRequest().session("loggedIn", "username").method(POST).uri("/unFollow/anonymous").header("Raw-Request-URI", "/follow");
+
     }
 
     @After
@@ -58,13 +63,30 @@ public class FollowControllerTest extends WithServer {
         repo = null;
     }
 
+    @Test
+    public void canUnfollowPerson() throws ExecutionException, InterruptedException {
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( postUnfollow);
+        Result result = route(app, tokenRequest);
+
+        Thread.sleep(500L);
+        Thread.sleep(500L);
+
+        List<Person> following = repo.findByUsername("username").toCompletableFuture().get().get().getFollowing();
+
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/following"));
+        MatcherAssert.assertThat(
+                following.size(),
+                is(0)
+        );
+    }
+
+
     //TODO sometimes test randomly fail
 
     @Test
     public void canFollowPerson() throws ExecutionException, InterruptedException {
-
-
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(new Follow())));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( postFollow.bodyJson(Json.toJson(new Follow())));
         Result result = route(app, tokenRequest);
 
         Thread.sleep(500L);
