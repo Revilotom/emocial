@@ -12,10 +12,12 @@ import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SearchController extends DefaultController {
 
@@ -30,9 +32,6 @@ public class SearchController extends DefaultController {
 
     public CompletionStage<Result> submitSearch(final Http.Request request) throws ExecutionException, InterruptedException {
 
-
-
-
         Form<Search> searchForm = formFactory.form(Search.class).bindFromRequest(request);
 
         if (searchForm.hasErrors() || searchForm.hasGlobalErrors()) {
@@ -42,10 +41,15 @@ public class SearchController extends DefaultController {
 
         //TODO this is probably bad
         Person logggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
+        List<String> followingNames = logggedInUser.getFollowing()
+                .stream().map(Person::getUsername).collect(Collectors.toList());
 
         return repository.search(searchForm.get().getSearchTerms())
-                .thenApplyAsync(stream -> ok(views.html.old.search.render(formFactory.form(Search.class),
-                        stream.filter(p -> !p.getUsername().equals(logggedInUser.getUsername())).collect(Collectors.toList()))), ec.current());
+                .thenApplyAsync(stream -> ok(
+                            views.html.old.search.render(formFactory.form(Search.class),
+                            stream.filter(p -> !p.getUsername().equals(logggedInUser.getUsername()))
+                                    .filter(p -> !followingNames.contains(p.getUsername()))
+                                    .collect(Collectors.toList())
+                            )), ec.current());
     }
-
 }

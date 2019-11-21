@@ -29,7 +29,10 @@ public class SearchControllerTest extends WithServer {
         repo = TestHelper.setup(app);
 
         Person loggedInUser = new Person( "dasda", "userename", "ads ");
+        Person following = new Person("dasda","youFollowMe", "asdasd");
+        loggedInUser.addFollowing(following);
 
+//        repo.update(following).toCompletableFuture().get();
         repo.update(loggedInUser).toCompletableFuture().get();
 
         get = fakeRequest().session("loggedIn", "userename").method(GET).uri("/search").header("Raw-Request-URI", "/search");
@@ -42,8 +45,20 @@ public class SearchControllerTest extends WithServer {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(search)));
         Result result = route(app, tokenRequest);
         final String body = contentAsString(result);
+
         MatcherAssert.assertThat(body.toLowerCase(), containsString("revilotom"));
         MatcherAssert.assertThat(body.toLowerCase(), not(containsString("userename")));
+    }
+
+    @Test
+    public void testSubmitSearchDoesNotReturnPeopleYouAlreadyFollow() {
+        Search search = new Search("F");
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(search)));
+        Result result = route(app, tokenRequest);
+
+        final String body = contentAsString(result);
+        System.out.println(body);
+        MatcherAssert.assertThat(body.toLowerCase(), not(containsString("youfollowme")));
     }
 
     @Test
