@@ -1,0 +1,8 @@
+@import views.html.components._
+
+@(posts: List[Post])
+<ul  class="list-group " style="border-width: 0">
+    @for(p <- posts){
+        <li class="list-group-item bg-secondary">@post(p)</li>
+    }
+</ul>

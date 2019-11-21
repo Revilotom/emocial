@@ -42,7 +42,7 @@ public class PostControllerTest extends WithServer {
         person.addPost(firstPost);
         repo.update(person).toCompletableFuture().get();
 
-        get = fakeRequest().session("loggedIn", "username").method(GET).uri("/posts").header("Raw-Request-URI", "/posts");
+        get = fakeRequest().session("loggedIn", "username").method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
         post = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
     }
 
@@ -63,7 +63,7 @@ public class PostControllerTest extends WithServer {
         Thread.sleep(500L); // wait for the second post to be written to the DB.
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
-//        MatcherAssert.assertThat(result.header("Location").get(), is("/posts"));
+//        MatcherAssert.assertThat(result.header("Location").get(), is("/myPosts"));
         List<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
         MatcherAssert.assertThat(
                 posts.get(1).content,

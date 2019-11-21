@@ -1,10 +1,10 @@
 @import views.html.components._
 
-@(username: String, posts: List[Post])
+@(username: String, p: List[Post])
 
 @main("Welcome to Play") {
 
-    <div id="wrapper">
+
         @navbar()
         @card(){
             <div class="form-group">
@@ -19,11 +19,7 @@
             </div>
         }
 
-        <ul  class="list-group">
-        @for(p <- posts){
-            <li class="list-group-item">@post(p)</li>
-        }
-        </ul>
+        @posts(p)
 
 
 
@@ -47,9 +43,8 @@
 
         <h1>HOME</h1>
                 <a href="/logout">Logout</a>
-                <a href="/posts">Posts</a>
+                <a href="/myPosts">Posts</a>
                 <a href="/search">Search</a>
 
-    </div>
 }
 

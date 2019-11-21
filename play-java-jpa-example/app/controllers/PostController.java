@@ -35,7 +35,7 @@ public class PostController extends DefaultController {
         return getLoggedInUser(request)
                 .thenApply(person -> person.map(Person::getPosts))
                 .thenApplyAsync(posts ->
-                        ok(views.html.old.posts.render(posts.orElseGet(ArrayList::new))));
+                        ok(views.html.old.myPosts.render(posts.orElseGet(ArrayList::new))));
     }
 
 
@@ -46,15 +46,6 @@ public class PostController extends DefaultController {
     public CompletionStage<Result> submitPost(final Http.Request request) {
 
         Form<Post> postForm = formFactory.form(Post.class).bindFromRequest(request);
-//
-//        if (request.getHeaders().get("Raw-Request-URI").get().equals("/home")){
-//            System.out.println("DSASDAS");
-//        }
-
-//        if (postForm.hasErrors() || postForm.hasGlobalErrors()) {
-//            return CompletableFuture.supplyAsync(() ->
-//                    badRequest(views.html.old.makePost.render(postForm)), ec.current());
-//        }
 
         if (hasFormBadRequestError(postForm)){
             return supplyAsyncBadRequest(makePost.render(postForm));

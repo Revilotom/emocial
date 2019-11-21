@@ -37,9 +37,6 @@ public class PersonRepoTest extends WithApplication {
     @Test
     public void testFollowersAreRemoved() throws ExecutionException, InterruptedException {
 
-//        repo.stream().toCompletableFuture().get().collect(Collectors.toList()).forEach(x -> System.out.println(x));
-
-
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
         Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 

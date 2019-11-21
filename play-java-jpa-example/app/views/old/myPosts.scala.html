@@ -1,0 +1,9 @@
+@import views.html.components._
+@import views.html.components.errors
+
+@(p: List[Post])
+
+@main("Your myPosts") {
+    @navbar()
+    @posts(p)
+}

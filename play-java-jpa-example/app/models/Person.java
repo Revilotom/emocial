@@ -68,6 +68,10 @@ public class Person {
         this.following.removeIf(p -> p.getTo().getUsername().equals(username));
     }
 
+    public void deletePost(long id){
+        this.posts.removeIf((post -> post.getId() == id));
+    }
+
     public List<Person> getFollowers() {
         return followers.stream().map(FollowRelation::getFrom).collect(Collectors.toList());
     }
@@ -157,7 +161,7 @@ public class Person {
     public String toString() {
         return "Person{" +
                 ", username='" + username + '\'' +
-                ", posts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
+                ", myPosts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
                 ", followers=" + followers +
                 ", following=" + following +
                 '}';

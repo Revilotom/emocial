@@ -5,7 +5,7 @@
 @(form: Form[Login])
 
 @main("Welcome") {
-        <div class="jumbotron verticle-center horizontal-center" style="height: 100%">
+        <div class="jumbotron verticle-center horizontal-center bg-secondary" style="height: 100%">
             <div class="">
                 @cardForm(form, "Welcome back!", "Login",  routes.LoginController.submitLogin() ){
                     @textField(form, "username")
