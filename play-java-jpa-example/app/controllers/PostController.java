@@ -27,7 +27,7 @@ public class PostController extends DefaultController {
     public CompletionStage<Result> getPersons() {
         return repository.stream().thenApplyAsync(stream ->
                 stream.collect(Collectors.toList())).thenApplyAsync(people ->
-                ok(views.html.old.persons.render(people, "persons")));
+                ok(views.html.old.persons.render(people, false)));
     }
 
     public CompletionStage<Result> getPosts(final Http.Request request) {

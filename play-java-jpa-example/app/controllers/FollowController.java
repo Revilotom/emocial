@@ -31,8 +31,7 @@ public class FollowController extends DefaultController {
         return getLoggedInUser(request)
                 .thenApply(person -> person.map(following ? Person::getFollowing : Person::getFollowers))
                 .thenApplyAsync(list ->
-                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new),
-                                following ? "Following" : "Followers")));
+                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new), following)), ec.current());
     }
 
     public CompletionStage<Result> getFollowing(final Http.Request request) {
