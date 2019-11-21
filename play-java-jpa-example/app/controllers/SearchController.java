@@ -9,6 +9,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
+import views.html.old.search;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -33,11 +34,10 @@ public class SearchController extends DefaultController {
     public CompletionStage<Result> submitSearch(final Http.Request request) throws ExecutionException, InterruptedException {
 
         Form<Search> searchForm = formFactory.form(Search.class).bindFromRequest(request);
-
-        if (searchForm.hasErrors() || searchForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() ->
-                    badRequest(views.html.old.search.render(searchForm, new ArrayList<>())), ec.current());
+        if (hasFormBadRequestError(searchForm)){
+            return supplyAsyncBadRequest(search.render(searchForm, new ArrayList<>()));
         }
+
 
         //TODO this is probably bad
         Person logggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();

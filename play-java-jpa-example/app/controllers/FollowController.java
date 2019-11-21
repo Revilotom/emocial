@@ -8,6 +8,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
+import views.html.old.followPerson;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class FollowController extends DefaultController {
         return ok(views.html.old.followPerson.render(formFactory.form(Follow.class)));
     }
 
-    private CompletionStage<Result> getRelevantPeople(final Http.Request request, boolean following){
+    private CompletionStage<Result> getRelevantPeople(final Http.Request request, boolean following) {
         return getLoggedInUser(request)
                 .thenApply(person -> person.map(following ? Person::getFollowing : Person::getFollowers))
                 .thenApplyAsync(list ->
@@ -41,7 +42,20 @@ public class FollowController extends DefaultController {
     public CompletionStage<Result> getFollowers(final Http.Request request) {
         return getRelevantPeople(request, false);
     }
-    public CompletionStage<Result> submitFollowWithUsername(final Http.Request request, String username) {
+
+
+//    public CompletionStage<Result> deleteFollower(final Http.Request request, String username) {
+//        return getLoggedInUser(request)
+//                .thenApply(Optional::get)
+//                .thenApply(loggedInUser -> {
+//                    loggedInUser.getFollowing()
+//                }
+//
+//
+//    }
+
+
+    public CompletionStage<Result> writeFollowToDB(final Http.Request request, String username) {
 
         return getLoggedInUser(request)
                 .thenApply(Optional::get)
@@ -52,23 +66,28 @@ public class FollowController extends DefaultController {
                 .thenApply(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
     }
 
+
+    public CompletionStage<Result> submitFollowWithUsername(final Http.Request request, String username) {
+        return writeFollowToDB(request, username);
+    }
+
+
     public CompletionStage<Result> submitFollow(final Http.Request request) {
 
         Form<Follow> followForm = formFactory.form(Follow.class).bindFromRequest(request);
 
-        if (followForm.hasErrors() || followForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.followPerson.render(followForm)), ec.current());
+        if (hasFormBadRequestError(followForm)){
+            return supplyAsyncBadRequest(followPerson.render(followForm));
         }
+
+//        if (followForm.hasErrors() || followForm.hasGlobalErrors()) {
+//            return CompletableFuture.supplyAsync(() ->
+//                    badRequest(views.html.old.followPerson.render(followForm)), ec.current());
+//        }
 
         Follow follow = followForm.get();
 
-        return getLoggedInUser(request)
-                .thenApply(Optional::get)
-                .thenApply(loggedInUser -> repository.findByUsername(follow.getNameOfPersonToFollow())
-                .thenApply(Optional::get)
-                .thenApply(loggedInUser::addFollowing)
-                .thenApply(repository::update))
-                .thenApply(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
+        return writeFollowToDB(request, follow.getUsernameOfPersonToFollow());
     }
 }
 

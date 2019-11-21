@@ -46,12 +46,12 @@ public class Person {
     List<Post> posts = new ArrayList<>();
 
     @JsonSerialize
-    @OneToMany(mappedBy="to", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="to", cascade = CascadeType.ALL, orphanRemoval = true)
     private
     List<FollowRelation> followers = new ArrayList<>();
 
     @JsonSerialize
-    @OneToMany(mappedBy="from", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="from", cascade = CascadeType.ALL, orphanRemoval = true)
     private
     List<FollowRelation> following = new ArrayList<>();
 
@@ -62,6 +62,10 @@ public class Person {
 
     public void setFollowers(List<FollowRelation> followers) {
         this.followers = followers;
+    }
+
+    public void unFollow(int index){
+        this.following.remove(index).setTo(null);
     }
 
     public List<Person> getFollowers() {

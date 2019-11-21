@@ -9,6 +9,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
+import views.html.old.signUp;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
@@ -30,9 +31,13 @@ public class SignUpController extends DefaultController {
         // TODO abstract out this error handling
 
         Form<SignUp> signUpForm = formFactory.form(SignUp.class).bindFromRequest(request);
+//
+//        if (signUpForm.hasErrors() || signUpForm.hasGlobalErrors()) {
+//            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.signUp.render(signUpForm)), ec.current());
+//        }
 
-        if (signUpForm.hasErrors() || signUpForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.signUp.render(signUpForm)), ec.current());
+        if (hasFormBadRequestError(signUpForm)){
+            return supplyAsyncBadRequest(signUp.render(signUpForm));
         }
 
         SignUp signUpFields = signUpForm.get();

@@ -13,8 +13,8 @@ public class Follow{
     public Follow() {
     }
 
-    public String getNameOfPersonToFollow() {
-        return nameOfPersonToFollow;
+    public String getUsernameOfPersonToFollow() {
+        return this.nameOfPersonToFollow;
     }
 
     public void setNameOfPersonToFollow(String nameOfPersonToFollow) {

@@ -13,18 +13,18 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+        PersonModelTest.class,
+        PersonRepoTest.class,
+
         SignUpModelTest.class,
         SignUpControllerTest.class,
         LoginControllerTest.class,
         PostControllerTest.class,
         FollowControllerTest.class,
+//
 
-        PersonRepoTest.class,
-        PersonModelTest.class,
 
-//        AcceptanceTest.class,
-//        IntegrationTest.class,
-//        UnitTest.class,
+
 })
 
 public class Runner {

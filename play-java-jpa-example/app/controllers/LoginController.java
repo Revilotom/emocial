@@ -15,7 +15,9 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.twirl.api.Html;
 import repositories.person.PersonRepository;
+import views.html.old.login;
 
 import javax.inject.Inject;
 import java.util.concurrent.CompletableFuture;
@@ -55,8 +57,8 @@ public class LoginController extends DefaultController {
     public CompletionStage<Result> submitLogin(final Http.Request request) {
         Form<Login> loginForm = formFactory.form(Login.class).bindFromRequest(request);
 
-        if (loginForm.hasErrors() || loginForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.login.render(loginForm)), ec.current());
+        if (hasFormBadRequestError(loginForm)) {
+            return supplyAsyncBadRequest(login.render(loginForm));
         }
 
         Login login = loginForm.get();

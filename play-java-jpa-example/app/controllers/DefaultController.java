@@ -9,24 +9,25 @@ import akka.stream.OverflowStrategy;
 import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import models.Person;
+import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Controller;
 import play.mvc.Http;
+import play.mvc.Result;
+import play.twirl.api.Html;
 import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public abstract class DefaultController extends Controller {
     final FormFactory formFactory;
     final PersonRepository repository;
     final HttpExecutionContext ec;
-
-
-//            .run(mat);
 
     @Inject
     public DefaultController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
@@ -38,5 +39,12 @@ public abstract class DefaultController extends Controller {
     public CompletionStage<Optional<Person>> getLoggedInUser(final Http.Request request){
         return request.session().getOptional("loggedIn")
                 .map(repository::findByUsername).get();
+    }
+
+    protected boolean hasFormBadRequestError(Form<?> form) { // part
+        return form.hasErrors() || form.hasGlobalErrors();
+    }
+    protected CompletableFuture<Result> supplyAsyncBadRequest(Html html) { // part
+        return CompletableFuture.supplyAsync(() -> badRequest(html));
     }
 }

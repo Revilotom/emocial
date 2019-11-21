@@ -8,6 +8,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
+import views.html.old.makePost;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -50,9 +51,13 @@ public class PostController extends DefaultController {
 //            System.out.println("DSASDAS");
 //        }
 
-        if (postForm.hasErrors() || postForm.hasGlobalErrors()) {
-            return CompletableFuture.supplyAsync(() ->
-                    badRequest(views.html.old.makePost.render(postForm)), ec.current());
+//        if (postForm.hasErrors() || postForm.hasGlobalErrors()) {
+//            return CompletableFuture.supplyAsync(() ->
+//                    badRequest(views.html.old.makePost.render(postForm)), ec.current());
+//        }
+
+        if (hasFormBadRequestError(postForm)){
+            return supplyAsyncBadRequest(makePost.render(postForm));
         }
 
         Post post = postForm.get();

@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import play.test.WithApplication;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -33,31 +34,27 @@ public class PersonRepoTest extends WithApplication {
         repo = null;
     }
 
-
-//    @Test
-//    public void testNewsFeed() throws ExecutionException, InterruptedException {
-//        Person p1 = new Person("adssa", "person1", "dasd");
-//        Post post1 = new Post("person1's post");
-//        p1.addPost(post1);
+    @Test
+    public void testFollowersAreRemoved() throws ExecutionException, InterruptedException {
 //
-//        Person p2 = new Person("adssa", "person2", "dasd");
-//        Post post2 = new Post("person2's post");
-//        post2.timeStamp += 23123214;
-//        p2.addPost(post2);
+//        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+//        Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 //
-//        Person user = new Person("Assa", "User", "dasdas");
+//        person2.addFollowing(person);
+//        repo.update(person2).toCompletableFuture().get();
 //
-//        user.addFollowing(p1);
-//        user.addFollowing(p2);
+//        person2.unFollow(0);
 //
-//        repo.update(p1).toCompletableFuture().get();
-//        repo.update(p2).toCompletableFuture().get();
-//        repo.update(user).toCompletableFuture().get();
+////        person2.setFollowing(new ArrayList<>());
 //
-//        repo.g
+//        repo.update(person2).toCompletableFuture().get();
 //
+////        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+//        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 //
-//    }
+////        MatcherAssert.assertThat(person.getFollowers().size(), is(0));
+//        MatcherAssert.assertThat(person2.getFollowing().size(), is(0));
+    }
 
     @Test
     public void testFollowersAreAdded() throws ExecutionException, InterruptedException {
@@ -71,7 +68,9 @@ public class PersonRepoTest extends WithApplication {
         person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
         person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 
+        MatcherAssert.assertThat(person.getFollowers().size(), is(1));
         MatcherAssert.assertThat(person.getFollowers().get(0).getUsername(), is(person2.username));
+        MatcherAssert.assertThat(person2.getFollowing().size(), is(1));
         MatcherAssert.assertThat(person2.getFollowing().get(0).getUsername(), is(person.username));
     }
 

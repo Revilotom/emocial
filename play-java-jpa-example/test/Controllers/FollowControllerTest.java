@@ -50,7 +50,7 @@ public class FollowControllerTest extends WithServer {
         getFollowing = fakeRequest().session("loggedIn", "username").method(GET).uri("/following").header("Raw-Request-URI", "/following");
         getFollowers = fakeRequest().session("loggedIn", "anonymous").method(GET).uri("/followers").header("Raw-Request-URI", "/followers");
 
-        post = fakeRequest().session("loggedIn", "username").method(POST).uri("/following").header("Raw-Request-URI", "/follow");
+        post = fakeRequest().session("loggedIn", "username").method(POST).uri("/follow/followMe").header("Raw-Request-URI", "/follow");
     }
 
     @After
@@ -63,10 +63,11 @@ public class FollowControllerTest extends WithServer {
     @Test
     public void canFollowPerson() throws ExecutionException, InterruptedException {
 
-        Follow follow = new Follow();
-        follow.setNameOfPersonToFollow("followMe");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(follow)));
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(new Follow())));
         Result result = route(app, tokenRequest);
+
+        Thread.sleep(500L);
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/following"));
