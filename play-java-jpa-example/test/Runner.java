@@ -21,10 +21,6 @@ import org.junit.runners.Suite;
         LoginControllerTest.class,
         PostControllerTest.class,
         FollowControllerTest.class,
-//
-
-
-
 })
 
 public class Runner {

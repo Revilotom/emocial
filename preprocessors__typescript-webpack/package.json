@@ -1,0 +1,29 @@
+{
+	"name": "e2e",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "echo",
+		"cypress:run": "./node_modules/.bin/cypress run",
+		"cypress:open": "./node_modules/.bin/cypress open",
+		"build": "./node_modules/.bin/webpack --output-filename out.js --entry ./integration/spec.ts",
+		"lint": "./node_modules/.bin/tslint --project ./tsconfig.json",
+		"postlint": "npm run tsc",
+		"tsc": "./node_modules/.bin/tsc --pretty --noEmit",
+		"precypress:run": "npm run lint",
+		"test:ci": "./node_modules/.bin/cypress run"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"cypress": "^3.6.1",
+		"webpack-cli": "^3.3.10"
+	},
+	"dependencies": {
+		"@cypress/webpack-preprocessor": "^4.1.1",
+		"ts-loader": "^6.2.1",
+		"typescript": "^3.7.2",
+		"webpack": "^4.41.2"
+	}
+}
