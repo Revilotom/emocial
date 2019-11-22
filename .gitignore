@@ -5,3 +5,5 @@ play-java-jpa-example/.idea
 play-java-jpa-example/app/models/target/
 img/
 preprocessors__typescript-webpack/node_modules
+preprocessors__typescript-webpack/cypress/screenshots/
+preprocessors__typescript-webpack/cypress/videos/
