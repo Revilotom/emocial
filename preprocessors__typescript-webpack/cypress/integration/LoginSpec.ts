@@ -8,7 +8,7 @@ describe("The Login Page", function() {
 		cy.contains("required")
 	})
 
-	it("checks that credentials are valid", function() {
+	it("checks that credentials are invalid", function() {
 		cy.get("input[name=username]").type("dasdhasjkdhkjsdhkashda")
 		cy.get("input[name=password]").type("dasdhasjkdhkjsdhkashda")
 		cy.contains("Login").click()

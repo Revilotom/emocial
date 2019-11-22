@@ -13,8 +13,8 @@ import views.html.old.makePost;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class PostController extends DefaultController {
@@ -50,24 +50,24 @@ public class PostController extends DefaultController {
         return ok(views.html.old.makePost.render(formFactory.form(Post.class)));
     }
 
-    public CompletionStage<Result> submitPost(final Http.Request request) {
+    public Result submitPost(final Http.Request request) throws ExecutionException, InterruptedException {
 
         Form<Post> postForm = formFactory.form(Post.class).bindFromRequest(request);
 
         if (hasFormBadRequestError(postForm)){
-            return supplyAsyncBadRequest(makePost.render(postForm));
+            return badRequest(makePost.render(postForm));
         }
 
         Post post = postForm.get();
 
-        return getLoggedInUser(request)
+       getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(person -> {
                             post.setOwner(person);
                             person.addPost(post);
                             return person;
                 })
-                .thenApply(repository::update)
-                .thenApply(personCompletionStage -> redirect(routes.HomeController.home()));
+                .thenApply(repository::update).toCompletableFuture().get().toCompletableFuture().get();
+       return redirect(routes.HomeController.home());
     }
 }

@@ -78,6 +78,10 @@ public class SignUp implements Constraints.Validatable<List<ValidationError>> {
     @Override
     public List<ValidationError> validate() {
 
+        if (password1 == null || password2 == null){
+            return null;
+        }
+
         List<ValidationError> errorList = new ArrayList<>();
 
         if (!password1.equals(password2)) {

@@ -19,9 +19,20 @@ import "./commands"
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
+// beforeEach(function() {
+// 	cy.exec("./clearDB.sh")
+// })
+
 beforeEach(function() {
 	cy.log("I run before every test in every spec file!!!!!!")
 	cy.exec("./clearDB.sh")
+
+	// cy.request("POST", "/signUp", {
+	// 	name: "mariokid",
+	// 	username: "itsmemario",
+	// 	password1: "12345678",
+	// 	password2: "12345678"
+	// })
 
 	cy.request("POST", "/signUp", {
 		name: "hello",

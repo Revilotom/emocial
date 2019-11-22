@@ -13,7 +13,7 @@
                 </h5>
                 @helper.form(action = routes.PostController.submitPost()) {
                     @helper.CSRF.formField
-                     <textarea class="form-control" name="content" rows="3"></textarea>
+                     <textarea class="form-control" id="content" name="content" rows="3"></textarea>
                     <input class="btn btn-primary btn-user btn-block" type="submit" value="Submit"/>
                 }
             </div>
