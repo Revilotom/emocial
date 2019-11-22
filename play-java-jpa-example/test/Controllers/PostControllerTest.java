@@ -76,12 +76,16 @@ public class PostControllerTest extends WithServer {
         Thread.sleep(500L); // wait for the second post to be written to the DB.
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
-//        MatcherAssert.assertThat(result.header("Location").get(), is("/myPosts"));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
         List<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
         MatcherAssert.assertThat(
                 posts.get(1).content,
                 is("second post"));
+
+//        MatcherAssert.assertThat(contentAsString(result), containsString("second post"));
+
     }
+
 
     @Test
     public void cannotMakePostIfMaxLengthIsExceeded() throws ExecutionException, InterruptedException {

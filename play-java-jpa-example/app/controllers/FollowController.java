@@ -2,6 +2,7 @@ package controllers;
 
 import forms.Follow;
 import models.Person;
+import models.Post;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
@@ -9,12 +10,15 @@ import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
 import views.html.old.followPerson;
+import views.html.old.persons;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 
 
 public class FollowController extends DefaultController {
@@ -28,18 +32,24 @@ public class FollowController extends DefaultController {
         return ok(views.html.old.followPerson.render(formFactory.form(Follow.class)));
     }
 
-    private CompletionStage<Result> getRelevantPeople(final Http.Request request, boolean following) {
-        return getLoggedInUser(request)
-                .thenApply(person -> person.map(following ? Person::getFollowing : Person::getFollowers))
-                .thenApplyAsync(list ->
-                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new), following)), ec.current());
+    private Result getRelevantPeople(final Http.Request request, boolean wantFollowing) throws ExecutionException, InterruptedException {
+//        return getLoggedInUser(request)
+//                .thenApply(person -> person.map(wantFollowing ? Person::getFollowing : Person::getFollowers))
+//                .thenApplyAsync(list ->
+//                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new), wantFollowing)), ec.current());
+        Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
+        Person user = maybe.get();
+        List<Person> people = wantFollowing ? user.getFollowing() : user.getFollowers();
+
+        return ok(persons.render(people, wantFollowing));
+
     }
 
-    public CompletionStage<Result> getFollowing(final Http.Request request) {
+    public Result getFollowing(final Http.Request request) throws ExecutionException, InterruptedException {
         return getRelevantPeople(request, true);
     }
 
-    public CompletionStage<Result> getFollowers(final Http.Request request) {
+    public Result getFollowers(final Http.Request request) throws ExecutionException, InterruptedException {
         return getRelevantPeople(request, false);
     }
 
@@ -52,35 +62,32 @@ public class FollowController extends DefaultController {
         return CompletableFuture.supplyAsync(() -> redirect(routes.FollowController.getFollowing()));
     }
 
-    public CompletionStage<Result> writeFollowToDB(final Http.Request request, String username) {
+    public Result writeFollowToDB(final Http.Request request, String username) throws ExecutionException, InterruptedException {
 
-        return getLoggedInUser(request)
+        getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(loggedInUser -> repository.findByUsername(username)
                         .thenApply(Optional::get)
                         .thenApply(loggedInUser::addFollowing)
                         .thenApply(repository::update))
-                .thenApply(personCompletionStage -> redirect(routes.FollowController.getFollowing()));
+                .toCompletableFuture().get().toCompletableFuture().get().toCompletableFuture().get();
+
+        return redirect(routes.FollowController.getFollowing());
     }
 
 
-    public CompletionStage<Result> submitFollowWithUsername(final Http.Request request, String username) {
+    public Result submitFollowWithUsername(final Http.Request request, String username) throws ExecutionException, InterruptedException {
         return writeFollowToDB(request, username);
     }
 
 
-    public CompletionStage<Result> submitFollow(final Http.Request request) {
+    public Result submitFollow(final Http.Request request) throws ExecutionException, InterruptedException {
 
         Form<Follow> followForm = formFactory.form(Follow.class).bindFromRequest(request);
 
         if (hasFormBadRequestError(followForm)){
-            return supplyAsyncBadRequest(followPerson.render(followForm));
+            return badRequest(followPerson.render(followForm));
         }
-
-//        if (followForm.hasErrors() || followForm.hasGlobalErrors()) {
-//            return CompletableFuture.supplyAsync(() ->
-//                    badRequest(views.html.old.followPerson.render(followForm)), ec.current());
-//        }
 
         Follow follow = followForm.get();
 

@@ -68,6 +68,6 @@ public class PostController extends DefaultController {
                             return person;
                 })
                 .thenApply(repository::update)
-                .thenApplyAsync(personCompletionStage -> redirect(routes.HomeController.home()));
+                .thenApply(personCompletionStage -> redirect(routes.HomeController.home()));
     }
 }
