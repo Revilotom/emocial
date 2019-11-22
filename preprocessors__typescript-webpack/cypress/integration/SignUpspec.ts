@@ -1,14 +1,5 @@
 describe("The SignUp Page", function() {
 	beforeEach(function() {
-		cy.exec("./clearDB.sh")
-
-		cy.request("POST", "/signUp", {
-			name: "hello",
-			username: "revilotom",
-			password1: "12345678",
-			password2: "12345678"
-		})
-
 		cy.visit("/signUp")
 	})
 
@@ -73,6 +64,6 @@ describe("The SignUp Page", function() {
 		cy.get("input[name=password2]").type("12345678")
 
 		cy.contains("Sign up!").click()
-		cy.url().should("eq", Cypress.config().baseUrl + "/") // tests won't fail in case the port changes
+		cy.location("pathname").should("eq", "/")
 	})
 })
