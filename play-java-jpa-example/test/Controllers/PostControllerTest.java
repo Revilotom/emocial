@@ -1,7 +1,6 @@
 package Controllers;
 
 import models.Person;
-
 import models.Post;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
@@ -16,13 +15,12 @@ import repositories.person.JPAPersonRepository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.PropertyPermission;
 import java.util.concurrent.ExecutionException;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static play.test.Helpers.*;
-import static play.test.Helpers.contentAsString;
 
 public class PostControllerTest extends WithServer {
     private Http.RequestBuilder postCreate;
@@ -40,19 +38,23 @@ public class PostControllerTest extends WithServer {
         person.addPost(firstPost);
         repo.update(person).toCompletableFuture().get();
 
+        person = repo.findByUsername("username").toCompletableFuture().get().get();
+
+
+
         get = fakeRequest().session("loggedIn", "username").method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
         postCreate = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
-        postDelete= fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" + firstPost.id).header("Raw-Request-URI", "/deletePost");
+        postDelete = fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" + person.getPosts().get(0).getId()).header("Raw-Request-URI", "/deletePost");
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         repo = null;
     }
 
     @Test
     public void canDeletePost() throws ExecutionException, InterruptedException {
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( postDelete);
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDelete);
         Result result = route(app, tokenRequest);
         Thread.sleep(500L); // wait for the second post to be written to the DB.
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
@@ -68,7 +70,7 @@ public class PostControllerTest extends WithServer {
     public void canMakePost() throws ExecutionException, InterruptedException {
 
         Post secondPost = new Post("second post");
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( postCreate.bodyJson(Json.toJson(secondPost)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postCreate.bodyJson(Json.toJson(secondPost)));
         Result result = route(app, tokenRequest);
 
         Thread.sleep(500L); // wait for the second post to be written to the DB.
@@ -89,7 +91,7 @@ public class PostControllerTest extends WithServer {
 
         Post firstPost = new Post(new String(chars));
 
-        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( postCreate.bodyJson(Json.toJson(firstPost)));
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postCreate.bodyJson(Json.toJson(firstPost)));
         Result result = route(app, tokenRequest);
 
         MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));

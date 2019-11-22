@@ -81,9 +81,10 @@ public class PersonRepoTest extends WithApplication {
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
         person.deletePost(person.getPosts().get(0).id);
         repo.update(person).toCompletableFuture().get();
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+
         MatcherAssert.assertThat(person.getPosts().size(), is(0));
     }
-
 
     @Test
     public void testPostsAreAdded() throws ExecutionException, InterruptedException {

@@ -41,7 +41,7 @@ public class Person {
     private String hash;
 
     @JsonSerialize
-    @OneToMany( cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private
     List<Post> posts = new ArrayList<>();
 
