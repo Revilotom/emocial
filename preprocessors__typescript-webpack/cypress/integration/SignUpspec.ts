@@ -1,5 +1,14 @@
 describe("The SignUp Page", function() {
 	beforeEach(function() {
+		cy.exec("./clearDB.sh")
+
+		cy.request("POST", "/signUp", {
+			name: "hello",
+			username: "revilotom",
+			password1: "12345678",
+			password2: "12345678"
+		})
+
 		cy.visit("/signUp")
 	})
 

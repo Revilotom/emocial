@@ -1,5 +1,5 @@
 {
 	"supportFile": "cypress/support/index.ts",
 	"fixturesFolder": false,
-	"baseUrl": "http://localhost:9000"
+	"baseUrl": "http://localhost:5555"
 }
