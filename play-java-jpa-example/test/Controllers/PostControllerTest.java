@@ -13,9 +13,9 @@ import play.mvc.Result;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.PropertyPermission;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -44,7 +44,8 @@ public class PostControllerTest extends WithServer {
 
         get = fakeRequest().session("loggedIn", "username").method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
         postCreate = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
-        postDelete = fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" + person.getPosts().get(0).getId()).header("Raw-Request-URI", "/deletePost");
+        postDelete = fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" +
+                new ArrayList<>(person.getPosts()).get(0).getId()).header("Raw-Request-URI", "/deletePost");
     }
 
     @After
@@ -60,7 +61,7 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
 
         MatcherAssert.assertThat(result.header("Location").get(), is("/myPosts"));
-        List<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
         MatcherAssert.assertThat(posts.size(), is(0));
     }
 
@@ -73,14 +74,12 @@ public class PostControllerTest extends WithServer {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postCreate.bodyJson(Json.toJson(secondPost)));
         Result result = route(app, tokenRequest);
 
-        Thread.sleep(500L); // wait for the second post to be written to the DB.
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
-        List<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
-        MatcherAssert.assertThat(
-                posts.get(1).content,
-                is("second post"));
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        MatcherAssert.assertThat(posts.size(), is(2));
 
 //        MatcherAssert.assertThat(contentAsString(result), containsString("second post"));
 

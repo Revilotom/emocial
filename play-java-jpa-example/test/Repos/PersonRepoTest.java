@@ -1,7 +1,6 @@
 package Repos;
 
 import Helpers.TestHelper;
-import models.FollowRelation;
 import models.Post;
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
@@ -71,15 +70,50 @@ public class PersonRepoTest extends WithApplication {
         person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 
         MatcherAssert.assertThat(person.getFollowers().size(), is(1));
-        MatcherAssert.assertThat(person.getFollowers().get(0).getUsername(), is(person2.username));
+        MatcherAssert.assertThat(new ArrayList<>(person.getFollowers()).get(0).getUsername(), is(person2.username));
         MatcherAssert.assertThat(person2.getFollowing().size(), is(1));
-        MatcherAssert.assertThat(person2.getFollowing().get(0).getUsername(), is(person.username));
+        MatcherAssert.assertThat(new ArrayList<>(person2.getFollowing()).get(0).getUsername(), is(person.username));
+    }
+
+    @Test
+    public void testCanFollowEachOther() throws ExecutionException, InterruptedException {
+
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        Person person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+        person.addFollowing(person2);
+
+        repo.update(person).toCompletableFuture().get();
+
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        person2.addFollowing(person);
+
+        System.err.println("~~~~~~Person~~~~~~~");
+        System.err.println(person.getFollowers());
+        System.err.println(person.getFollowing());
+
+        System.err.println("~~~~~~Person2~~~~~~~");
+        System.err.println(person2.getFollowers());
+        System.err.println(person2.getFollowing());
+
+
+        repo.update(person2).toCompletableFuture().get();
+
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        MatcherAssert.assertThat(person.getFollowers().size(), is(1));
+        MatcherAssert.assertThat(new ArrayList<>(person.getFollowers()).get(0).getUsername(), is(person2.username));
+
+        MatcherAssert.assertThat(person2.getFollowers().size(), is(1));
+        MatcherAssert.assertThat(new ArrayList<>(person2.getFollowers()).get(0).getUsername(), is(person.username));
     }
 
     @Test
     public void testPostsAreRemoved() throws ExecutionException, InterruptedException {
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
-        person.deletePost(person.getPosts().get(0).id);
+        person.deletePost(new ArrayList<>(person.getPosts()).get(0).id);
         repo.update(person).toCompletableFuture().get();
         person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
 
@@ -90,7 +124,7 @@ public class PersonRepoTest extends WithApplication {
     public void testPostsAreAdded() throws ExecutionException, InterruptedException {
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
         MatcherAssert.assertThat(person.getPosts().size(), is(1));
-        Post post = person.getPosts().get(0);
+        Post post = new ArrayList<>(person.getPosts()).get(0);
         MatcherAssert.assertThat(post.getContent(), is("Hello"));
     }
 

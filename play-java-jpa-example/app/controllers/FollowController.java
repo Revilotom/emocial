@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
@@ -39,9 +40,8 @@ public class FollowController extends DefaultController {
 //                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new), wantFollowing)), ec.current());
         Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
         Person user = maybe.get();
-        List<Person> people = wantFollowing ? user.getFollowing() : user.getFollowers();
-
-        return ok(persons.render(people, wantFollowing));
+        Set<Person> people = (wantFollowing ? user.getFollowing() : user.getFollowers());
+        return ok(persons.render(new ArrayList<>(people), wantFollowing));
 
     }
 
@@ -53,24 +53,34 @@ public class FollowController extends DefaultController {
         return getRelevantPeople(request, false);
     }
 
-    public CompletionStage<Result> unFollow(final Http.Request request, String username) {
+    public Result unFollow(final Http.Request request, String username) throws ExecutionException, InterruptedException {
         getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(loggedInUser -> {loggedInUser.unFollow(username); return loggedInUser;})
-                .thenAccept(repository::update);
+                .thenAccept(repository::update).toCompletableFuture().get();
 
-        return CompletableFuture.supplyAsync(() -> redirect(routes.FollowController.getFollowing()));
+//        return CompletableFuture.supplyAsync(() -> redirect(routes.FollowController.getFollowing()));
+        return redirect(routes.FollowController.getFollowing());
     }
 
     public Result writeFollowToDB(final Http.Request request, String username) throws ExecutionException, InterruptedException {
 
-        getLoggedInUser(request)
-                .thenApply(Optional::get)
-                .thenApply(loggedInUser -> repository.findByUsername(username)
-                        .thenApply(Optional::get)
-                        .thenApply(loggedInUser::addFollowing)
-                        .thenApply(repository::update))
-                .toCompletableFuture().get().toCompletableFuture().get().toCompletableFuture().get();
+//        getLoggedInUser(request)
+//                .thenApply(Optional::get)
+//                .thenApply(loggedInUser -> repository.findByUsername(username)
+//                        .thenApply(Optional::get)
+//                        .thenApply(loggedInUser::addFollowing)
+//                        .thenApply(repository::update))
+//                .toCompletableFuture().get().toCompletableFuture().get().toCompletableFuture().get();
+
+        Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
+        Person user = maybe.get();
+
+        Person userToFollow = repository.findByUsername(username).toCompletableFuture().get().get();
+
+        user.addFollowing(userToFollow);
+
+        repository.update(user).toCompletableFuture().get();
 
         return redirect(routes.FollowController.getFollowing());
     }

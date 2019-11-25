@@ -22,21 +22,42 @@ import "./commands"
 // beforeEach(function() {
 // 	cy.exec("./clearDB.sh")
 // })
+// Cypress.Cookies.debug(true)
 
 beforeEach(function() {
 	cy.log("I run before every test in every spec file!!!!!!")
 	cy.exec("./clearDB.sh")
 
-	// cy.request("POST", "/signUp", {
-	// 	name: "mariokid",
-	// 	username: "itsmemario",
-	// 	password1: "12345678",
-	// 	password2: "12345678"
-	// })
+	cy.request("POST", "/signUp", {
+		name: "mariokid",
+		username: "itsmemario",
+		password1: "12345678",
+		password2: "12345678"
+	})
+
+	cy.clearCookies()
 
 	cy.request("POST", "/signUp", {
 		name: "hello",
 		username: "revilotom",
+		password1: "12345678",
+		password2: "12345678"
+	})
+
+	cy.clearCookies()
+
+	cy.request("POST", "/signUp", {
+		name: "hello",
+		username: "kunal54",
+		password1: "12345678",
+		password2: "12345678"
+	})
+
+	cy.clearCookies()
+
+	cy.request("POST", "/signUp", {
+		name: "hello",
+		username: "ajinkya69",
 		password1: "12345678",
 		password2: "12345678"
 	})

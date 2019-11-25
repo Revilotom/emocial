@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import javax.persistence.*;
 
@@ -11,12 +12,13 @@ public class FollowRelation {
     public String toString() {
         return "FollowRelation{" +
                 "id=" + id +
-                ", from=" + from.getUsername() +
-                ", to=" + to.getUsername() +
+                ", from=" + from.getUsername() + from.hashCode() +
+                ", to=" + to.getUsername() + to.hashCode() +
                 '}';
     }
 
     @Id
+    @Unique
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
 

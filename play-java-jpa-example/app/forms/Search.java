@@ -3,13 +3,13 @@ package forms;
 import play.data.validation.Constraints;
 
 public class Search {
-    @Constraints.Required
-    String searchTerms;
+
+    private String searchTerms = "";
 
     public Search() {
     }
 
-    public Search(@Constraints.Required String searchTerms) {
+    public Search(String searchTerms) {
         this.searchTerms = searchTerms;
     }
 

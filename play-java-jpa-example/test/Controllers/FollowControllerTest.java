@@ -17,6 +17,7 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -71,7 +72,7 @@ public class FollowControllerTest extends WithServer {
         Thread.sleep(500L);
         Thread.sleep(500L);
 
-        List<Person> following = repo.findByUsername("username").toCompletableFuture().get().get().getFollowing();
+        List<Person> following = new ArrayList<>(repo.findByUsername("username").toCompletableFuture().get().get().getFollowing());
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/following"));

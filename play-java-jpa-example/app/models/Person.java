@@ -5,10 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -40,27 +37,28 @@ public class Person {
     @Constraints.Required
     private String hash;
 
+//    {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}
+
     @JsonSerialize
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private
-    List<Post> posts = new ArrayList<>();
+    Set<Post> posts = new HashSet<>();
 
     @JsonSerialize
     @OneToMany(mappedBy="to", cascade = CascadeType.ALL, orphanRemoval = true)
     private
-    List<FollowRelation> followers = new ArrayList<>();
+    Set<FollowRelation> followers = new HashSet<>();
 
     @JsonSerialize
     @OneToMany(mappedBy="from", cascade = CascadeType.ALL, orphanRemoval = true)
     private
-    List<FollowRelation> following = new ArrayList<>();
+    Set<FollowRelation> following = new HashSet<>();
 
-    public Person addFollowing(Person personToFollow){
+    public void addFollowing(Person personToFollow){
         this.following.add(new FollowRelation(this, personToFollow));
-        return this;
     }
 
-    public void setFollowers(List<FollowRelation> followers) {
+    public void setFollowers(Set<FollowRelation> followers) {
         this.followers = followers;
     }
 
@@ -72,23 +70,23 @@ public class Person {
         this.posts.removeIf((post -> post.getId() == id));
     }
 
-    public List<Person> getFollowers() {
-        return followers.stream().map(FollowRelation::getFrom).collect(Collectors.toList());
+    public Set<Person> getFollowers() {
+        return followers.stream().map(FollowRelation::getFrom).collect(Collectors.toSet());
     }
 
-    public List<Person> getFollowing() {
-        return following.stream().map(FollowRelation::getTo).collect(Collectors.toList());
+    public Set<Person> getFollowing() {
+        return following.stream().map(FollowRelation::getTo).collect(Collectors.toSet());
     }
 
-    public void setFollowing(List<FollowRelation> following) {
+    public void setFollowing(Set<FollowRelation> following) {
         this.following = following;
     }
 
-    public List<Post> getPosts() {
+    public Set<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Post> posts) {
+    public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
 
@@ -132,10 +130,10 @@ public class Person {
     }
 
     public List<Post> getNewsFeed(){
-        List<Post> postList = getPosts();
+        List<Post> postList = new ArrayList<>(getPosts());
         postList.addAll(getFollowing().stream()
                 .map(Person::getPosts)
-                .flatMap(List::stream)
+                .flatMap(Set::stream)
                 .collect(Collectors.toList()));
 
         Collections.sort(postList, new Comparator<Post>() {
@@ -157,13 +155,13 @@ public class Person {
         this.posts.add(post);
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                ", username='" + username + '\'' +
-                ", myPosts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
-                ", followers=" + followers +
-                ", following=" + following +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return hashCode() + "Person{" +
+//                " username='" + username + '\'' +
+//                ", myPosts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
+//                ", followers=" + followers +
+//                ", following=" + following +
+//                '}';
+//    }
 }

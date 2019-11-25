@@ -12,7 +12,7 @@
                             routes.FollowController.unFollow(p.getUsername)
                 ) {
                     @helper.CSRF.formField
-                    <button class="btn btn@{if(plus) "-primary" else "-danger"} btn-user" >
+                    <button name="personButton" class="btn btn@{if(plus) "-primary" else "-danger"} btn-user" >
                         <i class="fas fa-user@{if(plus) "-plus" else "-minus"} fa-sm fa-fw mr-2 text-gray-400"></i>
                     </button>
                 }
