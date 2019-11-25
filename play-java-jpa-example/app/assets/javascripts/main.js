@@ -1,3 +1,4 @@
+
 window.addEventListener('DOMContentLoaded', () => {
     const button = document.querySelector('#emoji-button');
     const picker = new EmojiButton({autoHide: false, position: "button"});
@@ -9,8 +10,10 @@ window.addEventListener('DOMContentLoaded', () => {
         textarea.value = textarea.value.substring(0, cursorPosition) + emoji + textarea.value.substring(cursorPosition);
     });
 
-    button.addEventListener('click', () => {
-        picker.showPicker(button);
-    });
+    if (button) {
+        button.addEventListener('click', () => {
+            picker.showPicker(button);
+        });
+    }
 });
 
