@@ -6,10 +6,6 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.13.0"
 
-//libraryDependencies ++= Seq(
-//  "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.0" % "test"
-//)
-
 libraryDependencies += guice
 libraryDependencies += javaJpa
 libraryDependencies += "com.h2database" % "h2" % "1.4.199"
@@ -24,6 +20,8 @@ libraryDependencies += "org.assertj" % "assertj-core" % "3.11.1" % "test"
 libraryDependencies += "org.mockito" % "mockito-core" % "2.23.4" % "test"
 
 libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.44"
+libraryDependencies += "com.vdurmont" % "emoji-java" % "5.1.1"
+
 
 Test / testOptions += Tests.Argument(TestFrameworks.JUnit, "-a", "-v")
 

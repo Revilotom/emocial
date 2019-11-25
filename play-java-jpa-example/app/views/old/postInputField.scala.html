@@ -1,0 +1,28 @@
+@import views.html.components._
+
+@(content: String)
+
+@card(){
+    <div class="form-group">
+        <h5 class="card-title">
+            Write a post!
+        </h5>
+
+        @helper.form(action = routes.PostController.submitPost()) {
+
+            @helper.CSRF.formField
+            <textarea class="form-control" id="content" name="content" rows="3" style="margin-bottom: 3%">@content</textarea>
+            <div class="row ">
+                <div class="col-8 ">
+                    <input class="btn btn-primary btn-user btn-block" type="submit" value="Submit"/>
+                </div>
+                <div class="col ">
+                    <button type="button" class="btn btn-secondary btn-user btn-block" id="emoji-button">
+                        <i class="fas fa-laugh"></i>
+                    </button>
+                </div>
+            </div>
+        }
+
+    </div>
+}

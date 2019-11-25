@@ -1,15 +1,17 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.joda.time.DateTime;
+import com.vdurmont.emoji.EmojiParser;
 import play.data.validation.Constraints;
+import play.data.validation.ValidationError;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import java.time.Instant;
 
+
 @Entity
-public class Post {
+@Constraints.Validate
+public class Post implements Constraints.Validatable<ValidationError>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -76,4 +78,10 @@ public class Post {
                 '}';
     }
 
+    @Override
+    public ValidationError validate() {
+        return EmojiParser.removeAllEmojis(content).equals("") ? null :
+                new ValidationError("content", "The content of all posts " +
+                        "must consist exclusively of emojis!!");
+    }
 }

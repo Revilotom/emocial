@@ -28,13 +28,7 @@ public class SignUpController extends DefaultController {
 
     public CompletionStage<Result> submitSignUp(final Http.Request request) {
 
-        // TODO abstract out this error handling
-
         Form<SignUp> signUpForm = formFactory.form(SignUp.class).bindFromRequest(request);
-//
-//        if (signUpForm.hasErrors() || signUpForm.hasGlobalErrors()) {
-//            return CompletableFuture.supplyAsync(() -> badRequest(views.html.old.signUp.render(signUpForm)), ec.current());
-//        }
 
         if (hasFormBadRequestError(signUpForm)){
             return supplyAsyncBadRequest(signUp.render(signUpForm));

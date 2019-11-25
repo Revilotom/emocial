@@ -1,15 +1,10 @@
-@import views.html.components.main
-@import views.html.components.item
-@import views.html.components.errors
+
+@import views.html.components._
 @import models.Post
 @(form: Form[Post])
 
-@main("Make your post") {
-    <form method="POST" action="@routes.PostController.submitPost()">
-        <ul>
-            @item("content")
-        </ul>
+    @main("Fix your post!") {
+        @navbar()
         @errors(form)
-        <button>Submit</button>
-    </form>
-}
+        @postInputField(form.value().get().getContent())
+    }

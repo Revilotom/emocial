@@ -4,6 +4,7 @@ import models.Person;
 import models.Post;
 import play.data.Form;
 import play.data.FormFactory;
+import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -61,7 +62,7 @@ public class PostController extends DefaultController {
 
         Post post = postForm.get();
 
-       getLoggedInUser(request)
+        getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(person -> {
                             post.setOwner(person);
