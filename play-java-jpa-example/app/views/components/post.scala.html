@@ -2,7 +2,7 @@
 @import java.time.ZoneId
 @import java.time.Instant
 @import java.time.format.DateTimeFormatter
-@(post: Post)
+@(post: Post, wantButton: Boolean = false)
 
 <div class="container">
     <div class="row justify-content-center">
@@ -11,18 +11,39 @@
                 <div class="card">
                     <div class="card-body">
                         <div class = "row">
-                            <div class ="col-9">
-                            <h5 class="card-title">
-                                @post.getOwner.getUsername
-                            </h5>
+                            <div class ="col-10">
+                                <div class="container">
+                                    <div class="row">
+                                        <h5 class="card-title">
+                                            @post.getOwner.getUsername
+                                        </h5>
+                                        <p class = "small">
+                                        @{
+                                            LocalDateTime.ofInstant(Instant.ofEpochMilli(post.getTimeStamp),
+                                                ZoneId.systemDefault).format(DateTimeFormatter.ofPattern("(MM/dd HH:mm)"))
+                                        }
+                                    </p>
+                                </div>
+
+
+
+                                </div>
+
+
                             </div>
                             <div class ="col">
-                            <p class = "small">
-                                @{
-                                LocalDateTime.ofInstant(Instant.ofEpochMilli(post.getTimeStamp),
-                                    ZoneId.systemDefault).format(DateTimeFormatter.ofPattern("(MM/dd HH:mm)"))
-                                }
-                            </p>
+
+
+                                        @helper.form(action=routes.PostController.deletePost(post.getId)){
+                                            @helper.CSRF.formField
+
+                                            @if(wantButton) {
+                                                <button name="postButton" class="btn btn-danger btn-user" >
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            }
+                                        }
+
                             </div>
                         </div>
 

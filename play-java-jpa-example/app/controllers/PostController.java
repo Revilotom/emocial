@@ -36,7 +36,7 @@ public class PostController extends DefaultController {
         return getLoggedInUser(request)
                 .thenApply(person -> person.map(Person::getPosts))
                 .thenApplyAsync(posts ->
-                        ok(views.html.old.myPosts.render(new ArrayList<>(posts.orElseGet(HashSet::new)))));
+                        ok(views.html.old.myPosts.render(new ArrayList<>(posts.orElseGet(HashSet::new)))), ec.current());
     }
 
     public CompletionStage<Result> deletePost(final Http.Request request, long postId) {

@@ -4,47 +4,31 @@
 
 @main("Welcome to Play") {
 
-
         @navbar()
         @card(){
             <div class="form-group">
                 <h5 class="card-title">
                     Write a post!
                 </h5>
+
+
+
                 @helper.form(action = routes.PostController.submitPost()) {
                     @helper.CSRF.formField
                      <textarea class="form-control" id="content" name="content" rows="3"></textarea>
-                    <input class="btn btn-primary btn-user btn-block" type="submit" value="Submit"/>
+                             <div class="row">
+                                 <div class="col-8">
+                                    <input class="btn btn-primary btn-user btn-block" type="submit" value="Submit"/>
+                                 </div>
+                                 <div class="col">
+                                    <button type="button" id="emoji-button">emoji</button>
+                                 </div>
+                             </div>
+
                 }
+
             </div>
         }
-
         @posts(p)
-
-
-
-@*        <div class="container">*@
-@*            <div class="row justify-content-center">*@
-@*                <div class="col-8">*@
-@*                    <div class="card o-hidden border-0 shadow-lg my-5">*@
-@*                        <div class="card">*@
-@*                            <img class="card-img-top" sr"c="... alt="Card image cap">*@
-@*                            <div class="card-body">*@
-@*                                <h5 class="card-title">Card title</h5>*@
-@*                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>*@
-@*                            </div>*@
-@*                        </div>*@
-@*                    </div>*@
-@*                </div>*@
-@*            </div>*@
-@*        </div>*@
-
-        <h1>@username 's</h1>
-
-        <h1>HOME</h1>
-                <a href="/logout">Logout</a>
-                <a href="/myPosts">Posts</a>
-                <a href="/search">Search</a>
-
 }
 

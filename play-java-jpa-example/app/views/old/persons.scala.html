@@ -5,7 +5,6 @@
 
 @main("Welcome to Play") {
     @navbar()
-    <h1>@{ if (following) "Following" else "Followers"} </h1>
     <ul  class="list-group" style="padding-inline-start: 0px">
     @for(p <- persons){
         @person(p, following)
