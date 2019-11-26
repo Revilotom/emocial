@@ -19,7 +19,7 @@ libraryDependencies += "org.awaitility" % "awaitility" % "3.1.5" % "test"
 libraryDependencies += "org.assertj" % "assertj-core" % "3.11.1" % "test"
 libraryDependencies += "org.mockito" % "mockito-core" % "2.23.4" % "test"
 
-libraryDependencies += "mysql" % "mysql-connector-java" % "5.1.44"
+libraryDependencies += "mysql" % "mysql-connector-java" % "8.0.18"
 libraryDependencies += "com.vdurmont" % "emoji-java" % "5.1.1"
 
 
@@ -29,4 +29,6 @@ ThisBuild / scalacOptions ++= List("-encoding", "utf8", "-deprecation", "-featur
 ThisBuild / javacOptions ++= List("-Xlint:unchecked", "-Xlint:deprecation", "-Werror")
 
 PlayKeys.externalizeResourcesExcludes += baseDirectory.value / "conf" / "META-INF" / "persistence.xml"
+
+maintainer := "tom.oliver@bizreach.co.jp"
 

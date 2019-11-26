@@ -35,3 +35,6 @@ The E2E tests should run in Cypress right away. There are few other commands con
 
 - `npm run build` runs Webpack to convert spec TS file into `out.js`
 - `npm run lint` lints TypeScript specs using [tslint](https://palantir.github.io/tslint) and then TypeScript compiler to type check test source files.
+
+
+// Write what we would do if the alarms are triggered.

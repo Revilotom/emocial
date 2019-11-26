@@ -21,9 +21,6 @@ describe("The following and followers Pages", function() {
 		cy.get("form > .btn").click()
 		cy.visit("/search")
 	})
-	// it("", () => {
-
-	// })
 
 	it("checks that can follow", function() {
 		cy.contains("Go!").click()

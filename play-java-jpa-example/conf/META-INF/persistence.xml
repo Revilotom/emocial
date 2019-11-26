@@ -9,6 +9,9 @@
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.connection.CharSet" value="utf8mb4" />
+            <property name="hibernate.connection.characterEncoding" value="utf8mb4"/>
+            <property name="hibernate.connection.useUnicode" value="true"/>
 
 <!--            idk about this-->
             <property name="hibernate.event.merge.entity_copy_observer" value="allow"/>
@@ -19,6 +22,11 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <non-jta-data-source>DefaultDS</non-jta-data-source>
         <properties>
+<!--            <property name="hibernate.show_sql" value="true"/>-->
+<!--            <property name="hibernate.format_sql" value="true"/>-->
+<!--            <property name="hibernate.use_sql_comments" value="true"/>-->
+
+
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
 

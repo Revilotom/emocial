@@ -16,7 +16,7 @@ ENV SECRET QUStej67ubRe
 
 ARG DBPASS
 
-ENV DB_URL mysql://$DBPASS@fpdb.cxyf9g19a5as.ap-northeast-1.rds.amazonaws.com:3306/FP?useSSL=false
+ENV DB_URL mysql://$DBPASS@fpdb.cxyf9g19a5as.ap-northeast-1.rds.amazonaws.com:3306/FP?useSSL=false?characterEncoding=utf8mb4
 
 RUN mkdir -p /usr/src/app
 

@@ -4,7 +4,6 @@ import models.Person;
 import models.Post;
 import play.data.Form;
 import play.data.FormFactory;
-import play.data.validation.ValidationError;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -43,7 +42,10 @@ public class PostController extends DefaultController {
     public CompletionStage<Result> deletePost(final Http.Request request, long postId) {
         return getLoggedInUser(request)
                 .thenApply(Optional::get)
-                .thenApply(person -> {person.deletePost(postId); return person;})
+                .thenApply(person -> {
+                    person.deletePost(postId);
+                    return person;
+                })
                 .thenAccept(repository::update)
                 .thenApplyAsync(posts -> redirect(routes.PostController.getPosts()));
     }
@@ -56,21 +58,25 @@ public class PostController extends DefaultController {
 
         Form<Post> postForm = formFactory.form(Post.class).bindFromRequest(request);
 
-        if (hasFormBadRequestError(postForm)){
+        if (hasFormBadRequestError(postForm)) {
             return badRequest(makePost.render(postForm));
         }
 
         Post post = postForm.get();
 
+
         getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(person -> {
-                            post.setOwner(person);
-                            person.addPost(post);
-                            return person;
+                    post.setOwner(person);
+                    person.addPost(post);
+
+                    System.out.println(post);
+                    System.out.println(post.content);
+                    return person;
                 })
                 .thenApply(repository::update).toCompletableFuture().get().toCompletableFuture().get();
 
-       return redirect(routes.HomeController.home());
+        return redirect(routes.HomeController.home());
     }
 }
