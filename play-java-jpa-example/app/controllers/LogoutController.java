@@ -25,8 +25,9 @@ public class LogoutController extends DefaultController {
     public CompletionStage<Result> logout() {
         return CompletableFuture.supplyAsync(() ->
                         redirect(routes.LoginController.index())
-                                .withNewSession()
-                ,
+                                .withNewSession(),
                 ec.current());
     }
 }
+
+// TODO do we need to do https?

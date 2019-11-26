@@ -4,7 +4,7 @@ describe("The Home Page", function() {
 		cy.get("input[name=username]").type("itsmemario")
 		cy.get("input[name=password]").type("12345678")
 		cy.contains("Login").click()
-		cy.get("textarea[name=content]").type("Mario is posting~~~")
+		cy.get("textarea[name=content]").type("🍄")
 		cy.contains("Submit").click()
 		cy.clearCookies()
 
@@ -12,7 +12,7 @@ describe("The Home Page", function() {
 		cy.get("input[name=username]").type("kunal54")
 		cy.get("input[name=password]").type("12345678")
 		cy.contains("Login").click()
-		cy.get("textarea[name=content]").type("Im kunal!!")
+		cy.get("textarea[name=content]").type("💩")
 		cy.contains("Submit").click()
 		cy.clearCookies()
 
@@ -28,16 +28,31 @@ describe("The Home Page", function() {
 	})
 
 	it("checks that can post", function() {
-		cy.get("textarea[name=content]").type("This is my first post!!!")
+		cy.get("textarea[name=content]").type("🎸")
 		cy.contains("Submit").click()
-		cy.contains("This is my first post!!!")
+		cy.contains("🎸")
+		cy.contains("content [The content of all posts must consist exclusively of emojis!!]").should("not.exist")
+	})
+
+	it("checks that cannot post normal characters", function() {
+		cy.get("textarea[name=content]").type("poopyboy")
+		cy.contains("Submit").click()
+		cy.contains("poopyboy")
+		cy.contains("content [The content of all posts must consist exclusively of emojis!!]")
 	})
 
 	it("checks that can see following people's posts", function() {
-		cy.contains("Mario is posting")
+		cy.contains("🍄")
 	})
 
 	it("checks that cannot see posts from people you're not following", function() {
-		cy.contains("kunal").should("not.exist")
+		cy.contains("💩").should("not.exist")
+	})
+
+	it("checks that the emoji picker can be used", function() {
+		cy.get("#emoji-button").click()
+		cy.get(".active > .emoji-picker__emojis > :nth-child(88)").click()
+		cy.contains("Submit").click()
+		cy.contains("👺")
 	})
 })

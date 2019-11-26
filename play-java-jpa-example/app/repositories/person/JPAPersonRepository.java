@@ -60,7 +60,7 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
 
 
     private Stream<Person> search(EntityManager em, String searchTerms){
-        return em.createQuery("select p From Person as p where username like :searchterms", Person.class)
+        return em.createQuery("select p From Person as p where username like :searchterms order by p.username asc ", Person.class)
                 .setParameter("searchterms", "%" + searchTerms + "%").getResultList().stream();
     }
 

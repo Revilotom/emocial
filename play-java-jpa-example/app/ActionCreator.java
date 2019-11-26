@@ -1,4 +1,4 @@
-import forms.Login;
+import controllers.routes;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Action;
@@ -28,23 +28,34 @@ public class ActionCreator implements play.http.ActionCreator {
     @Override
     public Action createAction(Http.Request request, Method actionMethod) {
 
-        List<String> publics = new ArrayList<>(Arrays.asList("/signUp", "/login", "/logout"));
+        List<String> loginSignUp = new ArrayList<>(Arrays.asList("/signUp", "/", "/login"));
 
         return new Action.Simple() {
 
-            CompletionStage<Result> getRoute(Http.Request req){
-                return req.getHeaders().get("Raw-Request-URI")
-                        // Does the requested page require authentication?
-                        .filter(uri -> publics.contains(uri) ||
-                                // Is the user logged in?
-                                req.session().getOptional("loggedIn").isPresent())
-                        // If either the user is logged or the page does not require authentication then forward the request.
-                        .map(uri -> delegate.call(req))
-                        // Otherwise send the user to the login page.
-                        .orElseGet(() ->
-                                CompletableFuture
-                                        .supplyAsync(() ->
-                                                ok(views.html.old.login.render(formFactory.form(Login.class))), ec.current()));
+            CompletionStage<Result> getRoute(Http.Request req) {
+                String uri = req.getHeaders().get("Raw-Request-URI").get();
+
+                // If the user is logged in..
+                if (req.session().getOptional("loggedIn").isPresent()) {
+                    // If the url points to either login or signup then redirect the user to the home page
+                    if (loginSignUp.contains(uri)) {
+                        return CompletableFuture
+                                .supplyAsync(() ->
+                                        redirect(routes.HomeController.home()), ec.current());
+                    }
+                    // Otherwise pass the request to the relevant controller
+                    return delegate.call(req);
+                }
+
+                // If the user is not logged in then let access the login, signup and logout pages
+                if (uri.equals("/logout") || loginSignUp.contains(uri)){
+                    return delegate.call(req);
+                }
+
+                // Otherwise redirect to the login page.
+                return CompletableFuture
+                        .supplyAsync(() ->
+                                redirect(routes.LoginController.index()), ec.current());
             }
 
 
