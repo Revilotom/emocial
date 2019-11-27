@@ -16,13 +16,15 @@ ENV SECRET QUStej67ubRe
 
 ARG DBPASS
 
-ENV DB_URL mysql://$DBPASS@fpdb.cxyf9g19a5as.ap-northeast-1.rds.amazonaws.com:3306/FP?useSSL=false?characterEncoding=utf8mb4
+ENV DB_URL mysql://${DBPASS}@fpdb3.cxyf9g19a5as.ap-northeast-1.rds.amazonaws.com:3306/FP?useSSL=FALSE
+# RUN echo "${DB_URL}"
+
 
 RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
-COPY ${PROJECT_NAME}/target/universal/${PROJECT_NAME}-${VERSION}.zip ./
+COPY ./${PROJECT_NAME}-${VERSION}.zip ./
 
 RUN unzip ${PROJECT_NAME}-${VERSION}.zip
 
