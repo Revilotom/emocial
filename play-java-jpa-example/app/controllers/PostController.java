@@ -12,9 +12,7 @@ import repositories.post.PostRepository;
 import views.html.old.makePost;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -37,9 +35,13 @@ public class PostController extends DefaultController {
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
         return getLoggedInUser(request)
-                .thenApply(person -> person.map(Person::getPosts))
+                .thenApply(person -> {
+                   List<Post> posts = new ArrayList<>(person.map(Person::getPosts).get());
+                    posts.sort(Person.ComparePosts);
+                    return posts;
+                })
                 .thenApplyAsync(posts ->
-                        ok(views.html.old.myPosts.render(new ArrayList<>(posts.orElseGet(HashSet::new)))), ec.current());
+                        ok(views.html.old.myPosts.render(posts)), ec.current());
     }
 
     public CompletionStage<Result> deletePost(final Http.Request request, long postId) {

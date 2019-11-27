@@ -54,10 +54,14 @@ public class FollowController extends DefaultController {
     }
 
     public Result unFollow(final Http.Request request, String username) throws ExecutionException, InterruptedException {
-        getLoggedInUser(request)
-                .thenApply(Optional::get)
-                .thenApply(loggedInUser -> {loggedInUser.unFollow(username); return loggedInUser;})
-                .thenAccept(repository::update).toCompletableFuture().get();
+//        getLoggedInUser(request)
+//                .thenApply(Optional::get)
+//                .thenApply(loggedInUser -> {loggedInUser.unFollow(username); return loggedInUser;})
+//                .thenAccept(repository::update).toCompletableFuture().get();
+
+        Person loggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
+        loggedInUser.unFollow(username);
+        repository.update(loggedInUser).toCompletableFuture().get();
 
 //        return CompletableFuture.supplyAsync(() -> redirect(routes.FollowController.getFollowing()));
         return redirect(routes.FollowController.getFollowing());

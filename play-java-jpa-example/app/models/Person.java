@@ -12,6 +12,13 @@ import java.util.stream.Collectors;
 @Entity
 public class Person {
 
+    public static final Comparator<Post> ComparePosts = new Comparator<>() {
+        @Override
+        public int compare(Post o1, Post o2) {
+            return (int) (o2.timeStamp - o1.timeStamp);
+        }
+    };
+
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
@@ -189,12 +196,7 @@ public class Person {
                 .flatMap(Set::stream)
                 .collect(Collectors.toList()));
 
-        Collections.sort(postList, new Comparator<Post>() {
-            @Override
-            public int compare(Post o1, Post o2) {
-                return (int) (o2.timeStamp - o1.timeStamp);
-            }
-        });
+        Collections.sort(postList, ComparePosts);
 
         return postList;
     }

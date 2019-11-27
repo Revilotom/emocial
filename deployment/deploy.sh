@@ -17,6 +17,7 @@ scp -i ~/Downloads/FinalProject.pem -rC ~/Documents/training/finalProject/19-tom
 
 rm ./theSave
 rm ./*.zip
+rm ./*.docker_temp*
 
 echo Starting server...
 
