@@ -1,11 +1,11 @@
 @import views.html.components._
 
-@(username: String = "", p: List[Post])
+@(username: String = "", p: List[Post], likedIds: List[Long], dislikedIds: List[Long])
 
 @main("Welcome to Play") {
 
         @navbar()
         @postInputField("")
-        @posts(p)
+        @posts(p, likedIds, dislikedIds)
 }
 

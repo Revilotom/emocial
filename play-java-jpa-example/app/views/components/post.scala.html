@@ -2,7 +2,7 @@
 @import java.time.ZoneId
 @import java.time.Instant
 @import java.time.format.DateTimeFormatter
-@(post: Post, wantButton: Boolean = false)
+@(post: Post, colour: String, wantButton: Boolean = false)
 
 <div class="container">
     <div class="row justify-content-center">
@@ -18,32 +18,25 @@
                                             @post.getOwner.getUsername
                                         </h5>
                                         <p class = "small">
-                                        @{
-                                            LocalDateTime.ofInstant(Instant.ofEpochMilli(post.getTimeStamp),
-                                                ZoneId.systemDefault).format(DateTimeFormatter.ofPattern("(MM/dd HH:mm)"))
-                                        }
-                                    </p>
-                                </div>
-
-
-
-                                </div>
-
-
-                            </div>
-                            <div class ="col">
-
-
-                                        @helper.form(action=routes.PostController.deletePost(post.getId)){
-                                            @helper.CSRF.formField
-
-                                            @if(wantButton) {
-                                                <button name="postButton" class="btn btn-danger btn-user" >
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
+                                            @{
+                                                LocalDateTime.ofInstant(Instant.ofEpochMilli(post.getTimeStamp),
+                                                    ZoneId.systemDefault).format(DateTimeFormatter.ofPattern("(MM/dd HH:mm)"))
                                             }
-                                        }
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            @vote(post, colour)
+                            <div class ="col">
+                            @helper.form(action=routes.PostController.deletePost(post.getId)){
+                                @helper.CSRF.formField
 
+                                @if(wantButton) {
+                                    <button name="postButton" class="btn btn-danger btn-user" >
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                }
+                            }
                             </div>
                         </div>
 

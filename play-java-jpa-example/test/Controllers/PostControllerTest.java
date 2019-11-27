@@ -23,8 +23,11 @@ import static org.hamcrest.Matchers.is;
 import static play.test.Helpers.*;
 
 public class PostControllerTest extends WithServer {
+    private Http.RequestBuilder postRemoveOpinion;
     private Http.RequestBuilder postCreate;
     private Http.RequestBuilder postDelete;
+    private Http.RequestBuilder postLike;
+    private Http.RequestBuilder postDislike;
     private Http.RequestBuilder get;
     private JPAPersonRepository repo;
 
@@ -40,14 +43,17 @@ public class PostControllerTest extends WithServer {
 
         person = repo.findByUsername("username").toCompletableFuture().get().get();
 
+        long firstPostId =  new ArrayList<>(person.getPosts()).get(0).getId();
 
-
-        get = fakeRequest().session("loggedIn", "username").method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
+        get =        fakeRequest().session("loggedIn", "username").method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
         postCreate = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
-        postDelete = fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" +
-                new ArrayList<>(person.getPosts()).get(0).getId()).header("Raw-Request-URI", "/deletePost");
-    }
+        postDelete = fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" + firstPostId).header("Raw-Request-URI", "/deletePost");
+        postLike =   fakeRequest().session("loggedIn", "username").method(POST).uri("/like/" + firstPostId).header("Raw-Request-URI", "/like");
+        postDislike =fakeRequest().session("loggedIn", "username").method(POST).uri("/dislike/" + firstPostId).header("Raw-Request-URI", "/dislike");
+        postRemoveOpinion = fakeRequest().session("loggedIn", "username").method(POST).uri("/removeOpinion/" + firstPostId).header("Raw-Request-URI", "/removeOpinion");
 
+
+    }
     @After
     public void tearDown() {
         repo = null;
@@ -65,12 +71,11 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(posts.size(), is(0));
     }
 
-    //TODO sometimes test randomly fail
 
     @Test
     public void canMakePost() throws ExecutionException, InterruptedException {
 
-        Post secondPost = new Post("second post");
+        Post secondPost = new Post("\uD83D\uDC69\uD83C\uDFFF\u200D\uD83C\uDF3E");
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postCreate.bodyJson(Json.toJson(secondPost)));
         Result result = route(app, tokenRequest);
 
@@ -108,4 +113,78 @@ public class PostControllerTest extends WithServer {
         final String body = contentAsString(newResult);
         MatcherAssert.assertThat(body, containsString("thisIsATest"));
     }
+
+    @Test
+    public void testCanLikePost() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postLike);
+
+        Result result = route(app, tokenRequest);
+
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
+
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).likers.size(), is(1));
+    }
+
+    @Test
+    public void testCanDislikePost() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDislike);
+
+        Result result = route(app, tokenRequest);
+
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
+
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).dislikers.size(), is(1));
+    }
+
+    @Test
+    public void testCanRemoveOpinionLike() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postLike);
+
+        Result result = route(app, tokenRequest);
+
+        tokenRequest = CSRFTokenHelper.addCSRFToken(postRemoveOpinion);
+
+        result = route(app, tokenRequest);
+
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
+
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).likers.size(), is(0));
+    }
+
+    @Test
+    public void testCanRemoveOpinionDislike() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDislike);
+
+        Result result = route(app, tokenRequest);
+
+        tokenRequest = CSRFTokenHelper.addCSRFToken(postRemoveOpinion);
+
+        result = route(app, tokenRequest);
+
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+        MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
+
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).dislikers.size(), is(0));
+    }
 }
+
+//TODO make everything private

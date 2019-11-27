@@ -88,6 +88,14 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
         try {
             Person person = query.setParameter("username", username).getSingleResult();
             Hibernate.initialize(person.getPosts());
+
+            person.getNewsFeed().forEach(p -> Hibernate.initialize(p.likers));
+            person.getNewsFeed().forEach(p -> Hibernate.initialize(p.dislikers));
+
+
+            Hibernate.initialize(person.getLikedPosts());
+            Hibernate.initialize(person.getDislikedPosts());
+
             Hibernate.initialize(person.getFollowers());
             Hibernate.initialize(person.getFollowing());
 

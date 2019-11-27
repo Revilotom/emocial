@@ -1,6 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
@@ -45,6 +46,24 @@ public class Person {
     Set<Post> posts = new HashSet<>();
 
     @JsonSerialize
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "post_like",
+            joinColumns = @JoinColumn(name = "peerson_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    private
+    Set<Post> likedPosts = new HashSet<>();
+
+    @JsonSerialize
+    @JoinTable(
+            name = "post_dislike",
+            joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "post_id"))
+    @ManyToMany(cascade = CascadeType.ALL)
+    private
+    Set<Post> dislikedPosts = new HashSet<>();
+
+    @JsonSerialize
     @OneToMany(mappedBy="to", cascade = CascadeType.ALL, orphanRemoval = true)
     private
     Set<FollowRelation> followers = new HashSet<>();
@@ -53,6 +72,40 @@ public class Person {
     @OneToMany(mappedBy="from", cascade = CascadeType.ALL, orphanRemoval = true)
     private
     Set<FollowRelation> following = new HashSet<>();
+
+    public void likePost(Post p){
+        p.removeDisliker(this);
+        p.addLiker(this);
+        this.dislikedPosts.removeIf(post -> post.getId().equals(p.getId()));
+        this.likedPosts.add(p);
+    }
+
+    public void dislikePost(Post p){
+        p.removeLiker(this);
+        p.addDisLiker(this);
+        this.likedPosts.removeIf(post -> {
+            System.out.println(post);
+
+            return post.getId().equals(p.getId());
+        });
+        this.dislikedPosts.add(p);
+    }
+
+    public Set<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(Set<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public Set<Post> getDislikedPosts() {
+        return dislikedPosts;
+    }
+
+    public void setDislikedPosts(Set<Post> dislikedPosts) {
+        this.dislikedPosts = dislikedPosts;
+    }
 
     public void addFollowing(Person personToFollow){
         this.following.add(new FollowRelation(this, personToFollow));
@@ -165,3 +218,6 @@ public class Person {
 //                '}';
 //    }
 }
+
+// TODO myPosts are not displayed in chronological order
+// TODO fix unfollowing

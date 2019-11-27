@@ -1,0 +1,35 @@
+@(post: Post, colour: String)
+<div class="col">
+    <div class="row">
+        @helper.form(action=
+            if(colour.equals("primary"))
+                routes.PostController.removeOpinion(post.getId)
+            else
+                routes.PostController.submitLike(post.getId)
+        ){
+            @helper.CSRF.formField
+            <button name="postButton" class="btn btn-@{if(colour.equals("primary")) colour else "secondary"} btn-user" >
+                <i class="fas fa-arrow-up"></i>
+            </button>
+        }
+    </div>
+
+    <div class="row">
+    @post.getRating
+    </div>
+
+    <div class="row">
+    @helper.form(action=
+            if(colour.equals("danger"))
+                routes.PostController.removeOpinion(post.getId)
+            else
+                routes.PostController.submitDislike(post.getId)
+    ){
+        @helper.CSRF.formField
+        <button name="postButton" class="btn btn-@{if(colour.equals("danger")) colour else "secondary"} btn-user" >
+            <i class="fas fa-arrow-down"></i>
+        </button>
+    }
+    </div>
+
+</div>

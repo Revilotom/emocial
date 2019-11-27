@@ -44,7 +44,8 @@ public class LoginControllerTest extends WithServer {
     public void testFieldsAreRendered() {
         Http.RequestBuilder request = Helpers.fakeRequest()
                 .method(GET)
-                .uri("/");
+                .uri("/")
+                .header("Raw-Request-URI", "/login");
 
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(request);
 

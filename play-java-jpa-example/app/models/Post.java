@@ -7,6 +7,8 @@ import play.data.validation.ValidationError;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 
@@ -24,6 +26,14 @@ public class Post implements Constraints.Validatable<ValidationError>{
     @JoinColumn
     @JsonBackReference
     public Person owner;
+
+    @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.MERGE)
+    @JsonBackReference
+    public Set<Person> likers = new HashSet<>();
+
+    @ManyToMany(mappedBy = "dislikedPosts", cascade = CascadeType.MERGE)
+    @JsonBackReference
+    public Set<Person> dislikers = new HashSet<>();
 
     public long getTimeStamp() {
         return timeStamp;
@@ -91,5 +101,25 @@ public class Post implements Constraints.Validatable<ValidationError>{
         return res.equals("") ? null :
                 new ValidationError("content", "The content of all posts " +
                         "must consist exclusively of emojis!!");
+    }
+
+    public void addLiker(Person person) {
+        this.likers.add(person);
+    }
+
+    public void removeLiker(Person person){
+        this.likers.removeIf(person1 -> person1.getId().equals(person.getId()));
+    }
+
+    public void addDisLiker(Person person) {
+        this.dislikers.add(person);
+    }
+
+    public void removeDisliker(Person person){
+        this.dislikers.removeIf(person1 -> person1.getId().equals(person.getId()));
+    }
+
+    public int getRating() {
+        return likers.size() - dislikers.size();
     }
 }

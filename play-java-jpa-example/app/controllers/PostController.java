@@ -8,6 +8,7 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
+import repositories.post.PostRepository;
 import views.html.old.makePost;
 
 import javax.inject.Inject;
@@ -20,10 +21,12 @@ import java.util.stream.Collectors;
 
 public class PostController extends DefaultController {
 
+    private PostRepository postRepository;
 
     @Inject
-    public PostController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
+    public PostController(FormFactory formFactory, PersonRepository repository, PostRepository postRepository, HttpExecutionContext ec) {
         super(formFactory, repository, ec);
+        this.postRepository = postRepository;
     }
 
     public CompletionStage<Result> getPersons() {
@@ -79,4 +82,42 @@ public class PostController extends DefaultController {
 
         return redirect(routes.HomeController.home());
     }
+
+    public Result submitLike(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+
+        Person user = getLoggedInUser(request).toCompletableFuture().get().get();
+        Post post = postRepository.findById(postId).toCompletableFuture().get().get();
+
+        user.likePost(post);
+
+        repository.update(user).toCompletableFuture().get();
+
+        return redirect(routes.HomeController.home());
+    }
+
+    public Result submitDislike(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+
+        Person user = getLoggedInUser(request).toCompletableFuture().get().get();
+        Post post = postRepository.findById(postId).toCompletableFuture().get().get();
+
+        user.dislikePost(post);
+
+        repository.update(user).toCompletableFuture().get();
+
+        return redirect(routes.HomeController.home());
+    }
+
+    public Result removeOpinion(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+
+        Person user = getLoggedInUser(request).toCompletableFuture().get().get();
+
+        user.getLikedPosts().removeIf(p -> p.getId().equals(postId));
+        user.getDislikedPosts().removeIf(p -> p.getId().equals(postId));
+
+        repository.update(user).toCompletableFuture().get();
+
+        return redirect(routes.HomeController.home());
+    }
+
+
 }

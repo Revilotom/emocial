@@ -4,7 +4,7 @@ echo Building play application...
 
 (cd $PLAYDIR && sbt dist)
 
-cp $PLAYDIR/target/universal/*.zip ./deployment/
+cp $PLAYDIR/target/universal/*.zip ./
 
 echo Building image..
 

@@ -83,7 +83,6 @@ public class FollowControllerTest extends WithServer {
     }
 
 
-    //TODO sometimes test randomly fail
 
     @Test
     public void canFollowPerson() throws ExecutionException, InterruptedException {

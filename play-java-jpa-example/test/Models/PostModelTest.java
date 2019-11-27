@@ -1,6 +1,7 @@
 package Models;
 
 import com.vdurmont.emoji.EmojiParser;
+import models.Person;
 import models.Post;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -22,8 +23,6 @@ public class PostModelTest {
         System.out.println("[" + EmojiParser.removeAllEmojis(content) + "]");
         Post p = new Post(content);
         MatcherAssert.assertThat(p.validate(), is(nullValue()));
-
-
     }
 
     @Test
@@ -37,5 +36,27 @@ public class PostModelTest {
     public void testValidationNoEmojis() {
         Post p = new Post("hello");
         MatcherAssert.assertThat(p.validate(), notNullValue());
+    }
+
+
+    @Test
+    public void testGetRating1() {
+        Post p = new Post();
+        p.addLiker(new Person());
+        MatcherAssert.assertThat(p.getRating(), is(1));
+    }
+
+    @Test
+    public void testGetRatingMinus3() {
+        Post p = new Post();
+
+
+        p.addLiker(new Person());
+        p.addDisLiker(new Person());
+        p.addDisLiker(new Person());
+        p.addDisLiker(new Person());
+        p.addDisLiker(new Person());
+
+        MatcherAssert.assertThat(p.getRating(), is(-3));
     }
 }

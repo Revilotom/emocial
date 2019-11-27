@@ -7,3 +7,4 @@ img/
 preprocessors__typescript-webpack/node_modules
 preprocessors__typescript-webpack/cypress/screenshots/
 preprocessors__typescript-webpack/cypress/videos/
+deployment/.docker_temp_*

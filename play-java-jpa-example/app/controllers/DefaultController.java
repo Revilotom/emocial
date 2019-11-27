@@ -48,5 +48,3 @@ public abstract class DefaultController extends Controller {
         return CompletableFuture.supplyAsync(() -> badRequest(html));
     }
 }
-
-// TODO do we need to make a japanese version

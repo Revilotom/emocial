@@ -38,3 +38,6 @@ The E2E tests should run in Cypress right away. There are few other commands con
 
 
 // Write what we would do if the alarms are triggered.
+// You need to think of a way in which this is better than facebook/slack. This is very important.
+
+// You can talk to people from any language 

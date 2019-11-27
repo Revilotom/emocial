@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HomeController extends DefaultController {
 
@@ -28,6 +30,15 @@ public class HomeController extends DefaultController {
         Person user = maybe.get();
         String username = user.getUsername();
         List<Post> nF = user.getNewsFeed();
-        return ok(views.html.old.home.render(username,nF));
+
+        List<Long> likes = nF.stream().map(Post::getId).filter(pId ->
+                user.getLikedPosts().stream().map(Post::getId)
+                        .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());
+
+        List<Long> dislikes = nF.stream().map(Post::getId).filter(pId ->
+                user.getDislikedPosts().stream().map(Post::getId)
+                        .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());
+
+        return ok(views.html.old.home.render(username, nF, likes, dislikes));
     }
 }

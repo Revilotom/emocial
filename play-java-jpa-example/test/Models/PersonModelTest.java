@@ -66,5 +66,37 @@ public class PersonModelTest {
         MatcherAssert.assertThat(newsFeed.get(2).getOwner().getUsername(), is("person1"));
     }
 
+    @Test
+    public void testLikeThenDisLikePost() {
+        Person p = new Person();
+        p.setId(1L);
+        Post post = new Post("dasad");
+        post.setOwner(p);
+        post.setId(256L);
 
+        p.likePost(post);
+        p.dislikePost(post);
+
+        MatcherAssert.assertThat(p.getLikedPosts().size(), is(0));
+        MatcherAssert.assertThat(p.getDislikedPosts().size(), is(1));
+        MatcherAssert.assertThat(post.likers.size(), is(0));
+        MatcherAssert.assertThat(post.dislikers.size(), is(1));
+    }
+
+    @Test
+    public void testDislikeThenLikePost() {
+        Person p = new Person();
+        p.setId(1L);
+        Post post = new Post("dasad");
+        post.setOwner(p);
+        post.setId(256L);
+
+        p.dislikePost(post);
+        p.likePost(post);
+
+        MatcherAssert.assertThat(p.getLikedPosts().size(), is(1));
+        MatcherAssert.assertThat(p.getDislikedPosts().size(), is(0));
+        MatcherAssert.assertThat(post.likers.size(), is(1));
+        MatcherAssert.assertThat(post.dislikers.size(), is(0));
+    }
 }
