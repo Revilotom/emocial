@@ -81,12 +81,6 @@ public class ActionCreator implements play.http.ActionCreator {
                         .filter(x -> !x.getKey().equals("csrfToken"))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-//                log.debug(
-//                        "{} {} {}",
-//                        request.method(),
-//                        request.uri(),
-//                        newMap);
-
                 try {
                     Result r = getResult(req).toCompletableFuture().get();
                     return CompletableFuture.supplyAsync(() -> r);
