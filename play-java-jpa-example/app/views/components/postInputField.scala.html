@@ -3,22 +3,22 @@
 @(content: String)
 
 @card(){
-    <div class="form-group">
-        <h5 class="card-title">
-            Write a post!
+    <div class="form-group emojis">
+        <h5 class="card-title" style="text-align: center">
+            📝
         </h5>
 
         @helper.form(action = routes.PostController.submitPost()) {
 
             @helper.CSRF.formField
             <textarea style="font-size: xx-large" class="form-control" id="content" name="content" rows="3" style="margin-bottom: 3%">@content</textarea>
-            <div class="row ">
-                <div class="col-8 ">
-                    <input class="btn btn-primary btn-user btn-block" type="submit" value="Submit"/>
+            <div class="row" style="padding-top: 2%;">
+                <div class="col-8 emojis">
+                    <input class="btn btn-light btn-user btn-block" type="submit" value="🗣️️"/>
                 </div>
-                <div class="col ">
-                    <button type="button" class="btn btn-secondary btn-user btn-block" id="emoji-button">
-                        <i class="fas fa-laugh"></i>
+                <div class="col emojis">
+                    <button type="button" class="btn btn-light btn-user btn-block" id="emoji-button">
+                        😀
                     </button>
                 </div>
             </div>

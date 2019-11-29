@@ -10,10 +10,12 @@
         , Symbol("style") -> "width: 100%"){
             @helper.CSRF.formField
 
-            <button name="postButton" class="btn btn-@{if(colour.equals("primary")) colour else "secondary"} btn-user"
-                style="width: 100%">
-                <i class="fas fa-arrow-up"></i>
-            </button>
+            <div class="emojis">
+                <button name="postButton" class="btn btn-@{if(colour.equals("primary")) colour else "light"} btn-user"
+                    style="width: 100%">
+                    👍🏻
+                </button>
+            </div>
         }
     </div>
 
@@ -31,10 +33,13 @@
             routes.PostController.submitDislike(post.getId)
      ,Symbol("style") -> "width: 100%"){
         @helper.CSRF.formField
-        <button name="postButton" class="btn btn-@{if(colour.equals("danger")) colour else "secondary"} btn-user"
-            style="width: 100%">
-            <i class="fas fa-arrow-down"></i>
-        </button>
+        <div class="emojis">
+            <button name="postButton" class="btn btn-@{if(colour.equals("danger")) colour else "light"} btn-user"
+                style="width: 100%">
+                👎🏻
+    @*            <i class="fas fa-arrow-down"></i>*@
+            </button>
+        </div>
     }
     </div>
 </div>

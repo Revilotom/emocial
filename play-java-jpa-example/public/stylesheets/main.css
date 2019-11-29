@@ -6,3 +6,11 @@ html, body {
     margin: 0;
     height: 100%;
 }
+
+.emojis > *{
+    font-size: xx-large;
+}
+
+.nav-item   {
+   padding-left: 60px !important;
+}

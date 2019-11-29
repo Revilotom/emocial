@@ -4,21 +4,17 @@
 <ul  class="list-group " style="border-width: 0">
     @for(p <- posts){
 
+        <li class="list-group-item bg-secondary" style="border: none">
             @if(likedIds.contains(p.getId)){
-                <li class="list-group-item bg-secondary">
                     @post(p,  "primary", wantButton)
-                </li>
             }else {
                 @if(dislikedIds.contains(p.getId)){
-                    <li class="list-group-item bg-secondary">
-                        @post(p,  "danger", wantButton)
-                    </li>
+                    @post(p,  "danger", wantButton)
                 }else{
-                    <li class="list-group-item bg-secondary">
-                        @post(p,  "secondary", wantButton)
-                    </li>
+                    @post(p,  "secondary", wantButton)
                 }
         }
+        </li>
 
 
 

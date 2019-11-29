@@ -43,8 +43,7 @@ public class PostModelTest {
     public void testGetRating1() {
         Post p = new Post();
         p.addLiker(new Person());
-        MatcherAssert.assertThat(p.getRating(), is(1));
-    }
+        MatcherAssert.assertThat(p.getRating(), is(1)); }
 
     @Test
     public void testGetRatingMinus3() {

@@ -25,9 +25,9 @@
   </appender>
 
   <logger name="play" level="INFO" />
-  <logger name="application" level="DEBUG" />
+  <logger name="application" level="INFO" />
   <logger name="ActionCreator" level="ERROR"/>
-  <logger name="filters.LoggingFilter" level="DEBUG"/>
+  <logger name="filters.LoggingFilter" level="INFO"/>
 <!--  <logger name="org.hibernate.SQL" level="TRACE" />-->
 <!--  <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />-->
 
