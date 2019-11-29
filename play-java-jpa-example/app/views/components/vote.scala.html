@@ -1,3 +1,4 @@
+@import helpers.EmojiHelper
 @(post: Post, colour: String)
 
 <div class="container">
@@ -21,7 +22,7 @@
 
     <div class="row" style="justify-content: center">
         <form>
-            @post.getRating
+            @{EmojiHelper.intToEmojis(post.getRating)}
         </form>
     </div>
 
