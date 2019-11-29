@@ -91,7 +91,7 @@ public class Person {
         p.removeLiker(this);
         p.addDisLiker(this);
         this.likedPosts.removeIf(post -> {
-            System.out.println(post);
+
 
             return post.getId().equals(p.getId());
         });

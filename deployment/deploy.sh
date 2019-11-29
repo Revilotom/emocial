@@ -16,7 +16,6 @@ echo Copying docker image...
 scp -i ~/Downloads/FinalProject.pem -rC ~/Documents/training/finalProject/19-tom-oliver/deployment/theSave ec2-user@13.112.1.50:~/
 
 rm ./theSave
-rm ./*.zip
 rm ./*.docker_temp*
 
 echo Starting server...

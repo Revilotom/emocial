@@ -52,7 +52,7 @@ public class PostController extends DefaultController {
                     return person;
                 })
                 .thenAccept(repository::update)
-                .thenApplyAsync(posts -> redirect(routes.PostController.getPosts()));
+                .thenApplyAsync(voidVar -> redirect(routes.PostController.getPosts()));
     }
 
     public Result makePostPage() {
@@ -69,15 +69,11 @@ public class PostController extends DefaultController {
 
         Post post = postForm.get();
 
-
         getLoggedInUser(request)
                 .thenApply(Optional::get)
                 .thenApply(person -> {
                     post.setOwner(person);
                     person.addPost(post);
-
-                    System.out.println(post);
-                    System.out.println(post.content);
                     return person;
                 })
                 .thenApply(repository::update).toCompletableFuture().get().toCompletableFuture().get();

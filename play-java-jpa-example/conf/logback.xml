@@ -26,8 +26,10 @@
 
   <logger name="play" level="INFO" />
   <logger name="application" level="DEBUG" />
-  <logger name="org.hibernate.SQL" level="TRACE" />
-  <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />
+  <logger name="ActionCreator" level="ERROR"/>
+  <logger name="filters.LoggingFilter" level="DEBUG"/>
+<!--  <logger name="org.hibernate.SQL" level="TRACE" />-->
+<!--  <logger name="org.hibernate.type.descriptor.sql" level="TRACE" />-->
 
   <root level="WARN">
     <appender-ref ref="ASYNCFILE" />

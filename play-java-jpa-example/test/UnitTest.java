@@ -56,7 +56,6 @@ public class UnitTest extends EndpointTest {
         ps.add(person);
         when(repository.stream()).thenReturn(supplyAsync(() -> ps.stream()));
 
-        System.out.println(repository.stream().toCompletableFuture().get().collect(Collectors.toList()));
     }
 
 //    @Test

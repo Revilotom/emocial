@@ -96,7 +96,7 @@ public class Post implements Constraints.Validatable<ValidationError>{
 
         String res = r.matcher(content).replaceAll("");
 
-        System.out.println(res);
+
 
         return res.equals("") ? null :
                 new ValidationError("content", "The content of all posts " +

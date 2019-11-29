@@ -1,4 +1,6 @@
 import controllers.routes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Action;
@@ -7,16 +9,17 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.stream.Collectors;
 
 public class ActionCreator implements play.http.ActionCreator {
 
     private final FormFactory formFactory;
     private final HttpExecutionContext ec;
+
+    private static final Logger log = LoggerFactory.getLogger(ActionCreator.class);
 
 
     @Inject
@@ -32,7 +35,8 @@ public class ActionCreator implements play.http.ActionCreator {
 
         return new Action.Simple() {
 
-            CompletionStage<Result> getRoute(Http.Request req) {
+            CompletionStage<Result> getResult(Http.Request req) {
+
                 String uri = req.getHeaders().get("Raw-Request-URI").get();
 
                 // If the user is logged in..
@@ -48,7 +52,7 @@ public class ActionCreator implements play.http.ActionCreator {
                 }
 
                 // If the user is not logged in then let access the login, signup and logout pages
-                if (uri.equals("/logout") || loginSignUp.contains(uri)){
+                if (uri.equals("/logout") || loginSignUp.contains(uri)) {
                     return delegate.call(req);
                 }
 
@@ -59,22 +63,45 @@ public class ActionCreator implements play.http.ActionCreator {
             }
 
 
+            public String formatMap(Map<String, ?> m){
+
+                return "\n{\n     " +
+                        m.entrySet().stream().map(x -> x.getKey() + " : " + x.getValue())
+                        .collect(Collectors.joining("\n     ")) +
+                        "\n}";
+            }
+
             @Override
             public CompletionStage<Result> call(Http.Request req) {
-                return getRoute(req);
-//                try{
-//                    return getRoute(req);
-//                }
-//                catch (Exception e){
-//                    System.out.println("HERER");
-//                }
-//
-//                return CompletableFuture
-//                        .supplyAsync(() ->
-//                                ok(views.html.old.login.render(formFactory.form(Login.class))), ec.current());
+
+                Map<String, String[]> bodyMap = request.body().asFormUrlEncoded();
+
+                Map<String, String> newMap = bodyMap == null ? null : bodyMap.entrySet().stream().map(entry ->
+                        new AbstractMap.SimpleEntry<>(entry.getKey(), Arrays.toString(entry.getValue())))
+                        .filter(x -> !x.getKey().equals("csrfToken"))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+//                log.debug(
+//                        "{} {} {}",
+//                        request.method(),
+//                        request.uri(),
+//                        newMap);
+
+                try {
+                    Result r = getResult(req).toCompletableFuture().get();
+                    return CompletableFuture.supplyAsync(() -> r);
+
+                } catch (Exception e) {
+                    log.error(
+                            "{} {} {} {}",
+                            request.method(),
+                            request.uri(),
+                            newMap != null ? formatMap(newMap) : "",
+                            formatMap(request.getHeaders().toMap())
+                    );
+                    return getResult(req);
+                }
             }
         };
-
-        /// Make a Logger here that shows the request parameters.
     }
 }
