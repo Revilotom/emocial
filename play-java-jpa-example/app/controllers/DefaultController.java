@@ -47,4 +47,17 @@ public abstract class DefaultController extends Controller {
     protected CompletableFuture<Result> supplyAsyncBadRequest(Html html) { // part
         return CompletableFuture.supplyAsync(() -> badRequest(html));
     }
+
+    // TODO Allow sort by rating
+    // TODO view the posts of other people
+    //  TODO Show the cuernt view as highlhited on the nav bar
+    // TODO HTTPS?
+    // TODO Make landing page
+    // TODO Allow comemting
+    // TODO test for verylong names/usernames
+    // TODO search includes names not just usernames
+    // TODO get rid of all fotn awesome
+    // TODO Move everything from the head into a static assets directory.
+
+
 }

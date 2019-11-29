@@ -1,12 +1,14 @@
+import { gotToSearch, submitSearch } from "../helpers.ts/methods"
+
 describe("The following and followers Pages", function() {
 	beforeEach(function() {
 		cy.visit("/search")
 		cy.get("input[name=username]").type("itsmemario")
 		cy.get("input[name=password]").type("12345678")
 		cy.contains("Login").click()
-		cy.contains("Explore").click()
+		gotToSearch()
 		cy.get("input[name=searchTerms]").type("revil")
-		cy.contains("Go!").click()
+		submitSearch()
 		cy.get("form > .btn").click()
 
 		cy.clearCookies()
@@ -15,15 +17,17 @@ describe("The following and followers Pages", function() {
 		cy.get("input[name=username]").type("revilotom")
 		cy.get("input[name=password]").type("12345678")
 		cy.contains("Login").click()
-		cy.contains("Explore").click()
+		gotToSearch()
 		cy.get("input[name=searchTerms]").type("mar")
-		cy.contains("Go!").click()
+		submitSearch()
 		cy.get("form > .btn").click()
 		cy.visit("/search")
 	})
 
 	it("checks that can follow", function() {
-		cy.contains("Go!").click()
+		gotToSearch()
+		submitSearch()
+
 		cy.contains("mario").should("not.exist")
 
 		cy.get(":nth-child(1) > .row > .col-2 > form > .btn").click()

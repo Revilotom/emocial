@@ -32,6 +32,6 @@ WORKDIR /usr/src/app/${PROJECT_NAME}-${VERSION}
 
 RUN chmod a+x bin/${PROJECT_NAME}
 
-CMD rm -rf RUNNING_PID && bin/${PROJECT_NAME} -Dapplication.secret=${SECRET} -Dconfig.resource=prod.conf -Dlogger.resource=prod-logger.xml
+CMD rm -rf RUNNING_PID && bin/${PROJECT_NAME} -Dconfig.resource=prod.conf -Dlogger.resource=prod-logger.xml
 
 EXPOSE 9000 9000

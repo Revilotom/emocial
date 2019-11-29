@@ -45,7 +45,7 @@ public class LoginController extends DefaultController {
     }
 
     public Result index() {
-        ref.tell("MESSAGE", ActorRef.noSender());
+//        ref.tell("MESSAGE", ActorRef.noSender());
         return ok(views.html.old.login.render(formFactory.form(Login.class)));
     }
 

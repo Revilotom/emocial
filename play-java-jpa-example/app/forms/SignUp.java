@@ -12,10 +12,12 @@ public class SignUp implements Constraints.Validatable<List<ValidationError>> {
     // Alphanumeric + space
     private final static String regexPattern = "^[a-zA-Z0-9 ]*$";
 
+    @Constraints.MaxLength(20)
     @Constraints.MinLength(5)
     @Constraints.Required
     private String name;
 
+    @Constraints.MaxLength(20)
     @Constraints.Pattern(SignUp.regexPattern)
     @Constraints.MinLength(5)
     @Constraints.Required

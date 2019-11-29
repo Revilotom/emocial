@@ -34,11 +34,7 @@ public class SearchController extends DefaultController {
     public CompletionStage<Result> submitSearch(final Http.Request request) throws ExecutionException, InterruptedException {
 
         Form<Search> searchForm = formFactory.form(Search.class).bindFromRequest(request);
-//        if (hasFormBadRequestError(searchForm)){
-//            return supplyAsyncBadRequest(search.render(searchForm, new ArrayList<>()));
-//        }
 
-        //TODO this is probably bad
         Person logggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
         List<String> followingNames = logggedInUser.getFollowing()
                 .stream().map(Person::getUsername).collect(Collectors.toList());

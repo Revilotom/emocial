@@ -1,11 +1,8 @@
+import { submitPost, gotToSearch, submitSearch, marioWritePost } from "../helpers.ts/methods"
+
 describe("The Home Page", function() {
 	beforeEach(function() {
-		cy.visit("/")
-		cy.get("input[name=username]").type("itsmemario")
-		cy.get("input[name=password]").type("12345678")
-		cy.contains("Login").click()
-		cy.get("textarea[name=content]").type("🍄")
-		cy.contains("Submit").click()
+		marioWritePost()
 		cy.clearCookies()
 
 		cy.visit("/")
@@ -13,30 +10,30 @@ describe("The Home Page", function() {
 		cy.get("input[name=password]").type("12345678")
 		cy.contains("Login").click()
 		cy.get("textarea[name=content]").type("💩")
-		cy.contains("Submit").click()
+		submitPost()
 		cy.clearCookies()
 
 		cy.visit("/")
 		cy.get("input[name=username]").type("revilotom")
 		cy.get("input[name=password]").type("12345678")
 		cy.contains("Login").click()
-		cy.contains("Explore").click()
+		gotToSearch()
 		cy.get("input[name=searchTerms]").type("mar")
-		cy.contains("Go!").click()
+		submitSearch()
 		cy.get("form > .btn").click()
 		cy.visit("/home")
 	})
 
 	it("checks that can post", function() {
 		cy.get("textarea[name=content]").type("🎸")
-		cy.contains("Submit").click()
+		submitPost()
 		cy.contains("🎸")
 		cy.contains("content [The content of all posts must consist exclusively of emojis!!]").should("not.exist")
 	})
 
 	it("checks that cannot post normal characters", function() {
 		cy.get("textarea[name=content]").type("poopyboy")
-		cy.contains("Submit").click()
+		submitPost()
 		cy.contains("poopyboy")
 		cy.contains("content [The content of all posts must consist exclusively of emojis!!]")
 	})
@@ -52,7 +49,7 @@ describe("The Home Page", function() {
 	it("checks that the emoji picker can be used", function() {
 		cy.get("#emoji-button").click()
 		cy.get(".active > .emoji-picker__emojis > :nth-child(88)").click()
-		cy.contains("Submit").click()
+		submitPost()
 		cy.contains("👺")
 	})
 })

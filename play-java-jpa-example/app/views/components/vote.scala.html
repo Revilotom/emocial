@@ -11,7 +11,7 @@
             @helper.CSRF.formField
 
             <div class="emojis">
-                <button name="postButton" class="btn btn-@{if(colour.equals("primary")) colour else "light"} btn-user"
+                <button name="postButton" class="btn btn-@{if(colour.equals("primary")) "success" else "light"} btn-user"
                     style="width: 100%">
                     👍🏻
                 </button>
