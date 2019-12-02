@@ -17,6 +17,7 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import javax.management.BadAttributeValueExpException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -83,6 +84,18 @@ public class FollowControllerTest extends WithServer {
     }
 
 
+    @Test
+    public void testFollowingNonExistantUserIsBadRequest() throws ExecutionException, InterruptedException {
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( postFollow.uri("/follow/8577658").bodyJson(Json.toJson(new Follow())));
+        Result result = route(app, tokenRequest);
+
+        Thread.sleep(500L);
+        final String body = contentAsString(result);
+
+        MatcherAssert.assertThat(body.toLowerCase(), containsString("could not find user to follow"));
+
+        MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
+    }
 
     @Test
     public void canFollowPerson() throws ExecutionException, InterruptedException {

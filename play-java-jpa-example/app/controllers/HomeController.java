@@ -26,8 +26,8 @@ public class HomeController extends DefaultController {
     }
 
     public Result home(final Http.Request request) throws ExecutionException, InterruptedException {
-        Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
-        Person user = maybe.get();
+
+        Person user = getLoggedInUser(request);
         String username = user.getUsername();
         List<Post> nF = user.getNewsFeed();
 

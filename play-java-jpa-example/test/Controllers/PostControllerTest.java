@@ -130,6 +130,24 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(body, containsString("thisIsATest"));
     }
 
+
+    @Test
+    public void testBadRequestIfPostToBeLikedDoesNotExist() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postLike.uri("/like/3123123"));
+
+        Result result = route(app, tokenRequest);
+
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+
+        final String body = contentAsString(result);
+
+        MatcherAssert.assertThat(body.toLowerCase(), containsString("could not find post"));
+        MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
+    }
+
+
+
     @Test
     public void testCanLikePost() throws InterruptedException, ExecutionException {
 

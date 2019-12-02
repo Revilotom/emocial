@@ -38,8 +38,7 @@ public class FollowController extends DefaultController {
 //                .thenApply(person -> person.map(wantFollowing ? Person::getFollowing : Person::getFollowers))
 //                .thenApplyAsync(list ->
 //                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new), wantFollowing)), ec.current());
-        Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
-        Person user = maybe.get();
+        Person user = getLoggedInUser(request);
         Set<Person> people = (wantFollowing ? user.getFollowing() : user.getFollowers());
         return ok(persons.render(new ArrayList<>(people), wantFollowing));
 
@@ -59,7 +58,7 @@ public class FollowController extends DefaultController {
 //                .thenApply(loggedInUser -> {loggedInUser.unFollow(username); return loggedInUser;})
 //                .thenAccept(repository::update).toCompletableFuture().get();
 
-        Person loggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
+        Person loggedInUser = getLoggedInUser(request);
         loggedInUser.unFollow(username);
         repository.update(loggedInUser).toCompletableFuture().get();
 
@@ -69,23 +68,17 @@ public class FollowController extends DefaultController {
 
     public Result writeFollowToDB(final Http.Request request, String username) throws ExecutionException, InterruptedException {
 
-//        getLoggedInUser(request)
-//                .thenApply(Optional::get)
-//                .thenApply(loggedInUser -> repository.findByUsername(username)
-//                        .thenApply(Optional::get)
-//                        .thenApply(loggedInUser::addFollowing)
-//                        .thenApply(repository::update))
-//                .toCompletableFuture().get().toCompletableFuture().get().toCompletableFuture().get();
+        Person user = getLoggedInUser(request);
+        Optional<Person> maybePerson = repository.findByUsername(username).toCompletableFuture().get();
 
-        Optional<Person> maybe = getLoggedInUser(request).toCompletableFuture().get();
-        Person user = maybe.get();
+        if(maybePerson.isEmpty()){
+            return badRequest("could not find user to follow");
+        }
 
-        Person userToFollow = repository.findByUsername(username).toCompletableFuture().get().get();
-
+        Person userToFollow = maybePerson.get();
         user.addFollowing(userToFollow);
 
         repository.update(user).toCompletableFuture().get();
-
         return redirect(routes.FollowController.getFollowing());
     }
 

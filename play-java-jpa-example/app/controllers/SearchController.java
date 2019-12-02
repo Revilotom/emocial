@@ -35,7 +35,7 @@ public class SearchController extends DefaultController {
 
         Form<Search> searchForm = formFactory.form(Search.class).bindFromRequest(request);
 
-        Person logggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
+        Person logggedInUser = getLoggedInUser(request);
         List<String> followingNames = logggedInUser.getFollowing()
                 .stream().map(Person::getUsername).collect(Collectors.toList());
 

@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class PostController extends DefaultController {
 
     public Result getPostsByPerson(final Http.Request request, String username) throws ExecutionException, InterruptedException {
 
-        Person loggedInUser = getLoggedInUser(request).toCompletableFuture().get().get();
+        Person loggedInUser = getLoggedInUser(request);
 
         Optional<Person> personToFind = repository.findByUsername(username).toCompletableFuture().get();
 
@@ -63,26 +64,18 @@ public class PostController extends DefaultController {
     }
 
 
-    public CompletionStage<Result> getPosts(final Http.Request request) {
-        return getLoggedInUser(request)
-                .thenApply(person -> {
-                    List<Post> posts = new ArrayList<>(person.map(Person::getPosts).get());
-                    posts.sort(Person.ComparePosts);
-                    return posts;
-                })
-                .thenApplyAsync(posts ->
-                        ok(views.html.old.myPosts.render(posts)), ec.current());
+    public Result getPosts(final Http.Request request) throws ExecutionException, InterruptedException {
+        Person loggedInUser = getLoggedInUser(request);
+        List<Post> postList = new ArrayList<>(loggedInUser.getPosts());
+        postList.sort(Person.ComparePosts);
+        return ok(views.html.old.myPosts.render(postList));
     }
 
-    public CompletionStage<Result> deletePost(final Http.Request request, long postId) {
-        return getLoggedInUser(request)
-                .thenApply(Optional::get)
-                .thenApply(person -> {
-                    person.deletePost(postId);
-                    return person;
-                })
-                .thenAccept(repository::update)
-                .thenApplyAsync(voidVar -> redirect(routes.PostController.getPosts()));
+    public Result deletePost(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+        Person loggedInUser = getLoggedInUser(request);
+        loggedInUser.deletePost(postId);
+        repository.update(loggedInUser);
+        return redirect(routes.PostController.getPosts());
     }
 
     public Result makePostPage() {
@@ -98,36 +91,27 @@ public class PostController extends DefaultController {
         }
 
         Post post = postForm.get();
+        Person loggedInUser = getLoggedInUser(request);
+        loggedInUser.addPost(post);
 
-        getLoggedInUser(request)
-                .thenApply(Optional::get)
-                .thenApply(person -> {
-                    post.setOwner(person);
-                    person.addPost(post);
-                    return person;
-                })
-                .thenApply(repository::update).toCompletableFuture().get().toCompletableFuture().get();
+        repository.update(loggedInUser).toCompletableFuture().get();
 
         return redirect(routes.HomeController.home());
     }
 
 
-    private Post handleOpinion(final Http.Request request, long postId, Opinion opinion) throws ExecutionException, InterruptedException {
-        Person user = getLoggedInUser(request).toCompletableFuture().get().get();
-        Post post = postRepository.findById(postId).toCompletableFuture().get().get();
+    private void handleOpinion(final Http.Request request, Post post, Opinion opinion) throws ExecutionException, InterruptedException {
+        Person user = getLoggedInUser(request);
 
         if (opinion == Opinion.LIKE) {
             user.likePost(post);
         } else if (opinion == Opinion.DISLIKE) {
             user.dislikePost(post);
         } else {
-            user.getLikedPosts().removeIf(p -> p.getId().equals(postId));
-            user.getDislikedPosts().removeIf(p -> p.getId().equals(postId));
+            user.getLikedPosts().removeIf(p -> p.getId().equals(post.getId()));
+            user.getDislikedPosts().removeIf(p -> p.getId().equals(post.getId()));
         }
-
         repository.update(user).toCompletableFuture().get();
-        return post;
-
     }
 
 
@@ -145,16 +129,21 @@ public class PostController extends DefaultController {
 
     private Result getCorrectRedirect(final Http.Request request, long postId, Opinion opinion) throws ExecutionException, InterruptedException {
 
-        System.out.println(request.session().data());
-        System.out.println(request.session().getOptional("voteLoc").isPresent());
+        Optional<Post> maybePost = postRepository.findById(postId).toCompletableFuture().get();
 
-        if(request.session().getOptional("voteLoc").orElse("home").contains("home")){
-            handleOpinion(request, postId, opinion);
+        if (maybePost.isEmpty()) {
+            return badRequest("could not find post: " + postId);
+        }
+
+        Post post = maybePost.get();
+
+        handleOpinion(request, post, opinion);
+
+        if (request.session().getOptional("voteLoc").orElse("home").contains("home")) {
             return redirect(routes.HomeController.home()).addingToSession(request, "voteLoc", "home");
         }
 
-        Post p = handleOpinion(request, postId, opinion);
-        return redirect(routes.PostController.getPostsByPerson(p.getOwner().getUsername()))
+        return redirect(routes.PostController.getPostsByPerson(post.getOwner().getUsername()))
                 .addingToSession(request, "voteLoc", "posts");
     }
 }

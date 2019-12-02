@@ -89,15 +89,6 @@ public class PersonRepoTest extends WithApplication {
 
         person2.addFollowing(person);
 
-        System.err.println("~~~~~~Person~~~~~~~");
-        System.err.println(person.getFollowers());
-        System.err.println(person.getFollowing());
-
-        System.err.println("~~~~~~Person2~~~~~~~");
-        System.err.println(person2.getFollowers());
-        System.err.println(person2.getFollowing());
-
-
         repo.update(person2).toCompletableFuture().get();
 
         person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
