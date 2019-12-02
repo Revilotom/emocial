@@ -1,13 +1,5 @@
 package controllers;
 
-import akka.NotUsed;
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.stream.ActorMaterializer;
-import akka.stream.Materializer;
-import akka.stream.OverflowStrategy;
-import akka.stream.javadsl.Sink;
-import akka.stream.javadsl.Source;
 import models.Person;
 import play.data.Form;
 import play.data.FormFactory;
@@ -19,7 +11,6 @@ import play.twirl.api.Html;
 import repositories.person.PersonRepository;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -50,7 +41,7 @@ public abstract class DefaultController extends Controller {
 
     // TODO Allow sort by rating
     // TODO view the posts of other people
-    //  TODO Show the cuernt view as highlhited on the nav bar
+    // TODO Show the cuernt view as highlhited on the nav bar
     // TODO HTTPS?
     // TODO Make landing page
     // TODO Allow comemting

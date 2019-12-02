@@ -9,6 +9,7 @@ import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
 import repositories.post.PostRepository;
+import scala.concurrent.impl.FutureConvertersImpl;
 import views.html.old.makePost;
 
 import javax.inject.Inject;
@@ -32,6 +33,21 @@ public class PostController extends DefaultController {
                 stream.collect(Collectors.toList())).thenApplyAsync(people ->
                 ok(views.html.old.persons.render(people, false)));
     }
+
+//    public CompletionStage<Result> getOtherPersonsPosts(Long personId){
+//
+//    }
+//
+//    public CompletionStage<Set<Post>> getPostsByUsername(String username){
+//        return repository.findByUsername(username)
+//                .thenApplyAsync(maybePerson -> {
+//                    if (maybePerson.isPresent()){
+//                        return maybePerson.get().getPosts();
+//                    }
+//                    return new HashSet<>();
+//                });
+//    }
+
 
     public CompletionStage<Result> getPosts(final Http.Request request) {
         return getLoggedInUser(request)
@@ -81,41 +97,37 @@ public class PostController extends DefaultController {
         return redirect(routes.HomeController.home());
     }
 
-    public Result submitLike(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
-
+    private Result handleOpinion(final Http.Request request, long postId, Opinion opinion) throws ExecutionException, InterruptedException {
         Person user = getLoggedInUser(request).toCompletableFuture().get().get();
         Post post = postRepository.findById(postId).toCompletableFuture().get().get();
 
-        user.likePost(post);
+        if (opinion == Opinion.LIKE) {
+            user.likePost(post);
+        }
+
+        else if (opinion == Opinion.DISLIKE) {
+            user.dislikePost(post);
+        }
+
+        else {
+            user.getLikedPosts().removeIf(p -> p.getId().equals(postId));
+            user.getDislikedPosts().removeIf(p -> p.getId().equals(postId));
+        }
 
         repository.update(user).toCompletableFuture().get();
-
         return redirect(routes.HomeController.home());
+
+    }
+
+    public Result submitLike(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+        return handleOpinion(request, postId, Opinion.LIKE);
     }
 
     public Result submitDislike(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
-
-        Person user = getLoggedInUser(request).toCompletableFuture().get().get();
-        Post post = postRepository.findById(postId).toCompletableFuture().get().get();
-
-        user.dislikePost(post);
-
-        repository.update(user).toCompletableFuture().get();
-
-        return redirect(routes.HomeController.home());
+        return handleOpinion(request, postId, Opinion.DISLIKE);
     }
 
     public Result removeOpinion(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
-
-        Person user = getLoggedInUser(request).toCompletableFuture().get().get();
-
-        user.getLikedPosts().removeIf(p -> p.getId().equals(postId));
-        user.getDislikedPosts().removeIf(p -> p.getId().equals(postId));
-
-        repository.update(user).toCompletableFuture().get();
-
-        return redirect(routes.HomeController.home());
+        return handleOpinion(request, postId, Opinion.NONE);
     }
-
-
 }

@@ -33,6 +33,18 @@ public class PostModelTest {
     }
 
     @Test
+    public void testWithMultipleLines() {
+       String content = "\uD83E\uDD11\uD83E\uDD28\n" +
+                "\uD83D\uDC79\uD83D\uDC79\n" +
+                "\uD83D\uDC7A\uD83D\uDC7A";
+
+       Post p = new Post(content);
+
+       MatcherAssert.assertThat(p.validate(), is(nullValue()));
+
+    }
+
+    @Test
     public void testValidationNoEmojis() {
         Post p = new Post("hello");
         MatcherAssert.assertThat(p.validate(), notNullValue());

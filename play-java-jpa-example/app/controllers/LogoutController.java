@@ -30,4 +30,3 @@ public class LogoutController extends DefaultController {
     }
 }
 
-// TODO do we need to do https?
