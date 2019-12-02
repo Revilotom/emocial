@@ -1,6 +1,5 @@
 package repositories.post;
 
-import models.Person;
 import models.Post;
 import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
@@ -10,11 +9,9 @@ import repositories.person.DatabaseExecutionContext;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletionStage;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -31,7 +28,7 @@ public class JPAPostRepository extends JPADefaultRepository implements PostRepos
 
     @Override
     public CompletionStage<Stream<Post>> stream() {
-        return supplyAsync(() -> wrap(em -> stream(em)), executionContext);
+        return supplyAsync(() -> wrap(this::stream), executionContext);
     }
 
     @Override
@@ -51,7 +48,7 @@ public class JPAPostRepository extends JPADefaultRepository implements PostRepos
         return post;
     }
 
-    public Optional<Post>findById(EntityManager em, long id) {
+    private Optional<Post>findById(EntityManager em, long id) {
         try{
             Post post =
                     em.createQuery("select p from Post p where id = :id", Post.class)

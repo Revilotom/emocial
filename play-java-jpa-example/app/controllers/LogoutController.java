@@ -2,7 +2,6 @@ package controllers;
 
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
 

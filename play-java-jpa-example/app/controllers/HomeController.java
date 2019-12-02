@@ -11,11 +11,8 @@ import play.mvc.Result;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class HomeController extends DefaultController {
 

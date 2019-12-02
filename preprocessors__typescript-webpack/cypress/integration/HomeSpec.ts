@@ -1,17 +1,11 @@
-import { submitPost, gotToSearch, submitSearch, marioWritePost } from "../helpers.ts/methods"
+import { submitPost, gotToSearch, submitSearch, marioWritePost, kunalWritePost } from "../helpers.ts/methods"
 
 describe("The Home Page", function() {
 	beforeEach(function() {
 		marioWritePost()
 		cy.clearCookies()
 
-		cy.visit("/")
-		cy.get("input[name=username]").type("kunal54")
-		cy.get("input[name=password]").type("12345678")
-		cy.contains("Login").click()
-		cy.get("textarea[name=content]").type("💩")
-		submitPost()
-		cy.clearCookies()
+		kunalWritePost()
 
 		cy.visit("/")
 		cy.get("input[name=username]").type("revilotom")

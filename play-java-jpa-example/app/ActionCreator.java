@@ -1,7 +1,6 @@
 import controllers.routes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Action;
 import play.mvc.Http;
@@ -16,15 +15,13 @@ import java.util.stream.Collectors;
 
 public class ActionCreator implements play.http.ActionCreator {
 
-    private final FormFactory formFactory;
     private final HttpExecutionContext ec;
 
     private static final Logger log = LoggerFactory.getLogger(ActionCreator.class);
 
 
     @Inject
-    public ActionCreator(FormFactory formFactory, HttpExecutionContext ec) {
-        this.formFactory = formFactory;
+    public ActionCreator(HttpExecutionContext ec) {
         this.ec = ec;
     }
 
@@ -37,12 +34,10 @@ public class ActionCreator implements play.http.ActionCreator {
 
             CompletionStage<Result> getResult(Http.Request req) {
 
-                String uri = req.getHeaders().get("Raw-Request-URI").get();
-
                 // If the user is logged in..
                 if (req.session().getOptional("loggedIn").isPresent()) {
                     // If the url points to either login or signup then redirect the user to the home page
-                    if (loginSignUp.contains(uri)) {
+                    if (loginSignUp.contains(req.uri())) {
                         return CompletableFuture
                                 .supplyAsync(() ->
                                         redirect(routes.HomeController.home()), ec.current());
@@ -52,7 +47,7 @@ public class ActionCreator implements play.http.ActionCreator {
                 }
 
                 // If the user is not logged in then let access the login, signup and logout pages
-                if (uri.equals("/logout") || loginSignUp.contains(uri)) {
+                if (req.uri().equals("/logout") || loginSignUp.contains(req.uri())) {
                     return delegate.call(req);
                 }
 
@@ -63,7 +58,7 @@ public class ActionCreator implements play.http.ActionCreator {
             }
 
 
-            public String formatMap(Map<String, ?> m){
+            String formatMap(Map<String, ?> m){
 
                 return "\n{\n     " +
                         m.entrySet().stream().map(x -> x.getKey() + " : " + x.getValue())

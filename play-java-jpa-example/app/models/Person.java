@@ -1,7 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.Hibernate;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
@@ -12,12 +11,7 @@ import java.util.stream.Collectors;
 @Entity
 public class Person {
 
-    public static final Comparator<Post> ComparePosts = new Comparator<>() {
-        @Override
-        public int compare(Post o1, Post o2) {
-            return (int) (o2.timeStamp - o1.timeStamp);
-        }
-    };
+    public static final Comparator<Post> ComparePosts = (o1, o2) -> (int) (o2.timeStamp - o1.timeStamp);
 
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
@@ -196,7 +190,7 @@ public class Person {
                 .flatMap(Set::stream)
                 .collect(Collectors.toList()));
 
-        Collections.sort(postList, ComparePosts);
+        postList.sort(ComparePosts);
 
         return postList;
     }

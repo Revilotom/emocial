@@ -12,3 +12,14 @@ export const marioWritePost = () => {
 	cy.get("textarea[name=content]").type("🍄")
 	submitPost()
 }
+
+export const kunalWritePost = () => {
+	cy.clearCookies()
+	cy.visit("/")
+	cy.get("input[name=username]").type("kunal")
+	cy.get("input[name=password]").type("12345678")
+	cy.contains("Login").click()
+	cy.get("textarea[name=content]").type("🤡")
+	submitPost()
+	cy.clearCookies()
+}

@@ -1,14 +1,8 @@
-import { gotToSearch, submitSearch, submitPost } from "../helpers.ts/methods"
+import { gotToSearch, submitSearch, submitPost, marioWritePost, kunalWritePost } from "../helpers.ts/methods"
 
 describe("The Home Page", function() {
 	beforeEach(function() {
-		cy.visit("/")
-		cy.get("input[name=username]").type("itsmemario")
-		cy.get("input[name=password]").type("12345678")
-		cy.contains("Login").click()
-		cy.get("textarea[name=content]").type("👋🏻")
-		submitPost()
-		cy.clearCookies()
+		kunalWritePost()
 
 		cy.visit("/")
 		cy.get("input[name=username]").type("revilotom")
@@ -25,7 +19,14 @@ describe("The Home Page", function() {
 		submitSearch()
 		cy.contains("mario").should("not.exist")
 
-		cy.contains("kunal54")
+		cy.contains("kunal")
 		cy.contains("ajinkya69")
+	})
+
+	it("checks that you can click on a users name to see their posts", function() {
+		submitSearch()
+		cy.contains("mario").should("not.exist")
+		cy.contains("kunal").click()
+		cy.contains("🤡")
 	})
 })

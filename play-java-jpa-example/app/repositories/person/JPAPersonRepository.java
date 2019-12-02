@@ -1,7 +1,6 @@
 package repositories.person;
 
 import models.Person;
-import models.Post;
 import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
 import repositories.JPADefaultRepository;
@@ -9,7 +8,6 @@ import repositories.JPADefaultRepository;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +38,7 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
 
     @Override
     public CompletionStage<Stream<Person>> stream() {
-        return supplyAsync(() -> wrap(em -> stream(em)), executionContext);
+        return supplyAsync(() -> wrap(this::stream), executionContext);
     }
 
     @Override

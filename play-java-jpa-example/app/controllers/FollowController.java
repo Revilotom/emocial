@@ -2,7 +2,6 @@ package controllers;
 
 import forms.Follow;
 import models.Person;
-import models.Post;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
@@ -14,11 +13,8 @@ import views.html.old.persons;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
 
@@ -66,7 +62,7 @@ public class FollowController extends DefaultController {
         return redirect(routes.FollowController.getFollowing());
     }
 
-    public Result writeFollowToDB(final Http.Request request, String username) throws ExecutionException, InterruptedException {
+    private Result writeFollowToDB(final Http.Request request, String username) throws ExecutionException, InterruptedException {
 
         Person user = getLoggedInUser(request);
         Optional<Person> maybePerson = repository.findByUsername(username).toCompletableFuture().get();

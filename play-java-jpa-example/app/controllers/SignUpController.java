@@ -5,14 +5,12 @@ import forms.SignUp;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
 import views.html.old.signUp;
 
 import javax.inject.Inject;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public class SignUpController extends DefaultController {

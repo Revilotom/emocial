@@ -48,7 +48,7 @@ beforeEach(function() {
 
 	cy.request("POST", "/signUp", {
 		name: "hello",
-		username: "kunal54",
+		username: "kunal",
 		password1: "12345678",
 		password2: "12345678"
 	})

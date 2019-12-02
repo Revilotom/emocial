@@ -32,7 +32,7 @@ public class FollowRelation {
     @JsonBackReference
     private Person to;
 
-    public FollowRelation() {};
+    public FollowRelation() {}
 
     public FollowRelation(Person from, Person to) {
         this.from = from;

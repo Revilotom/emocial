@@ -5,20 +5,16 @@ import models.Person;
 import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
-import views.html.old.search;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SearchController extends DefaultController {
 

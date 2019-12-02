@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -31,32 +30,30 @@ public abstract class DefaultController extends Controller {
         this.ec = ec;
     }
 
-    public Person getLoggedInUser(final Http.Request request) throws ExecutionException, InterruptedException {
+    Person getLoggedInUser(final Http.Request request) throws ExecutionException, InterruptedException {
         Optional<Person> maybeUSer = request.session().getOptional("loggedIn")
                 .map(repository::findByUsername).get().toCompletableFuture().get();
 
-        if (maybeUSer.isEmpty()){
-            assert false;
-        }
+        assert maybeUSer.isPresent();
         return maybeUSer.get();
     }
 
-    protected boolean hasFormBadRequestError(Form<?> form) { // part
+    boolean hasFormBadRequestError(Form<?> form) { // part
         return form.hasErrors() || form.hasGlobalErrors();
     }
 
-    protected CompletableFuture<Result> supplyAsyncBadRequest(Html html) { // part
+    CompletableFuture<Result> supplyAsyncBadRequest(Html html) { // part
         return CompletableFuture.supplyAsync(() -> badRequest(html));
     }
 
 
-    protected List<Long> postIdsThatYouLiked(List<Post> input, Person loggedInUser) {
+    List<Long> postIdsThatYouLiked(List<Post> input, Person loggedInUser) {
         return input.stream().map(Post::getId).filter(pId ->
                 loggedInUser.getLikedPosts().stream().map(Post::getId)
                         .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());
     }
 
-    protected List<Long> postIdsThatYouDisliked(List<Post> input, Person loggedInUser) {
+    List<Long> postIdsThatYouDisliked(List<Post> input, Person loggedInUser) {
         return input.stream().map(Post::getId).filter(pId ->
                 loggedInUser.getDislikedPosts().stream().map(Post::getId)
                         .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());

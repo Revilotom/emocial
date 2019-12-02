@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class EmojiHelper {
 
-    static HashMap<String, String> numToEmoji = new HashMap<String, String>() {{
+    private static final HashMap<String, String> numToEmoji = new HashMap<>() {{
 
         put("1", "1️⃣");
         put("2", "2️⃣");

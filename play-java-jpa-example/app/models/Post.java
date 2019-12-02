@@ -1,7 +1,6 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.vdurmont.emoji.EmojiParser;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
 
@@ -16,7 +15,7 @@ import java.util.regex.Pattern;
 @Constraints.Validate
 public class Post implements Constraints.Validatable<ValidationError>{
 
-    private static Pattern r = Pattern.compile(
+    private static final Pattern r = Pattern.compile(
             "^(?:(?:[\u00a9\u00ae\u203c\u2049\u2122\u2139\u2194" +
             "-\u2199\u21a9-\u21aa\u231a-\u231b\u2328\u23cf\u23e9-\u23f3\u23f8-\u23fa\u24c2\u25aa-" +
             "\u25ab\u25b6\u25c0\u25fb-\u25fe\u2600-\u2604\u260e\u2611\u2614-\u2615\u2618\u261d\u2620\u2622-" +
@@ -41,7 +40,7 @@ public class Post implements Constraints.Validatable<ValidationError>{
     @ManyToOne( cascade = CascadeType.MERGE)
     @JoinColumn
     @JsonBackReference
-    public Person owner;
+    private Person owner;
 
     @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.MERGE)
     @JsonBackReference
@@ -71,7 +70,7 @@ public class Post implements Constraints.Validatable<ValidationError>{
 
     @Constraints.Required
     @Constraints.MaxLength(200)
-    public String content;
+    private String content;
 
     public Post() {
         this.timeStamp = Instant.now().toEpochMilli();

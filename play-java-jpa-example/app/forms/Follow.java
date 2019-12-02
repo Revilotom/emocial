@@ -2,8 +2,6 @@ package forms;
 
 import play.data.validation.Constraints;
 
-import javax.validation.Constraint;
-
 public class Follow{
 
     public Follow(String nameOfPersonToFollow) {

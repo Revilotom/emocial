@@ -1,20 +1,15 @@
 package repositories;
 
-import models.Person;
-import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
 import repositories.person.DatabaseExecutionContext;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public abstract class JPADefaultRepository {
-    public final JPAApi jpaApi;
-    public final DatabaseExecutionContext executionContext;
+    private final JPAApi jpaApi;
+    protected final DatabaseExecutionContext executionContext;
 
     @Inject
     public JPADefaultRepository(JPAApi jpaApi, DatabaseExecutionContext executionContext) {

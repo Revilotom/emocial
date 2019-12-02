@@ -2,41 +2,26 @@ package controllers;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import akka.stream.ActorMaterializer;
-import akka.stream.Materializer;
 import akka.stream.OverflowStrategy;
-import akka.stream.javadsl.Sink;
 import akka.stream.javadsl.Source;
 import forms.Login;
 import play.data.Form;
 import play.data.FormFactory;
-import play.libs.EventSource;
 import play.libs.concurrent.HttpExecutionContext;
-import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.twirl.api.Html;
 import repositories.person.PersonRepository;
 import views.html.old.login;
 
 import javax.inject.Inject;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 
 public class LoginController extends DefaultController {
 
-    final ActorSystem system = ActorSystem.create("QuickStart");
-    final Materializer materializer = ActorMaterializer.create(system);
+    private final ActorSystem system = ActorSystem.create("QuickStart");
 
-    final Source<String, ActorRef> source = Source.actorRef(1000, OverflowStrategy.dropHead());
-    final ActorRef ref = source
-            .map(elem -> {
-                System.out.println(elem);
-                return elem;
-            })
-            .to(Sink.foreach(elem -> System.out.println("sinking")))
-            .run(materializer);
+    private final Source<String, ActorRef> source = Source.actorRef(1000, OverflowStrategy.dropHead());
 
 
     @Inject
@@ -45,13 +30,7 @@ public class LoginController extends DefaultController {
     }
 
     public Result index() {
-//        ref.tell("MESSAGE", ActorRef.noSender());
         return ok(views.html.old.login.render(formFactory.form(Login.class)));
-    }
-
-    public Result sse() {
-        final Source<EventSource.Event, ?> eventSource = source.map(EventSource.Event::event);
-        return ok().chunked(eventSource.via(EventSource.flow())).as(Http.MimeTypes.EVENT_STREAM);
     }
 
     public CompletionStage<Result> submitLogin(final Http.Request request) {

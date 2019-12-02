@@ -34,8 +34,8 @@ describe("The following and followers Pages", function() {
 
 		cy.location("pathname").should("eq", "/following")
 
-		cy.contains("ajinkya")
-		cy.contains("mario")
+		cy.contains("ajinkya").click()
+		cy.location("pathname").should("eq", "/posts/ajinkya69")
 	})
 
 	it("checks that can unfollow", function() {
@@ -48,6 +48,7 @@ describe("The following and followers Pages", function() {
 	it("checks that can see followers", function() {
 		cy.visit("/followers")
 		cy.location("pathname").should("eq", "/followers")
-		cy.contains("mario")
+		cy.contains("mario").click()
+		cy.location("pathname").should("eq", "/posts/itsmemario")
 	})
 })
