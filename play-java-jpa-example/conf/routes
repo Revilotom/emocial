@@ -17,6 +17,7 @@ POST    /logout                     controllers.LogoutController.logout()
 GET     /signUp                     controllers.SignUpController.signUp()
 POST    /signUp                     controllers.SignUpController.submitSignUp(req: Request)
 
+GET     /posts/:username            controllers.PostController.getPostsByPerson(req: Request, username: String)
 GET     /myPosts                    controllers.PostController.getPosts(req: Request)
 GET     /makePost                   controllers.PostController.makePostPage()
 POST    /makePost                   controllers.PostController.submitPost(req: Request)

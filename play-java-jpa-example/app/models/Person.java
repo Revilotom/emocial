@@ -210,16 +210,13 @@ public class Person {
         this.posts.add(post);
     }
 
-//    @Override
-//    public String toString() {
-//        return hashCode() + "Person{" +
-//                " username='" + username + '\'' +
-//                ", myPosts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
-//                ", followers=" + followers +
-//                ", following=" + following +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return hashCode() + "Person{" +
+                " username='" + username + '\'' +
+                ", myPosts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
+                ", followers=" + followers +
+                ", following=" + following +
+                '}';
+    }
 }
-
-// TODO myPosts are not displayed in chronological order
-// TODO fix unfollowing

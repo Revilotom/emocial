@@ -30,30 +30,46 @@ public class PostControllerTest extends WithServer {
     private Http.RequestBuilder postDislike;
     private Http.RequestBuilder get;
     private JPAPersonRepository repo;
+    private Http.RequestBuilder getPersonsPosts;
+    private Http.RequestBuilder getPersonsPostsUserDoesNotExist;
 
     @Before
     public void setUp() throws ExecutionException, InterruptedException {
         repo = app.injector().instanceOf(JPAPersonRepository.class);
 
-        Person person = new Person("hackme", "username", "password");
+        Person otherUser = new Person("hello", "revilotom", "123456789");
+        otherUser.addPost(new Post("My name is tom!"));
+        repo.update(otherUser).toCompletableFuture().get();
+        System.out.println(repo.findByUsername("revilotom").toCompletableFuture().get().get());
+
+
+        Person loggedInUser = new Person("hackme", "username", "password");
         Post firstPost = new Post("thisIsATest");
-        firstPost.setOwner(person);
-        person.addPost(firstPost);
-        repo.update(person).toCompletableFuture().get();
+        loggedInUser.addPost(firstPost);
+        repo.update(loggedInUser).toCompletableFuture().get();
 
-        person = repo.findByUsername("username").toCompletableFuture().get().get();
+        loggedInUser = repo.findByUsername("username").toCompletableFuture().get().get();
 
-        long firstPostId =  new ArrayList<>(person.getPosts()).get(0).getId();
+        long firstPostId =  new ArrayList<>(loggedInUser.getPosts()).get(0).getId();
 
-        get =        fakeRequest().session("loggedIn", "username").method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
-        postCreate = fakeRequest().session("loggedIn", "username").method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
-        postDelete = fakeRequest().session("loggedIn", "username").method(POST).uri("/deletePost/" + firstPostId).header("Raw-Request-URI", "/deletePost");
-        postLike =   fakeRequest().session("loggedIn", "username").method(POST).uri("/like/" + firstPostId).header("Raw-Request-URI", "/like");
-        postDislike =fakeRequest().session("loggedIn", "username").method(POST).uri("/dislike/" + firstPostId).header("Raw-Request-URI", "/dislike");
-        postRemoveOpinion = fakeRequest().session("loggedIn", "username").method(POST).uri("/removeOpinion/" + firstPostId).header("Raw-Request-URI", "/removeOpinion");
-
-
+        get =        fakeRequest().session("loggedIn", "username")
+                .method(GET).uri("/myPosts").header("Raw-Request-URI", "/myPosts");
+        postCreate = fakeRequest().session("loggedIn", "username")
+                .method(POST).uri("/makePost").header("Raw-Request-URI", "/makePost");
+        postDelete = fakeRequest().session("loggedIn", "username")
+                .method(POST).uri("/deletePost/" + firstPostId).header("Raw-Request-URI", "/deletePost");
+        postLike =   fakeRequest().session("loggedIn", "username")
+                .method(POST).uri("/like/" + firstPostId).header("Raw-Request-URI", "/like");
+        postDislike =fakeRequest().session("loggedIn", "username")
+                .method(POST).uri("/dislike/" + firstPostId).header("Raw-Request-URI", "/dislike");
+        postRemoveOpinion = fakeRequest().session("loggedIn", "username")
+                .method(POST).uri("/removeOpinion/" + firstPostId).header("Raw-Request-URI", "/removeOpinion");
+        getPersonsPosts = fakeRequest().session("loggedIn", "username")
+                .method(GET).uri("/posts/revilotom").header("Raw-Request-URI", "/posts/revilotom");
+        getPersonsPostsUserDoesNotExist = fakeRequest().session("loggedIn", "username")
+                .method(GET).uri("/posts/asda").header("Raw-Request-URI", "/posts/asda");
     }
+
     @After
     public void tearDown() {
         repo = null;
@@ -184,6 +200,34 @@ public class PostControllerTest extends WithServer {
 
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
         MatcherAssert.assertThat(new ArrayList<>(posts).get(0).dislikers.size(), is(0));
+    }
+
+
+    @Test
+    public void testCanShowAPersonsPostsFailsIfUserDoesntExist() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(getPersonsPostsUserDoesNotExist);
+        Result result = route(app, tokenRequest);
+
+        final String body = contentAsString(result);
+        MatcherAssert.assertThat(body.toLowerCase(), containsString("could not find user with username"));
+        MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
+    }
+
+    @Test
+    public void testCanShowAPersonsPosts() throws InterruptedException, ExecutionException {
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(getPersonsPosts);
+
+        Result result = route(app, tokenRequest);
+
+        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+
+        final String body = contentAsString(result);
+
+        MatcherAssert.assertThat(body, containsString("name is tom"));
+
+        MatcherAssert.assertThat(result.status(), is(OK));
     }
 }
 

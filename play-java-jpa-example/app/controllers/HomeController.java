@@ -39,6 +39,7 @@ public class HomeController extends DefaultController {
                 user.getDislikedPosts().stream().map(Post::getId)
                         .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());
 
-        return ok(views.html.old.home.render(username, nF, likes, dislikes));
+        return ok(views.html.old.home.render(username, nF, likes, dislikes))
+                .addingToSession(request, "voteLoc", "home");
     }
 }
