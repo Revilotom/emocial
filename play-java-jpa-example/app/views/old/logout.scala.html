@@ -5,14 +5,13 @@
 @main("Are you sure you want to logout?") {
     @navbar()
     @card(){
-        <h5 style="text-align: center">Are sure you want to logout?</h5>
+        <h2 style="text-align: center">⚠️️👤🔚❓</h2>
         <div style="text-align: center">
         @form(CSRF(routes.LogoutController.logout())) {
-            <button class="btn btn-primary btn-user" >Yes, I'm sure</button>
+            <button class="btn btn-primary btn-user" >👌</button>
         }
         </div>
     }
-
 }
 @import views.html.helper.form
 @import views.html.helper.CSRF
