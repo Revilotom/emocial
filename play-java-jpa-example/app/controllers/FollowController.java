@@ -30,10 +30,6 @@ public class FollowController extends DefaultController {
     }
 
     private Result getRelevantPeople(final Http.Request request, boolean wantFollowing) throws ExecutionException, InterruptedException {
-//        return getLoggedInUser(request)
-//                .thenApply(person -> person.map(wantFollowing ? Person::getFollowing : Person::getFollowers))
-//                .thenApplyAsync(list ->
-//                        ok(views.html.old.persons.render(list.orElseGet(ArrayList::new), wantFollowing)), ec.current());
         Person user = getLoggedInUser(request);
         Set<Person> people = (wantFollowing ? user.getFollowing() : user.getFollowers());
         return ok(persons.render(new ArrayList<>(people), wantFollowing));
@@ -49,16 +45,9 @@ public class FollowController extends DefaultController {
     }
 
     public Result unFollow(final Http.Request request, String username) throws ExecutionException, InterruptedException {
-//        getLoggedInUser(request)
-//                .thenApply(Optional::get)
-//                .thenApply(loggedInUser -> {loggedInUser.unFollow(username); return loggedInUser;})
-//                .thenAccept(repository::update).toCompletableFuture().get();
-
         Person loggedInUser = getLoggedInUser(request);
         loggedInUser.unFollow(username);
         repository.update(loggedInUser).toCompletableFuture().get();
-
-//        return CompletableFuture.supplyAsync(() -> redirect(routes.FollowController.getFollowing()));
         return redirect(routes.FollowController.getFollowing());
     }
 

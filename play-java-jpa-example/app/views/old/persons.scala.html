@@ -1,14 +1,23 @@
-@import views.html.components._
+@import helpers.EmojiHelper
 @import models.Person
+@import views.html.components._
 
 @(persons: List[Person], following: Boolean)
 
-@main("Welcome to Play") {
-    @navbar()
-    <ul  class="list-group" style="padding-inline-start: 0px">
-    @for(p <- persons){
-        @person(p, following)
-    }
-    </ul>
+    @main("Welcome to Play") {
+        @navbar()
 
-}
+        @card() {
+            <h2>
+                @{EmojiHelper.intToEmojis(persons.size())}
+                👤
+            </h2>
+        }
+        @ulList() {
+            @for(p <- persons) {
+                @listItem() {
+                    @person(p, following)
+                }
+            }
+        }
+    }

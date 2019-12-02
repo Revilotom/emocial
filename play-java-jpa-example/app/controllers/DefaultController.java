@@ -60,7 +60,7 @@ public abstract class DefaultController extends Controller {
     }
 
 
-    // TODO need error handling for all paths that take a parameter!!!!!!!!!!
+    // TODO Pagination
     // TODO Allow sort by rating
     // TODO Show the cuernt view as highlhited on the nav bar
     // TODO HTTPS?

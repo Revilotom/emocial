@@ -28,7 +28,7 @@ public class ActionCreator implements play.http.ActionCreator {
     @Override
     public Action createAction(Http.Request request, Method actionMethod) {
 
-        List<String> loginSignUp = new ArrayList<>(Arrays.asList("/signUp", "/", "/login"));
+        List<String> inSignUp = new ArrayList<>(Arrays.asList("/signUp", "/", "/login"));
 
         return new Action.Simple() {
 
@@ -37,7 +37,7 @@ public class ActionCreator implements play.http.ActionCreator {
                 // If the user is logged in..
                 if (req.session().getOptional("loggedIn").isPresent()) {
                     // If the url points to either login or signup then redirect the user to the home page
-                    if (loginSignUp.contains(req.uri())) {
+                    if (inSignUp.contains(req.uri())) {
                         return CompletableFuture
                                 .supplyAsync(() ->
                                         redirect(routes.HomeController.home()), ec.current());
@@ -47,7 +47,7 @@ public class ActionCreator implements play.http.ActionCreator {
                 }
 
                 // If the user is not logged in then let access the login, signup and logout pages
-                if (req.uri().equals("/logout") || loginSignUp.contains(req.uri())) {
+                if (req.uri().equals("/logout") || inSignUp.contains(req.uri())) {
                     return delegate.call(req);
                 }
 

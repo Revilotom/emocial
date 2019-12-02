@@ -1,23 +1,18 @@
 @import views.html.components._
 
 @(posts: List[Post], likedIds: List[Long], dislikedIds:List[Long], wantButton: Boolean = false)
-<ul  class="list-group " style="border-width: 0">
-    @for(p <- posts){
-
-        <li class="list-group-item bg-secondary" style="border: none">
-            @if(likedIds.contains(p.getId)){
-                    @post(p,  "primary", wantButton)
-            }else {
-                @if(dislikedIds.contains(p.getId)){
-                    @post(p,  "danger", wantButton)
-                }else{
-                    @post(p,  "secondary", wantButton)
+@ulList() {
+    @for(p: Post <- posts) {
+        @listItem() {
+            @if(likedIds.contains(p.getId)) {
+                @post(p, "primary", wantButton)
+            } else {
+                @if(dislikedIds.contains(p.getId)) {
+                    @post(p, "danger", wantButton)
+                } else {
+                    @post(p, "secondary", wantButton)
                 }
+            }
         }
-        </li>
-
-
-
-
     }
-</ul>
+}

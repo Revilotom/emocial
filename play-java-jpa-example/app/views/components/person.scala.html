@@ -1,26 +1,33 @@
 @(p: Person, wantButton: Boolean = false, plus: Boolean = false)
-<li class="list-group-item">
-    <div class="row">
-        <div class="col-2">
-            @if(wantButton){
-
+<li class="listItem-group-item">
+    @card() {
+        <div class="row">
+            <div class="col-2">
+            @if(wantButton) {
                 @helper.form(action =
-                        if (plus)
+                        if(plus)
                             routes.FollowController.submitFollowWithUsername(p.getUsername)
                         else
                             routes.FollowController.unFollow(p.getUsername)
                 ) {
                     @helper.CSRF.formField
-                    <button name="personButton" class="btn btn@{if(plus) "-primary" else "-danger"} btn-user" >
-                        <i class="fas fa-user@{if(plus) "-plus" else "-minus"} fa-sm fa-fw mr-2 text-gray-400"></i>
+                    <button name="personButton" class="btn btn@{
+                        if(plus) "-primary" else "-danger"
+                    } btn-user" >
+                        <i class="fas fa-user@{
+                            if(plus) "-plus" else "-minus"
+                        } fa-sm fa-fw mr-2 text-gray-400"></i>
                     </button>
                 }
-            }else{
+            } else {
                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
             }
+            </div>
+            <div class="col-10">
+                <h5>
+                    <a href="/posts/@p.getUsername"> @p.getUsername (@p.name) </a>
+                </h5>
+            </div>
         </div>
-        <div class="col-10">
-            <a href="/posts/@p.getUsername"> @p.getUsername (@p.name) </a>
-        </div>
-    </div>
+    }
 </li>
