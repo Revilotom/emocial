@@ -26,7 +26,7 @@ public class HomeController extends DefaultController {
 
         Person user = getLoggedInUser(request);
         String username = user.getUsername();
-        List<Post> nF = user.getNewsFeed();
+        List<Post> nF = user.getNewsFeed(request.session().getOptional("order"));
 
         List<Long> likes = nF.stream().map(Post::getId).filter(pId ->
                 user.getLikedPosts().stream().map(Post::getId)
@@ -36,6 +36,6 @@ public class HomeController extends DefaultController {
                 user.getDislikedPosts().stream().map(Post::getId)
                         .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());
 
-        return ok(views.html.old.home.render(username, nF, likes, dislikes));
+        return ok(views.html.old.home.render(username, nF, likes, dislikes, Post.isByRating(request)));
     }
 }

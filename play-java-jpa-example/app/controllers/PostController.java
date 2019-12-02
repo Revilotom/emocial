@@ -51,21 +51,23 @@ public class PostController extends DefaultController {
         Person person = personToFind.get();
 
         List<Post> posts = new ArrayList<>(person.getPosts());
-        posts.sort(Person.ComparePosts);
+        posts.sort(Post.ComparePostsTime);
 
 
         return ok(views.html.old.personsPosts.render(
                 username,
                 posts,
                 postIdsThatYouLiked(posts, loggedInUser),
-                postIdsThatYouDisliked(posts, loggedInUser)));
+                postIdsThatYouDisliked(posts, loggedInUser),
+                Post.isByRating(request)
+                ));
     }
 
 
     public Result getPosts(final Http.Request request) throws ExecutionException, InterruptedException {
         Person loggedInUser = getLoggedInUser(request);
         List<Post> postList = new ArrayList<>(loggedInUser.getPosts());
-        postList.sort(Person.ComparePosts);
+        postList.sort(Post.ComparePostsTime);
         return ok(views.html.old.myPosts.render(postList));
     }
 
@@ -138,9 +140,13 @@ public class PostController extends DefaultController {
         handleOpinion(request, post, opinion);
 
         if (request.session().getOptional("oldURI").orElse("home").contains("home")) {
-            return redirect(routes.HomeController.home()).addingToSession(request, "voteLoc", "home");
+            return redirect(routes.HomeController.home());
         }
 
         return redirect(routes.PostController.getPostsByPerson(post.getOwner().getUsername()));
+    }
+
+    public Result submitOrder(final Http.Request request, boolean byRating){
+        return redirect(routes.HomeController.home()).addingToSession(request, "order", byRating ? "rating" : "time");
     }
 }

@@ -3,6 +3,7 @@ package repositories.person;
 import models.Person;
 import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
+import play.mvc.Http;
 import repositories.JPADefaultRepository;
 
 import javax.inject.Inject;
@@ -87,9 +88,8 @@ public class JPAPersonRepository extends JPADefaultRepository implements PersonR
             Person person = query.setParameter("username", username).getSingleResult();
             Hibernate.initialize(person.getPosts());
 
-            person.getNewsFeed().forEach(p -> Hibernate.initialize(p.likers));
-            person.getNewsFeed().forEach(p -> Hibernate.initialize(p.dislikers));
-
+            person.getNewsFeed(Optional.empty()).forEach(p -> Hibernate.initialize(p.likers));
+            person.getNewsFeed(Optional.empty()).forEach(p -> Hibernate.initialize(p.dislikers));
 
             Hibernate.initialize(person.getLikedPosts());
             Hibernate.initialize(person.getDislikedPosts());

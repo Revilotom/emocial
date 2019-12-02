@@ -1,6 +1,6 @@
 @import views.html.components._
 
-@(username: String, p: List[Post], likedIds: List[Long], dislikedIds: List[Long])
+@(username: String, p: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean)
 @main("personsPosts") {
     @navbar()
 
@@ -8,5 +8,5 @@
         <h1>@username 's 🗒️🗒️🗒️</h1>
     }
 
-    @posts(p, likedIds, dislikedIds)
+    @posts(p, likedIds, dislikedIds, order)
 }

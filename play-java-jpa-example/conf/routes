@@ -22,11 +22,12 @@ POST    /makePost                   controllers.PostController.submitPost(req: R
 POST    /like/:postId               controllers.PostController.submitLike(req: Request, postId: Long)
 POST    /dislike/:postId            controllers.PostController.submitDislike(req: Request, postId: Long)
 POST    /deletePost/:postId         controllers.PostController.deletePost(req: Request, postId: Long)
-POST    /removeOpinion/:postId         controllers.PostController.removeOpinion(req: Request, postId: Long)
+POST    /removeOpinion/:postId      controllers.PostController.removeOpinion(req: Request, postId: Long)
+POST    /order/:rating              controllers.PostController.submitOrder(req: Request, rating: Boolean)
+
 
 GET     /search                     controllers.SearchController.searchPage()
 POST    /search                     controllers.SearchController.submitSearch(req: Request)
-
 
 GET     /followers                  controllers.FollowController.getFollowers(req: Request)
 GET     /following                  controllers.FollowController.getFollowing(req: Request)

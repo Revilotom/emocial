@@ -3,9 +3,11 @@ package models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import play.data.validation.Constraints;
 import play.data.validation.ValidationError;
+import play.mvc.Http;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -59,6 +61,8 @@ public class Post implements Constraints.Validatable<ValidationError>{
     }
 
     public long timeStamp;
+    public static final Comparator<Post> ComparePostsTime = (o1, o2) -> (int) (o2.timeStamp - o1.timeStamp);
+    public static final Comparator<Post> ComparePostsRating = (o1, o2) -> (int) (o2.getRating() - o1.getRating());
 
     public Person getOwner() {
         return owner;
@@ -137,4 +141,10 @@ public class Post implements Constraints.Validatable<ValidationError>{
     public int getRating() {
         return likers.size() - dislikers.size();
     }
+
+    public static boolean isByRating(Http.Request request){
+        return request.session().getOptional("order").orElse("").contains("rating");
+
+    }
+
 }

@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
+import play.mvc.Http;
 
 import javax.persistence.*;
 import java.util.*;
@@ -10,8 +11,6 @@ import java.util.stream.Collectors;
 
 @Entity
 public class Person {
-
-    public static final Comparator<Post> ComparePosts = (o1, o2) -> (int) (o2.timeStamp - o1.timeStamp);
 
     public static String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
@@ -183,14 +182,20 @@ public class Person {
         return this.hash;
     }
 
-    public List<Post> getNewsFeed(){
+    public List<Post> getNewsFeed(Optional<String> maybeOrder){
+
         List<Post> postList = new ArrayList<>(getPosts());
         postList.addAll(getFollowing().stream()
                 .map(Person::getPosts)
                 .flatMap(Set::stream)
                 .collect(Collectors.toList()));
 
-        postList.sort(ComparePosts);
+        if(maybeOrder.orElse("").contains("rating")){
+            postList.sort(Post.ComparePostsRating);
+        }
+        else{
+            postList.sort(Post.ComparePostsTime);
+        }
 
         return postList;
     }
