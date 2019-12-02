@@ -5,11 +5,15 @@
 @main("Are you sure you want to logout?") {
     @navbar()
     @card(){
+        <div class="emojis">
+
         <h2 style="text-align: center">⚠️️👤🔚❓</h2>
-        <div style="text-align: center">
-        @form(CSRF(routes.LogoutController.logout())) {
-            <button class="btn btn-primary btn-user" >👌</button>
-        }
+            <div style="text-align: center">
+            @form(CSRF(routes.LogoutController.logout())) {
+                    <button class="btn btn-primary btn-user" >👌</button>
+
+            }
+            </div>
         </div>
     }
 }

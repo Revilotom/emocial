@@ -22,6 +22,7 @@ public class LoggingFilter extends Filter {
             Http.RequestHeader requestHeader) {
 
 
+
         long startTime = System.currentTimeMillis();
         return nextFilter
                 .apply(requestHeader)
@@ -31,11 +32,12 @@ public class LoggingFilter extends Filter {
                             long requestTime = endTime - startTime;
 
                             log.debug(
-                                    "{} {} took {}ms {}",
+                                    "{} {} took {}ms {} {}",
                                     requestHeader.method(),
                                     requestHeader.uri(),
                                     requestTime,
-                                    result.status());
+                                    result.status(),
+                                    "from " + requestHeader.session().data().toString());
 
                             return result.withHeader("Request-Time", "" + requestTime);
                         });

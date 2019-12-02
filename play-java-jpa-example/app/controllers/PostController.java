@@ -58,8 +58,7 @@ public class PostController extends DefaultController {
                 username,
                 posts,
                 postIdsThatYouLiked(posts, loggedInUser),
-                postIdsThatYouDisliked(posts, loggedInUser)))
-                .addingToSession(request, "voteLoc", "personsPosts");
+                postIdsThatYouDisliked(posts, loggedInUser)));
     }
 
 
@@ -138,11 +137,10 @@ public class PostController extends DefaultController {
 
         handleOpinion(request, post, opinion);
 
-        if (request.session().getOptional("voteLoc").orElse("home").contains("home")) {
+        if (request.session().getOptional("oldURI").orElse("home").contains("home")) {
             return redirect(routes.HomeController.home()).addingToSession(request, "voteLoc", "home");
         }
 
-        return redirect(routes.PostController.getPostsByPerson(post.getOwner().getUsername()))
-                .addingToSession(request, "voteLoc", "posts");
+        return redirect(routes.PostController.getPostsByPerson(post.getOwner().getUsername()));
     }
 }

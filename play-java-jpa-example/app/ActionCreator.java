@@ -78,7 +78,7 @@ public class ActionCreator implements play.http.ActionCreator {
 
                 try {
                     Result r = getResult(req).toCompletableFuture().get();
-                    return CompletableFuture.supplyAsync(() -> r);
+                    return CompletableFuture.supplyAsync(() -> r.addingToSession(request, "oldURI", request.uri()));
 
                 } catch (Exception e) {
                     log.error(
