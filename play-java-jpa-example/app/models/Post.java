@@ -35,6 +35,8 @@ public class Post implements Constraints.Validatable<ValidationError>{
             "|\u200d[\u2640\u2642]|[\ud83c\udde6-\ud83c\uddff]{2}|.[\u20e0\u20e3\ufe0f]+)+[\n\r]*)+$"
     );
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
@@ -62,7 +64,15 @@ public class Post implements Constraints.Validatable<ValidationError>{
 
     public long timeStamp;
     public static final Comparator<Post> ComparePostsTime = (o1, o2) -> (int) (o2.timeStamp - o1.timeStamp);
-    public static final Comparator<Post> ComparePostsRating = (o1, o2) -> (int) (o2.getRating() - o1.getRating());
+
+    static final Comparator<Post> ComparePostsRating = (o1, o2) -> {
+
+        int difference = (o2.getRating() - o1.getRating());
+        if (difference == 0){
+            return (int) (o2.getTimeStamp() - o1.getTimeStamp());
+        }
+        return difference;
+    };
 
     public Person getOwner() {
         return owner;

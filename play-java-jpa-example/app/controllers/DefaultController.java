@@ -60,6 +60,7 @@ public abstract class DefaultController extends Controller {
     }
 
 
+    // TODO make sure sort by rating also takes into account time
     // TODO Pagination
     // TODO Allow sort by rating
     // TODO Show the cuernt view as highlhited on the nav bar

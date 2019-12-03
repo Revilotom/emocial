@@ -70,4 +70,9 @@ public class PostModelTest {
 
         MatcherAssert.assertThat(p.getRating(), is(-3));
     }
+
+    @Test
+    public void testZWG() {
+        MatcherAssert.assertThat(new Post("\u200D").validate(), notNullValue());
+    }
 }

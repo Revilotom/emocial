@@ -29,11 +29,8 @@ describe("The following and followers Pages", function() {
 		submitSearch()
 
 		cy.contains("mario").should("not.exist")
-
 		cy.get(":nth-child(1) > .row > .col-2 > form > .btn").click()
-
 		cy.location("pathname").should("eq", "/following")
-
 		cy.contains("ajinkya").click()
 		cy.location("pathname").should("eq", "/posts/ajinkya69")
 	})
@@ -52,3 +49,9 @@ describe("The following and followers Pages", function() {
 		cy.location("pathname").should("eq", "/posts/itsmemario")
 	})
 })
+
+// Write about how you planned not to do sucha a complicated project so that you could finish it in time
+// Talk about how you wanted to jsut make a simple a product awhere you can use normal letteres
+// And then after a proccsss you slowly arrived at the emoji only idea.
+// Its good to write on the first slide all of the different features and then show which ines actually made the cut.
+// The presentation is justa bout the product its about how you designed, and what decisions you made.

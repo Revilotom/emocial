@@ -6,6 +6,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static junit.framework.TestCase.assertTrue;
@@ -58,7 +59,7 @@ public class PersonModelTest {
         user.addFollowing(p1);
         user.addFollowing(p2);
 
-        List<Post> newsFeed = user.getNewsFeed();
+        List<Post> newsFeed = user.getNewsFeed(Optional.empty());
 
         MatcherAssert.assertThat(newsFeed.size(), is(3));
         MatcherAssert.assertThat(newsFeed.get(0).getOwner().getUsername(), is("person2"));
