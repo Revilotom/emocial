@@ -66,9 +66,7 @@ public class PostController extends DefaultController {
 
     public Result getPosts(final Http.Request request) throws ExecutionException, InterruptedException {
         Person loggedInUser = getLoggedInUser(request);
-        List<Post> postList = new ArrayList<>(loggedInUser.getPosts());
-        postList.sort(Post.ComparePostsTime);
-        return ok(views.html.old.myPosts.render(postList));
+        return getPostsByPerson(request, loggedInUser.getUsername());
     }
 
     public Result deletePost(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
@@ -79,7 +77,7 @@ public class PostController extends DefaultController {
     }
 
     public Result makePostPage() {
-        return ok(views.html.old.makePost.render(formFactory.form(Post.class)));
+        return ok(makePost.render(formFactory.form(Post.class)));
     }
 
     public Result submitPost(final Http.Request request) throws ExecutionException, InterruptedException {

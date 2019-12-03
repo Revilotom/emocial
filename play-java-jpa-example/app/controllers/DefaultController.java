@@ -61,12 +61,10 @@ public abstract class DefaultController extends Controller {
 
 
     // TODO Pagination
-    // TODO Show the cuernt view as highlhited on the nav bar
     // TODO Make landing page
     // TODO Allow comemting
     // TODO test for verylong names/usernames
     // TODO search includes names not just usernames
-    // TODO get rid of all fotn awesome
     // TODO Move everything from the head into a static assets directory.
 
 
