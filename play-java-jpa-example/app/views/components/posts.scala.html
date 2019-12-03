@@ -3,24 +3,30 @@
 @(posts: List[Post], likedIds: List[Long], dislikedIds:List[Long], order:Boolean, wantButton: Boolean = false)
 
 @card(){
-    <div class="custom-control custom-radio">
-        @helper.form(action = routes.PostController.submitOrder(false)){
-            @helper.CSRF.formField
-            <input type="radio" class="custom-control-input" id="defaultGroupExample1"
-            name="groupOfDefaultRadios" onchange="this.form.submit()" @{if(!order)"checked"else{""}}>
-            <label class="custom-control-label" for="defaultGroupExample1">Chronological</label>
-        }
+
+    <div class="row emojis" style="text-align: center; justify-content: center">
+        <h3>🥇🥈🥉</h3>
     </div>
 
-        <!-- Group of default radios - option 2 -->
-    <div class="custom-control custom-radio">
-        @helper.form(action = routes.PostController.submitOrder(true)){
-            @helper.CSRF.formField
-            <input type="radio" class="custom-control-input" id="defaultGroupExample2"
-            name="groupOfDefaultRadios" onchange="this.form.submit()" @{if(order)"checked"else{""}}>
+    <div class="emojis row">
+        <div class="col-10">
+            @helper.form(action = routes.PostController.submitOrder(false)){
+                @helper.CSRF.formField
+                <label class="btn bnt-secondary">🕰️
+                    <input type="radio" onchange="this.form.submit()" @{if(!order)"checked"else{""}}>
+                </label>
+            }
+        </div>
 
-            <label class="custom-control-label" for="defaultGroupExample2">Rating</label>
-        }
+            <!-- Group of default radios - option 2 -->
+        <div class="col">
+            @helper.form(action = routes.PostController.submitOrder(true)){
+                @helper.CSRF.formField
+                <label class="btn bnt-secondary">👍
+                    <input type="radio" onchange="this.form.submit()" @{if(order)"checked"else{""}}>
+                </label>
+            }
+        </div>
     </div>
 }
 
