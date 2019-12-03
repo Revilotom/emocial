@@ -3,6 +3,7 @@
 @import views.html.components._
 @import views.html.components.errors
 
+@import helpers.EmojiHelper
 @(form: Form[Search], persons: List[Person])
 
 @main("Welcome to Play") {
@@ -11,24 +12,34 @@
         @navbar()
 
         @card(){
-            <form method="POST" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
-            action="@routes.SearchController.submitSearch()">
-                           <div class="input-group col">
-                               @helper.CSRF.formField
-                             <input type="text" name="searchTerms" class="form-control bg-light border-0 small" placeholder="❔❔❔❔❔❔❔" aria-label="Search" aria-describedby="basic-addon2">
-                               <div class="input-group-append">
-                                   <input name="submitSearch" class="btn btn-primary btn-user btn-block" type="submit" value="🔎️" />
-                               </div>
-                           </div>
-                @errors(form)
-            </form>
-
-            <hr>
-            <ul  class="listItem-group" style="padding-inline-start: 0px">
-            @for(p <- persons){
-                @person(p, true, true)
+            <div class="row">
+                <div class="col">
+                    <form method="POST" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+                    action="@routes.SearchController.submitSearch()">
+                                   <div class="input-group col">
+                                       @helper.CSRF.formField
+                                     <input type="text" name="searchTerms" class="form-control bg-light border-0 small" placeholder="❔❔❔❔❔❔❔" aria-label="Search" aria-describedby="basic-addon2">
+                                       <div class="input-group-append">
+                                           <input name="submitSearch" class="btn btn-primary btn-user btn-block" type="submit" value="🔎️" />
+                                       </div>
+                                   </div>
+                        @errors(form)
+                    </form>
+                </div>
+                <div class="col">
+                    <h2>
+                        @{EmojiHelper.intToEmojis(persons.size())}
+                        👤
+                    </h2>
+                </div>
+            </div>
+        }
+        @ulList() {
+            @for(p <- persons) {
+                @listItem() {
+                    @person(p, true, true)
+                }
             }
-            </ul>
-    }
+        }
 }
 

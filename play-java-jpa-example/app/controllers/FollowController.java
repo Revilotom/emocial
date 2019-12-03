@@ -8,7 +8,6 @@ import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;
 import play.mvc.Result;
 import repositories.person.PersonRepository;
-import views.html.old.followPerson;
 import views.html.old.persons;
 
 import javax.inject.Inject;
@@ -23,10 +22,6 @@ public class FollowController extends DefaultController {
     @Inject
     public FollowController(FormFactory formFactory, PersonRepository repository, HttpExecutionContext ec) {
         super(formFactory, repository, ec);
-    }
-
-    public Result makeFollowPage() {
-        return ok(views.html.old.followPerson.render(formFactory.form(Follow.class)));
     }
 
     private Result getRelevantPeople(final Http.Request request, boolean wantFollowing) throws ExecutionException, InterruptedException {
@@ -67,23 +62,8 @@ public class FollowController extends DefaultController {
         return redirect(routes.FollowController.getFollowing());
     }
 
-
     public Result submitFollowWithUsername(final Http.Request request, String username) throws ExecutionException, InterruptedException {
         return writeFollowToDB(request, username);
-    }
-
-
-    public Result submitFollow(final Http.Request request) throws ExecutionException, InterruptedException {
-
-        Form<Follow> followForm = formFactory.form(Follow.class).bindFromRequest(request);
-
-        if (hasFormBadRequestError(followForm)){
-            return badRequest(followPerson.render(followForm));
-        }
-
-        Follow follow = followForm.get();
-
-        return writeFollowToDB(request, follow.getUsernameOfPersonToFollow());
     }
 }
 
