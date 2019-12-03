@@ -4,8 +4,8 @@
 
 @(persons: List[Person], following: Boolean)
 
-    @main("Welcome to Play") {
-        @navbar()
+    @main("") {
+        @navbar(if(following){"following"}else{"followers"})
 
         @card() {
             <h2>

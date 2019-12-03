@@ -4,7 +4,7 @@
 @(form: Form[Post])
 
     @main("Fix your post!") {
-        @navbar()
+        @navbar("")
         @errors(form)
         @postInputField(form.value().get().getContent())
     }

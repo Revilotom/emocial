@@ -1,3 +1,5 @@
+@(current: String)
+
 <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light"
     style="
         border-bottom: 5px solid #a4b2ff;
@@ -12,37 +14,26 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav spaced">
             <li class="nav-item">
-                <a class="nav-link" href="/home">️📰</a>
+                <a @{if (current.equals("home")){"style=color:unset"} else{""}} class="nav-link" href="/home">️📰</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/search">
-@*                    <i class="fas fa-search fa-sm"></i>*@
+                <a @{if (current.equals("search")){"style=color:unset"} else{""}} class="nav-link" href="/search">
                     🔎
                 </a>
 
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/myPosts">️👤</a>
+                <a @{if (current.equals("myPosts")){"style=color:unset"} else{""}} class="nav-link" href="/myPosts">️👤</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/following">👤➡️👥</a>
+                <a @{if (current.equals("following")){"style=color:unset"} else{""}} class="nav-link" href="/following">👤➡️👥</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/followers">👥➡️👤</a>
+                <a @{if (current.equals("followers")){"style=color:unset"} else{""}} class="nav-link" href="/followers">👥➡️👤</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/logout">👋🏻</a>
+                <a @{if (current.equals("logout")){"style=color:unset"} else{""}}class="nav-link" href="/logout">👋🏻</a>
             </li>
-@*            <li class="nav-item dropdown">*@
-@*                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">*@
-@*          Dropdown link*@
-@*                </a>*@
-@*                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">*@
-@*                    <a class="dropdown-item" href="#">Action</a>*@
-@*                    <a class="dropdown-item" href="#">Another action</a>*@
-@*                    <a class="dropdown-item" href="#">Something else here</a>*@
-@*                </div>*@
-@*            </li>*@
         </ul>
     </div>
 </nav>

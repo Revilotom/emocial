@@ -2,8 +2,8 @@
 
 @(username: String = "", p: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean)
 
-@main("Welcome to Play") {
-        @navbar()
+@main("Home") {
+        @navbar("home")
         @postInputField("")
         @posts(p, likedIds, dislikedIds, order)
 }

@@ -6,10 +6,10 @@
 @import helpers.EmojiHelper
 @(form: Form[Search], persons: List[Person])
 
-@main("Welcome to Play") {
+@main("Search") {
 
     <div id="wrapper">
-        @navbar()
+        @navbar("search")
 
         @card(){
             <div class="row">

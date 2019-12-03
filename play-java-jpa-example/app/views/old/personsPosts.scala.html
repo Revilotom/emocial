@@ -1,8 +1,8 @@
 @import views.html.components._
 
 @(username: String, p: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean)
-@main("personsPosts") {
-    @navbar()
+@main(username + "'s posts") {
+    @navbar("")
 
     @card(){
         <h1>@username 's 🗒️🗒️🗒️</h1>
