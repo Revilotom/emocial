@@ -16,7 +16,7 @@ describe("The Logout Page", function() {
 		cy.location("pathname").should("eq", "/home")
 
 		cy.visit("/logout")
-		cy.contains("Yes").click()
+		cy.get('.btn').click()
 
 		cy.visit("/home")
 		cy.location("pathname").should("eq", "/")

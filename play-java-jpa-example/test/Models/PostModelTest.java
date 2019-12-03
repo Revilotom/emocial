@@ -6,6 +6,8 @@ import models.Post;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 
+import java.util.regex.Pattern;
+
 import static org.hamcrest.Matchers.*;
 
 public class PostModelTest {
@@ -72,7 +74,16 @@ public class PostModelTest {
     }
 
     @Test
-    public void testZWG() {
+    public void testZWGSingle() {
         MatcherAssert.assertThat(new Post("\u200D").validate(), notNullValue());
+    }
+    @Test
+    public void testZWGMany() {
+        MatcherAssert.assertThat(new Post("\u200D\u200D\u200D\u200D").validate(), notNullValue());
+    }
+
+    @Test
+    public void testEmptyString() {
+        MatcherAssert.assertThat(new Post("").validate(), notNullValue());
     }
 }

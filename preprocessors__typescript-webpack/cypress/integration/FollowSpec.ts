@@ -29,7 +29,7 @@ describe("The following and followers Pages", function() {
 		submitSearch()
 
 		cy.contains("mario").should("not.exist")
-		cy.get(":nth-child(1) > .row > .col-2 > form > .btn").click()
+		cy.get(':nth-child(1) > .container > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > .row > .col-2 > form > .btn').click()
 		cy.location("pathname").should("eq", "/following")
 		cy.contains("ajinkya").click()
 		cy.location("pathname").should("eq", "/posts/ajinkya69")

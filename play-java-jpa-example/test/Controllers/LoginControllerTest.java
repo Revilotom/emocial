@@ -14,6 +14,7 @@ import play.test.Helpers;
 import play.test.WithServer;
 import repositories.person.JPAPersonRepository;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import static junit.framework.TestCase.*;
@@ -95,7 +96,7 @@ public class LoginControllerTest extends WithServer {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken( post.bodyJson(Json.toJson(login)));
         Result result = route(app, tokenRequest);
         MatcherAssert.assertThat(result.status(), is(BAD_REQUEST));
-        assertNull(result.session());
+        MatcherAssert.assertThat(result.session().getOptional("loggedIn"), is(Optional.empty()));
         final String body = contentAsString(result);
         MatcherAssert.assertThat(body.toLowerCase(), containsString("invalid credentials"));
     }

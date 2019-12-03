@@ -1,4 +1,4 @@
 mysql -u admin -ppassword <<EOF
 use testDB;
-DELETE FROM Person;
+DELETE IGNORE FROM Person;
 EOF
