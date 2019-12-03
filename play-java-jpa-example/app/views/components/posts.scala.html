@@ -1,9 +1,15 @@
 @import views.html.components._
 
+@import helpers.EmojiHelper
 @(posts: List[Post], likedIds: List[Long], dislikedIds:List[Long], order:Boolean, wantButton: Boolean = false)
 
+@card() {
+    <h2>
+        @{EmojiHelper.intToEmojis(posts.size())}
+        🗒️
+    </h2>
+}
 @card(){
-
     <div class="row emojis" style="text-align: center; justify-content: center">
         <h3>🥇🥈🥉</h3>
     </div>
@@ -29,7 +35,6 @@
         </div>
     </div>
 }
-
 @ulList() {
     @for(p: Post <- posts) {
         @listItem() {
