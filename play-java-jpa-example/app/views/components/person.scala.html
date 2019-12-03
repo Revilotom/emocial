@@ -12,15 +12,15 @@
                 ) {
                     @helper.CSRF.formField
                     <button name="personButton" class="btn btn@{
-                        if(plus) "-primary" else "-danger"
+                        if(plus) "-light" else "-danger"
                     } btn-user" >
-                        <i class="fas fa-user@{
-                            if(plus) "-plus" else "-minus"
-                        } fa-sm fa-fw mr-2 text-gray-400"></i>
+                        @{
+                            if(plus) "➕️👤" else "➖️👤"
+                        }
                     </button>
                 }
             } else {
-                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                👤
             }
             </div>
             <div class="col-10">
