@@ -1,6 +1,7 @@
 @import views.html.components._
 
-@(username: String, p: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean)
+@import helpers.EmojiHelper
+@(username: String, ps: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean)
 @main(username + "'s posts") {
     @navbar("")
 
@@ -8,5 +9,11 @@
         <h1>@username 's 🗒️🗒️🗒️</h1>
     }
 
-    @posts(p, likedIds, dislikedIds, order)
+    @card() {
+        <h2>
+            @{EmojiHelper.intToEmojis(ps.map(_.getRating).sum)}👍
+        </h2>
+    }
+
+    @posts(ps, likedIds, dislikedIds, order)
 }
