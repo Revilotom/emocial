@@ -29,4 +29,5 @@ describe("The Home Page", function() {
 		cy.contains("kunal").click()
 		cy.contains("🤡")
 	})
+
 })

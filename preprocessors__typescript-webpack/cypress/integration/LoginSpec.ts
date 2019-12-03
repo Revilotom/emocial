@@ -30,9 +30,6 @@ describe("The Login Page", function() {
 
 		cy.visit("/makePost")
 		cy.location("pathname").should("eq", "/")
-
-		cy.visit("/follow")
-		cy.location("pathname").should("eq", "/")
 	})
 
 	it("checks that fields must be filled in", function() {

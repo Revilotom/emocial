@@ -47,7 +47,7 @@ describe("The Home Page", function() {
 		cy.contains("👺")
 	})
 
-	it.only("checks that you can change the order", function() {
+	it("checks that you can change the order", function() {
 		cy.visit("/search")
 		cy.get("input[name=searchTerms]").type("kun").click()
 		submitSearch()
