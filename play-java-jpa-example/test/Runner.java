@@ -1,26 +1,29 @@
-
-import Controllers.FollowControllerTest;
-import Controllers.LoginControllerTest;
-import Controllers.PostControllerTest;
-import Controllers.SignUpControllerTest;
+import Controllers.*;
 import Models.PersonModelTest;
-import Models.SignUpModelTest;
-
+import Models.PostModelTest;
 import Repos.PersonRepoTest;
-
+import Repos.PostRepoTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         PersonModelTest.class,
-        PersonRepoTest.class,
+        PostModelTest.class,
 
-        SignUpModelTest.class,
-        SignUpControllerTest.class,
-        LoginControllerTest.class,
+        PersonRepoTest.class,
+        PostRepoTest.class,
+
         PostControllerTest.class,
         FollowControllerTest.class,
+        LoginControllerTest.class,
+        LogoutControllerTest.class,
+        PostControllerTest.class,
+        SearchControllerTest.class,
+        SignUpControllerTest.class,
+
+        TestEmojiHelpers.class,
+        AcceptanceTest.class
 })
 
 public class Runner {

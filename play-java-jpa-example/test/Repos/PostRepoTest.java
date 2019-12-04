@@ -78,9 +78,6 @@ public class PostRepoTest extends WithApplication {
         post = postRepository.findById(2).toCompletableFuture().get().get();
 
         MatcherAssert.assertThat(person.getDislikedPosts().size(), is(1));
-        MatcherAssert.assertThat(post.getLikers().size(), is(1));
+        MatcherAssert.assertThat(post.getDislikers().size(), is(1));
     }
-
-    // TODO fix the time
-
 }
