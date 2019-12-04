@@ -11,46 +11,50 @@ This document reflects the current architecture of the system.
 - Infrastructure: AWS (EC2 + RDS)
 
 
-# Backend
+# Implementation
 
-- Front end
-    - The front end is rendered by the back end using the Twirl templating language that comes with the play framework.
-    - IntelliJ has trouble type checking the aspects of twirl that are scala specific.
-    - Simple validation (e.g password min lengths etc) are handled automatically by Twirl by making use of the @Constraints annotation provided by play.
-    - More complex validation, (e.g username is taken) is done manually.
-    - A single 17 line JS file (main.js) is used to append the emoji picker button to the DOM.
-    - Javascript libraries
-        - The JS libraries used are: bootstrap, emojiButton, jquery and popper.js (also needed by bootstrap)
-    - Styling
-        - Styling is done using bootstrap v4
-- Backend
+## Front end
+- The front end is rendered by the back end using the Twirl templating language that comes with the play framework.
+- IntelliJ has trouble type checking the aspects of twirl that are scala specific.
+- Simple validation (e.g password min lengths etc) are handled automatically by Twirl by making use of the @Constraints annotation provided by play.
+- More complex validation, (e.g username is taken) is done manually.
+- A single 17 line JS file (main.js) is used to append the emoji picker button to the DOM.
+- Javascript libraries
+    - The JS libraries used are: bootstrap, emojiButton, jquery and popper.js (also needed by bootstrap)
+- Styling
+    - Styling is done using bootstrap v4
+
+## Backend
+
+- JPA
+    The backend uses the Java Persistence API for handling access to the database.
+    - Hibernate 
+        - Hibernate is the choice for the persistence library because of its prevelence and maturity.
+
+    ![Schema](./img/er.png)
+    This diagram shows the logical relationship between the two main entities, Person and Post.
+- Configuration
+    - Development:
+        - DB: 
+            - For testing purposes an H2 in memory database in MYSQL mode is used.
+        - Logging: 
+            - Info messages for starting up/shutting down.
+            - All request are logged with headers, body and session.
+            - All SQL queries are logged with parameters.
+    - Production:
+        - DB: 
+            - The RDS instance is used.
+        - Logging: 
+            - Info messages for starting up/shutting down.
+            - Only requests that cause HTTP status 500 errors are logged with headers, body and session.
+    - Testing:
+        - This configuration is for running the e2e cypress tests.
+        - DB: 
+            - A MYSQL running on localhost with username="username" and password="password" with a database called testDB is used.
+
     
-    - JPA
-        The backend uses the Java Persistence API for handling access to the database.
-        - Hibernate 
-            - Hibernate is the choice for the persistence library because of its prevelence and maturity.
 
-        ![Schema](./img/er.png)
-        This diagram shows the logical relationship between the two main entities, Person and Post.
-    - Configuration
-        - Development:
-            - DB: For testing purposes an H2 in memory database in MYSQL mode is used.
-            - Logging: 
-                - Info messages for starting up/shutting down.
-                - All request are logged with headers, body and session.
-                - All SQL queries are logged with parameters.
-        - Production:
-            - DB: The RDS instance is used.
-            - Logging: 
-                - Info messages for starting up/shutting down.
-                - Only requests that cause 500 errors are logged with headers, body and session.
-        - Testing:
-            This configuration is for running the e2e cypress tests.
-            - DB: A MYSQL running on localhost with username="username" and password="password" with a database called testDB is used.
-            
-    
-
-# Infrastructure
+## Infrastructure
 
 ![Schema](./img/infra.png)
 
