@@ -48,7 +48,7 @@ public class PersonModelTest {
 
         Person p2 = new Person("adssa", "person2", "dasd");
         Post post2 = new Post("person2's post");
-        post2.timeStamp += 23123214;
+        post2.setTimeStamp(post2.getTimeStamp() + 23123214);
         p2.addPost(post2);
 
         Person user = new Person("Assa", "User", "dasdas");
@@ -79,8 +79,8 @@ public class PersonModelTest {
 
         MatcherAssert.assertThat(p.getLikedPosts().size(), is(0));
         MatcherAssert.assertThat(p.getDislikedPosts().size(), is(1));
-        MatcherAssert.assertThat(post.likers.size(), is(0));
-        MatcherAssert.assertThat(post.dislikers.size(), is(1));
+        MatcherAssert.assertThat(post.getLikers().size(), is(0));
+        MatcherAssert.assertThat(post.getDislikers().size(), is(1));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class PersonModelTest {
 
         MatcherAssert.assertThat(p.getLikedPosts().size(), is(1));
         MatcherAssert.assertThat(p.getDislikedPosts().size(), is(0));
-        MatcherAssert.assertThat(post.likers.size(), is(1));
-        MatcherAssert.assertThat(post.dislikers.size(), is(0));
+        MatcherAssert.assertThat(post.getLikers().size(), is(1));
+        MatcherAssert.assertThat(post.getDislikers().size(), is(0));
     }
 }

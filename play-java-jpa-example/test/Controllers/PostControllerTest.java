@@ -158,7 +158,7 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
 
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
-        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).likers.size(), is(1));
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).getLikers().size(), is(1));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
 
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
-        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).dislikers.size(), is(1));
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).getDislikers().size(), is(1));
     }
 
     @Test
@@ -190,7 +190,7 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
 
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
-        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).likers.size(), is(0));
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).getLikers().size(), is(0));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
 
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
-        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).dislikers.size(), is(0));
+        MatcherAssert.assertThat(new ArrayList<>(posts).get(0).getDislikers().size(), is(0));
     }
 
 

@@ -50,11 +50,11 @@ public class UnitTest extends EndpointTest {
     public void getPerson() throws ExecutionException, InterruptedException {
         PersonRepository repository = mock(PersonRepository.class);
         Person person = new Person();
-        person.id = 1L;
-        person.name = "Steve";
+        person.setId(1L);
+        person.setName("Steve");
         List<Person> ps = new ArrayList<>();
         ps.add(person);
-        when(repository.stream()).thenReturn(supplyAsync(() -> ps.stream()));
+        when(repository.stream()).thenReturn(supplyAsync(ps::stream));
 
     }
 

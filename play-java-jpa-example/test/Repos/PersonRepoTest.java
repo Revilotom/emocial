@@ -70,9 +70,9 @@ public class PersonRepoTest extends WithApplication {
         person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 
         MatcherAssert.assertThat(person.getFollowers().size(), is(1));
-        MatcherAssert.assertThat(new ArrayList<>(person.getFollowers()).get(0).getUsername(), is(person2.username));
+        MatcherAssert.assertThat(new ArrayList<>(person.getFollowers()).get(0).getUsername(), is(person2.getUsername()));
         MatcherAssert.assertThat(person2.getFollowing().size(), is(1));
-        MatcherAssert.assertThat(new ArrayList<>(person2.getFollowing()).get(0).getUsername(), is(person.username));
+        MatcherAssert.assertThat(new ArrayList<>(person2.getFollowing()).get(0).getUsername(), is(person.getUsername()));
     }
 
     @Test
@@ -95,16 +95,16 @@ public class PersonRepoTest extends WithApplication {
         person2 = repo.findByUsername("usekk").toCompletableFuture().get().get();
 
         MatcherAssert.assertThat(person.getFollowers().size(), is(1));
-        MatcherAssert.assertThat(new ArrayList<>(person.getFollowers()).get(0).getUsername(), is(person2.username));
+        MatcherAssert.assertThat(new ArrayList<>(person.getFollowers()).get(0).getUsername(), is(person2.getUsername()));
 
         MatcherAssert.assertThat(person2.getFollowers().size(), is(1));
-        MatcherAssert.assertThat(new ArrayList<>(person2.getFollowers()).get(0).getUsername(), is(person.username));
+        MatcherAssert.assertThat(new ArrayList<>(person2.getFollowers()).get(0).getUsername(), is(person.getUsername()));
     }
 
     @Test
     public void testPostsAreRemoved() throws ExecutionException, InterruptedException {
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
-        person.deletePost(new ArrayList<>(person.getPosts()).get(0).id);
+        person.deletePost(new ArrayList<>(person.getPosts()).get(0).getId());
         repo.update(person).toCompletableFuture().get();
         person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
 

@@ -53,8 +53,8 @@ public class JPAPostRepository extends JPADefaultRepository implements PostRepos
             Post post =
                     em.createQuery("select p from Post p where id = :id", Post.class)
                             .setParameter("id",id).getSingleResult();
-            Hibernate.initialize(post.likers);
-            Hibernate.initialize(post.dislikers);
+            Hibernate.initialize(post.getLikers());
+            Hibernate.initialize(post.getDislikers());
             return Optional.of(post);
         }
         catch (NoResultException e){

@@ -36,12 +36,12 @@ public class Post implements Constraints.Validatable<ValidationError> {
                     "|\u200d[\u2640\u2642]|[\ud83c\udde6-\ud83c\uddff]{2}|.[\u20e0\u20e3\ufe0f]+)+[\n\r]*)+$"
     );
 
-    private Pattern invisible = Pattern.compile("\u200D");
+    private static final Pattern invisible = Pattern.compile("\u200D");
 
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    private Long id;
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn
@@ -50,11 +50,13 @@ public class Post implements Constraints.Validatable<ValidationError> {
 
     @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.MERGE)
     @JsonBackReference
-    public Set<Person> likers = new HashSet<>();
+    private Set<Person> likers = new HashSet<>();
 
     @ManyToMany(mappedBy = "dislikedPosts", cascade = CascadeType.MERGE)
     @JsonBackReference
-    public Set<Person> dislikers = new HashSet<>();
+    private Set<Person> dislikers = new HashSet<>();
+
+    private long timeStamp;
 
     public long getTimeStamp() {
         return timeStamp;
@@ -64,7 +66,6 @@ public class Post implements Constraints.Validatable<ValidationError> {
         this.timeStamp = timeStamp;
     }
 
-    public long timeStamp;
     public static final Comparator<Post> ComparePostsTime = (o1, o2) -> (int) (o2.timeStamp - o1.timeStamp);
 
     static final Comparator<Post> ComparePostsRating = (o1, o2) -> {
@@ -161,6 +162,23 @@ public class Post implements Constraints.Validatable<ValidationError> {
 
     public int getRating() {
         return likers.size() - dislikers.size();
+    }
+
+
+    public Set<Person> getLikers() {
+        return likers;
+    }
+
+    public void setLikers(Set<Person> likers) {
+        this.likers = likers;
+    }
+
+    public Set<Person> getDislikers() {
+        return dislikers;
+    }
+
+    public void setDislikers(Set<Person> dislikers) {
+        this.dislikers = dislikers;
     }
 
     public static boolean isByRating(Http.Request request) {

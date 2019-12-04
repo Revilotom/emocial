@@ -26,14 +26,14 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
+    private Long id;
 
     @Constraints.Required
-    public String name;
+    private String name;
 
     @Constraints.Required
     @Column (nullable = false, unique = true)
-    public String username;
+    private String username;
 
     @Constraints.Required
     private String hash;
