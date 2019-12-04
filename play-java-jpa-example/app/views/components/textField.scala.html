@@ -2,9 +2,9 @@
 @import views.html.helper.FieldConstructor
 @import views.html.components._
 
-@(f: Form[_], id: String)
+@(f: Form[_], id: String, placeHolder: String)
 
 @implicitField = @{ FieldConstructor(myFieldConstructorTemplate.f) }
 
 @helper.CSRF.formField
-@helper.inputText(f(id))
+@helper.inputText(f(id), Symbol("placeHolder") -> placeHolder)

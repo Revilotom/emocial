@@ -7,8 +7,8 @@
         <div class="jumbotron verticle-center horizontal-center bg-secondary" style="height: 100%">
             <div class="">
                 @cardForm(form, "Welcome back!", "Login",  routes.LoginController.submitLogin() ){
-                    @textField(form, "username")
-                    @textField(form, "password")
+                    @textField(form, "username", "Username")
+                    @textField(form, "password", "Password")
                 }{
                     <hr>
                 <div class="text-center">

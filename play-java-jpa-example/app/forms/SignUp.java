@@ -23,11 +23,13 @@ public class SignUp implements Constraints.Validatable<List<ValidationError>> {
     @Constraints.Required
     private String username;
 
+    @Constraints.MaxLength(100)
     @Constraints.Pattern(SignUp.regexPattern)
     @Constraints.MinLength(8)
     @Constraints.Required
     private String password1;
 
+    @Constraints.MaxLength(100)
     @Constraints.Pattern(SignUp.regexPattern)
     @Constraints.MinLength(8)
     @Constraints.Required

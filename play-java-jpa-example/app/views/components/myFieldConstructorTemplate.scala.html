@@ -3,7 +3,8 @@
 <div class="@if(elements.hasErrors) {error} form-group">
     <div class="col">
         <div class = "row">
-            <input name="@elements.id" type="@elements.id" class="form-control form-control-user" id="exampleInputPassword" placeholder="@elements.id">
+            <input name="@elements.id" type="@elements.id" class="form-control form-control-user"
+            placeholder="@elements.args.get(Symbol("placeHolder"))">
         </div>
         @if(elements.hasErrors){
             <div class = "row">

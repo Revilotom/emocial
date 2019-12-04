@@ -5,10 +5,10 @@
 
 @main("Welcome") {
         @cardForm(form, "Please create an account", "Sign up!",  routes.SignUpController.submitSignUp() ){
-            @textField(form, "name")
-            @textField(form, "username")
-            @textField(form, "password1")
-            @textField(form, "password2")
+            @textField(form, "name", "Name: 5~20 characters, alphanumeric")
+            @textField(form, "username", "Username: 5~20 characters, alphanumeric")
+            @textField(form, "password1", "Password: 8~100 characters, alphanumeric")
+            @textField(form, "password2", "Confirm Password: 8~100 characters, alphanumeric")
         }{
                 <hr>
         <div class="text-center">
