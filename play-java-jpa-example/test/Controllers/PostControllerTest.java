@@ -237,5 +237,3 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.status(), is(OK));
     }
 }
-
-//TODO make everything private

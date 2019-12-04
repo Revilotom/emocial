@@ -58,12 +58,4 @@ public abstract class DefaultController extends Controller {
                 loggedInUser.getDislikedPosts().stream().map(Post::getId)
                         .collect(Collectors.toSet()).contains(pId)).collect(Collectors.toList());
     }
-
-
-    // TODO Pagination
-    // TODO Make landing page
-    // TODO Allow comemting
-    // TODO test for verylong names/usernames
-
-
 }
