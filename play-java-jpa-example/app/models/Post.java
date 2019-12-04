@@ -36,7 +36,7 @@ public class Post implements Constraints.Validatable<ValidationError> {
                     "|\u200d[\u2640\u2642]|[\ud83c\udde6-\ud83c\uddff]{2}|.[\u20e0\u20e3\ufe0f]+)+[\n\r]*)+$"
     );
 
-    Pattern invisible = Pattern.compile("\u200D");
+    private Pattern invisible = Pattern.compile("\u200D");
 
 
     @Id

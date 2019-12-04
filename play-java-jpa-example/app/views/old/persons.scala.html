@@ -4,7 +4,7 @@
 
 @(persons: List[Person], following: Boolean)
 
-    @main("") {
+    @main(if(following){"Following"}else{"Followers"}) {
         @navbar(if(following){"following"}else{"followers"})
         @card() {
             <h2>

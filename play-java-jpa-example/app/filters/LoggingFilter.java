@@ -21,8 +21,6 @@ public class LoggingFilter extends Filter {
             Function<Http.RequestHeader, CompletionStage<Result>> nextFilter,
             Http.RequestHeader requestHeader) {
 
-
-
         long startTime = System.currentTimeMillis();
         return nextFilter
                 .apply(requestHeader)

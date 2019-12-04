@@ -18,13 +18,12 @@ public class PersonModelTest {
     @Test
     public void testP() {
         String hash = Person.hashPassword("jon");
-        System.out.println(hash);
+
     }
 
     @Test
     public void testHashPassword() {
         String hash = Person.hashPassword("myPassword");
-        System.out.println(hash);
     }
 
     @Test

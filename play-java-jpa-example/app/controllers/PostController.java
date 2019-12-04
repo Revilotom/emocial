@@ -42,8 +42,6 @@ public class PostController extends DefaultController {
 
         Optional<Person> personToFind = repository.findByUsername(username).toCompletableFuture().get();
 
-        System.out.println(personToFind);
-
         if (personToFind.isEmpty()) {
             return badRequest("Could not find user with username: " + username);
         }

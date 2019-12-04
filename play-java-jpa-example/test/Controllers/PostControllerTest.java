@@ -79,8 +79,9 @@ public class PostControllerTest extends WithServer {
     public void canDeletePost() throws ExecutionException, InterruptedException {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDelete);
         Result result = route(app, tokenRequest);
-        Thread.sleep(500L); // wait for the second post to be written to the DB.
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+
+        Thread.sleep(1000L); // wait
 
         MatcherAssert.assertThat(result.header("Location").get(), is("/myPosts"));
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
@@ -95,7 +96,7 @@ public class PostControllerTest extends WithServer {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postCreate.bodyJson(Json.toJson(secondPost)));
         Result result = route(app, tokenRequest);
 
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
+        Thread.sleep(1000L); // wait
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
@@ -138,8 +139,6 @@ public class PostControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
 
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
-
         final String body = contentAsString(result);
 
         MatcherAssert.assertThat(body.toLowerCase(), containsString("could not find post"));
@@ -155,8 +154,6 @@ public class PostControllerTest extends WithServer {
 
         Result result = route(app, tokenRequest);
 
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
-
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
 
@@ -170,8 +167,6 @@ public class PostControllerTest extends WithServer {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDislike);
 
         Result result = route(app, tokenRequest);
-
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
@@ -191,8 +186,6 @@ public class PostControllerTest extends WithServer {
 
         result = route(app, tokenRequest);
 
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
-
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
 
@@ -210,8 +203,6 @@ public class PostControllerTest extends WithServer {
         tokenRequest = CSRFTokenHelper.addCSRFToken(postRemoveOpinion);
 
         result = route(app, tokenRequest);
-
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
 
         MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
@@ -238,8 +229,6 @@ public class PostControllerTest extends WithServer {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(getPersonsPosts);
 
         Result result = route(app, tokenRequest);
-
-        Thread.sleep(1000L); // wait for the second post to be written to the DB.
 
         final String body = contentAsString(result);
 

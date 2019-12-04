@@ -1,8 +1,6 @@
 package controllers;
 
-import forms.Follow;
 import models.Person;
-import play.data.Form;
 import play.data.FormFactory;
 import play.libs.concurrent.HttpExecutionContext;
 import play.mvc.Http;

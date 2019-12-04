@@ -22,7 +22,6 @@ public class PostModelTest {
     @Test
     public void testDarkSkin() {
         String content = "\uD83D\uDC69\uD83C\uDFFF\u200D\uD83C\uDF3E";
-        System.out.println("[" + EmojiParser.removeAllEmojis(content) + "]");
         Post p = new Post(content);
         MatcherAssert.assertThat(p.validate(), is(nullValue()));
     }

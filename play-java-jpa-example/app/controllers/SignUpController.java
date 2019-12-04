@@ -26,8 +26,6 @@ public class SignUpController extends DefaultController {
 
     public CompletionStage<Result> submitSignUp(final Http.Request request) {
 
-//        "".charAt(2);
-
         Form<SignUp> signUpForm = formFactory.form(SignUp.class).bindFromRequest(request);
 
         if (hasFormBadRequestError(signUpForm)){

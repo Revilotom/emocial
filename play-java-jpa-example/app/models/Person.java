@@ -38,8 +38,6 @@ public class Person {
     @Constraints.Required
     private String hash;
 
-//    {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE}
-
     @JsonSerialize
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private
@@ -83,11 +81,7 @@ public class Person {
     public void dislikePost(Post p){
         p.removeLiker(this);
         p.addDisLiker(this);
-        this.likedPosts.removeIf(post -> {
-
-
-            return post.getId().equals(p.getId());
-        });
+        this.likedPosts.removeIf(post -> post.getId().equals(p.getId()));
         this.dislikedPosts.add(p);
     }
 

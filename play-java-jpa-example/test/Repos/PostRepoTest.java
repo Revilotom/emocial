@@ -28,7 +28,6 @@ public class PostRepoTest extends WithApplication {
 
     @Test
     public void testCanLikePost() throws ExecutionException, InterruptedException {
-//        System.out.println(postRepository.stream().toCompletableFuture().get().collect(Collectors.toList()));
         Post post = postRepository.findById(2).toCompletableFuture().get().get();
         Person person = personRepo.findByUsername("revilotom").toCompletableFuture().get().get();
 
@@ -45,7 +44,6 @@ public class PostRepoTest extends WithApplication {
 
     @Test
     public void testCannotLikePostTwice() throws ExecutionException, InterruptedException {
-//        System.out.println(postRepository.stream().toCompletableFuture().get().collect(Collectors.toList()));
         Post post = postRepository.findById(2).toCompletableFuture().get().get();
         Person person = personRepo.findByUsername("revilotom").toCompletableFuture().get().get();
 
@@ -69,7 +67,6 @@ public class PostRepoTest extends WithApplication {
 
     @Test
     public void testCanDislikePost() throws ExecutionException, InterruptedException {
-//        System.out.println(postRepository.stream().toCompletableFuture().get().collect(Collectors.toList()));
         Post post = postRepository.findById(2).toCompletableFuture().get().get();
         Person person = personRepo.findByUsername("revilotom").toCompletableFuture().get().get();
 
