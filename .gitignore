@@ -1,9 +1,9 @@
-play-java-jpa-example/project/project
-play-java-jpa-example/project/target
-play-java-jpa-example/target/
-play-java-jpa-example/logs/
-play-java-jpa-example/.idea
-play-java-jpa-example/app/models/target/
+emocial/project/project
+emocial/project/target
+emocial/target/
+emocial/logs/
+emocial/.idea
+emocial/app/models/target/
 
 preprocessors__typescript-webpack/node_modules
 preprocessors__typescript-webpack/cypress/screenshots/
@@ -13,3 +13,5 @@ deployment/.docker_temp_*
 package-lock.json
 *.zip
 node_modules
+
+preprocessors__typescript/cypress/img

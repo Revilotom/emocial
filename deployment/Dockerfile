@@ -8,7 +8,7 @@ RUN apk update \
 
 RUN apk upgrade
 
-ENV PROJECT_NAME play-java-jpa-example
+ENV PROJECT_NAME emocial
 
 ENV VERSION 1.0-SNAPSHOT
 

@@ -1,4 +1,4 @@
-PLAYDIR="../play-java-jpa-example"
+PLAYDIR="../emocial"
 
 echo Building play application...
 
