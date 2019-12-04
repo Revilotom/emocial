@@ -102,9 +102,6 @@ public class PostControllerTest extends WithServer {
         MatcherAssert.assertThat(result.header("Location").get(), is("/home"));
         Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
         MatcherAssert.assertThat(posts.size(), is(2));
-
-//        MatcherAssert.assertThat(contentAsString(result), containsString("second post"));
-
     }
 
 

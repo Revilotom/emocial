@@ -3,7 +3,6 @@ package models;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
-import play.mvc.Http;
 
 import javax.persistence.*;
 import java.util.*;

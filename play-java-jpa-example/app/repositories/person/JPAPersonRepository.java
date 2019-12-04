@@ -3,7 +3,6 @@ package repositories.person;
 import models.Person;
 import org.hibernate.Hibernate;
 import play.db.jpa.JPAApi;
-import play.mvc.Http;
 import repositories.JPADefaultRepository;
 
 import javax.inject.Inject;
