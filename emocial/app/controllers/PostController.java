@@ -49,8 +49,6 @@ public class PostController extends DefaultController {
         Person person = personToFind.get();
 
         List<Post> posts = new ArrayList<>(person.getPosts());
-        posts.sort(Post.ComparePostsTime);
-
 
         return ok(views.html.old.personsPosts.render(
                 username,
@@ -143,6 +141,15 @@ public class PostController extends DefaultController {
     }
 
     public Result submitOrder(final Http.Request request, boolean byRating){
-        return redirect(routes.HomeController.home()).addingToSession(request, "order", byRating ? "rating" : "time");
+
+        String selectedOrder =  byRating ? "rating" : "time";
+
+        if (request.session().getOptional("oldURI").orElse("home").contains("home")) {
+            return redirect(routes.HomeController.home()).addingToSession(request, "order", selectedOrder);
+        }
+
+        String[] splitted = request.session().getOptional("oldURI").get().split("/");
+
+        return redirect(routes.PostController.getPostsByPerson(splitted[splitted.length-1])).addingToSession(request, "order", selectedOrder);
     }
 }

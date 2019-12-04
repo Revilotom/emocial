@@ -51,33 +51,53 @@ describe("The Home Page", function() {
 		cy.visit("/search")
 		cy.get("input[name=searchTerms]").type("kun").click()
 		submitSearch()
-		cy.get('form > .btn').click()
+		cy.get("form > .btn").click()
 		cy.visit("/")
 
-		cy.get(":nth-child(1) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title")
-		.should("contain.text", "kunal")
+		cy
+			.get(
+				":nth-child(1) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title"
+			)
+			.should("contain.text", "kunal")
 
-		cy.get(":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title")
-		.should("contain.text", "mario")
+		cy
+			.get(
+				":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title"
+			)
+			.should("contain.text", "mario")
 
-		cy.get(":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(2) > .col-2 > .container > :nth-child(1) > form > .emojis > .btn")
-		.click()
+		cy
+			.get(
+				":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(2) > .col-2 > .container > :nth-child(1) > form > .emojis > .btn"
+			)
+			.click()
 
-		cy.get('.col > form > .btn > input').click()
+		cy.get(".col > form > .btn > input").click()
 
-		cy.get(":nth-child(1) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title")
-		.should("contain.text", "mario")
-		
-		cy.get(":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title")
-		.should("contain.text", "kunal")
+		cy
+			.get(
+				":nth-child(1) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title"
+			)
+			.should("contain.text", "mario")
 
-		cy.get('.col-10 > form > .btn > input')
-		.click()
+		cy
+			.get(
+				":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title"
+			)
+			.should("contain.text", "kunal")
 
-		cy.get(":nth-child(1) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title")
-		.should("contain.text", "kunal")
+		cy.get(".col-10 > form > .btn > input").click()
 
-		cy.get(":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title")
-		.should("contain.text", "mario")
+		cy
+			.get(
+				":nth-child(1) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title"
+			)
+			.should("contain.text", "kunal")
+
+		cy
+			.get(
+				":nth-child(2) > :nth-child(1) > .justify-content-center > .col-8 > .o-hidden > .card > .card-body > :nth-child(1) > .col-10 > .container > .row > .card-title"
+			)
+			.should("contain.text", "mario")
 	})
 })

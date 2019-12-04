@@ -68,7 +68,7 @@ public class Post implements Constraints.Validatable<ValidationError> {
 
     public static final Comparator<Post> ComparePostsTime = (o1, o2) -> (int) (o2.timeStamp - o1.timeStamp);
 
-    static final Comparator<Post> ComparePostsRating = (o1, o2) -> {
+    public static final Comparator<Post> ComparePostsRating = (o1, o2) -> {
 
         int difference = (o2.getRating() - o1.getRating());
         if (difference == 0) {
