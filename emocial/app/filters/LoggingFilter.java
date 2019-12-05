@@ -28,14 +28,14 @@ public class LoggingFilter extends Filter {
                         result -> {
                             long endTime = System.currentTimeMillis();
                             long requestTime = endTime - startTime;
-
-                            log.debug(
-                                    "{} {} took {}ms {} {}",
-                                    requestHeader.method(),
-                                    requestHeader.uri(),
-                                    requestTime,
-                                    result.status(),
-                                    "from " + requestHeader.session().data().toString());
+//
+//                            log.debug(
+//                                    "{} {} took {}ms {} {}",
+//                                    requestHeader.method(),
+//                                    requestHeader.uri(),
+//                                    requestTime,
+//                                    result.status(),
+//                                    "from " + requestHeader.session().data().toString());
 
                             return result.withHeader("Request-Time", "" + requestTime);
                         });

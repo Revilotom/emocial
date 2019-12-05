@@ -49,7 +49,7 @@ public class Post implements Constraints.Validatable<ValidationError> {
     @JsonBackReference
     private Person owner;
 
-    @ManyToMany(mappedBy = "likedPosts", cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "likedPosts", cascade = CascadeType.MERGE)
     @JsonBackReference
     private Set<Person> likers = new HashSet<>();
 
@@ -122,6 +122,7 @@ public class Post implements Constraints.Validatable<ValidationError> {
                 ", person=" + owner.getUsername() +
                 ", content='" + content + '\'' +
                 ", likers=" + likers.stream().map(Person::getUsername).collect(Collectors.toList()) +
+                ", dislikers=" + dislikers.stream().map(Person::getUsername).collect(Collectors.toList()) +
                 '}';
     }
 

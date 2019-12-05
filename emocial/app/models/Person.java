@@ -49,17 +49,17 @@ public class Person {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "post_like",
-            joinColumns = @JoinColumn(name = "peerson_id"),
+            joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
     private
     Set<Post> likedPosts = new HashSet<>();
 
     @JsonSerialize
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "post_dislike",
             joinColumns = @JoinColumn(name = "person_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id"))
-    @ManyToMany(cascade = CascadeType.ALL)
     private
     Set<Post> dislikedPosts = new HashSet<>();
 
@@ -116,14 +116,9 @@ public class Person {
     }
 
     public void deletePost(long id){
-//        this.posts.forEach(p -> {
-//            if (p.getId() == id){
-//                p.setLikers(new HashSet<>());
-//                p.setDislikers(new HashSet<>());
-//            }
-//        });
 
         this.likedPosts.removeIf(post -> post.getId() == id);
+        this.dislikedPosts.removeIf(post -> post.getId() == id);
 
         this.posts.removeIf((post -> post.getId() == id));
     }

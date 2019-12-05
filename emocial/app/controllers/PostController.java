@@ -67,34 +67,37 @@ public class PostController extends DefaultController {
     }
 
     public Result deletePost(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+        System.out.println();
+
         Person loggedInUser = getLoggedInUser(request);
-        System.err.println(loggedInUser);
 
         ArrayList<Person> toUpdate = new ArrayList<>();
 
         for (Post post : loggedInUser.getPosts()) {
             if (post.getId() == postId) {
-                System.err.println(post);
-                List<Person> likers = new ArrayList<>(post.getLikers());
 
-                for (Person liker : likers){
+                loggedInUser.deletePost(postId);
+                post.removeLiker(loggedInUser);
+                post.removeDisliker(loggedInUser);
+
+                for (Person liker : post.getLikers()){
+                    post.removeLiker(liker);
                     liker = repository.findByUsername(liker.getUsername()).toCompletableFuture().get().get();
                     liker.getLikedPosts().removeIf(p -> p.getId() == postId);
                     toUpdate.add(liker);
                 }
 
-                List<Person> dislikers = new ArrayList<>(post.getLikers());
-
-                for (Person disliker :dislikers){
+                for (Person disliker : post.getDislikers()){
+                    post.removeDisliker(disliker);
                     disliker = repository.findByUsername(disliker.getUsername()).toCompletableFuture().get().get();
-                    disliker.getLikedPosts().removeIf(p -> p.getId() == postId);
+                    disliker.getDislikedPosts().removeIf(p -> p.getId() == postId);
                     toUpdate.add(disliker);
                 }
+                System.err.println(post);
                 break;
             }
         }
 
-        loggedInUser.deletePost(postId);
         toUpdate.add(loggedInUser);
         System.err.println(toUpdate);
 

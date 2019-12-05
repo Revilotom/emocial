@@ -76,6 +76,22 @@ public class PostControllerTest extends WithServer {
     }
 
     @Test
+    public void canDeleteALikedPost() throws ExecutionException, InterruptedException {
+
+
+        Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDelete);
+        Result result = route(app, tokenRequest);
+        MatcherAssert.assertThat(result.status(), is(SEE_OTHER));
+
+        Thread.sleep(1000L); // wait
+
+        MatcherAssert.assertThat(result.header("Location").get(), is("/myPosts"));
+        Set<Post> posts = repo.findByUsername("username").toCompletableFuture().get().get().getPosts();
+        MatcherAssert.assertThat(posts.size(), is(0));
+    }
+
+
+    @Test
     public void canDeletePost() throws ExecutionException, InterruptedException {
         Http.RequestBuilder tokenRequest = CSRFTokenHelper.addCSRFToken(postDelete);
         Result result = route(app, tokenRequest);

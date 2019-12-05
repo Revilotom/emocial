@@ -149,8 +149,31 @@ public class PersonRepoTest extends WithApplication {
     }
 
     @Test
+    public void testPostsisDisliked() throws ExecutionException, InterruptedException {
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+
+        Post post = new ArrayList<>(person.getPosts()).get(0);
+
+        Person kunal = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        kunal.likePost(post);
+
+        repo.update(kunal).toCompletableFuture().get();
+
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        System.out.println();
+
+
+
+    }
+
+    @Test
     public void testPostsAreAdded() throws ExecutionException, InterruptedException {
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        Post p = new ArrayList<>(person.getPosts()).get(0);
+        person.dislikePost(p);
+
+
         MatcherAssert.assertThat(person.getPosts().size(), is(1));
         Post post = new ArrayList<>(person.getPosts()).get(0);
         MatcherAssert.assertThat(post.getContent(), is("Hello"));
