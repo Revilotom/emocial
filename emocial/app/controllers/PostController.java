@@ -55,8 +55,9 @@ public class PostController extends DefaultController {
                 posts,
                 postIdsThatYouLiked(posts, loggedInUser),
                 postIdsThatYouDisliked(posts, loggedInUser),
-                Post.isByRating(request)
-                ));
+                Post.isByRating(request),
+                username.equals(loggedInUser.getUsername())
+        ));
     }
 
 
@@ -67,8 +68,38 @@ public class PostController extends DefaultController {
 
     public Result deletePost(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
         Person loggedInUser = getLoggedInUser(request);
+        System.err.println(loggedInUser);
+
+        ArrayList<Person> toUpdate = new ArrayList<>();
+
+        for (Post post : loggedInUser.getPosts()) {
+            if (post.getId() == postId) {
+                System.err.println(post);
+                List<Person> likers = new ArrayList<>(post.getLikers());
+
+                for (Person liker : likers){
+                    liker = repository.findByUsername(liker.getUsername()).toCompletableFuture().get().get();
+                    liker.getLikedPosts().removeIf(p -> p.getId() == postId);
+                    toUpdate.add(liker);
+                }
+
+                List<Person> dislikers = new ArrayList<>(post.getLikers());
+
+                for (Person disliker :dislikers){
+                    disliker = repository.findByUsername(disliker.getUsername()).toCompletableFuture().get().get();
+                    disliker.getLikedPosts().removeIf(p -> p.getId() == postId);
+                    toUpdate.add(disliker);
+                }
+                break;
+            }
+        }
+
         loggedInUser.deletePost(postId);
-        repository.update(loggedInUser);
+        toUpdate.add(loggedInUser);
+        System.err.println(toUpdate);
+
+        toUpdate.forEach(repository::update);
+
         return redirect(routes.PostController.getPosts());
     }
 
@@ -140,9 +171,9 @@ public class PostController extends DefaultController {
         return redirect(routes.PostController.getPostsByPerson(post.getOwner().getUsername()));
     }
 
-    public Result submitOrder(final Http.Request request, boolean byRating){
+    public Result submitOrder(final Http.Request request, boolean byRating) {
 
-        String selectedOrder =  byRating ? "rating" : "time";
+        String selectedOrder = byRating ? "rating" : "time";
 
         if (request.session().getOptional("oldURI").orElse("home").contains("home")) {
             return redirect(routes.HomeController.home()).addingToSession(request, "order", selectedOrder);
@@ -150,6 +181,6 @@ public class PostController extends DefaultController {
 
         String[] splitted = request.session().getOptional("oldURI").get().split("/");
 
-        return redirect(routes.PostController.getPostsByPerson(splitted[splitted.length-1])).addingToSession(request, "order", selectedOrder);
+        return redirect(routes.PostController.getPostsByPerson(splitted[splitted.length - 1])).addingToSession(request, "order", selectedOrder);
     }
 }

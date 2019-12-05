@@ -1,6 +1,8 @@
 package models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.mindrot.jbcrypt.BCrypt;
 import play.data.validation.Constraints;
 
@@ -39,6 +41,7 @@ public class Person {
 
     @JsonSerialize
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private
     Set<Post> posts = new HashSet<>();
 
@@ -113,6 +116,15 @@ public class Person {
     }
 
     public void deletePost(long id){
+//        this.posts.forEach(p -> {
+//            if (p.getId() == id){
+//                p.setLikers(new HashSet<>());
+//                p.setDislikers(new HashSet<>());
+//            }
+//        });
+
+        this.likedPosts.removeIf(post -> post.getId() == id);
+
         this.posts.removeIf((post -> post.getId() == id));
     }
 
@@ -207,8 +219,11 @@ public class Person {
         return hashCode() + "Person{" +
                 " username='" + username + '\'' +
                 ", myPosts=" + posts.stream().map(Post::getContent).collect(Collectors.toList()) +
-                ", followers=" + followers +
-                ", following=" + following +
+                ", likes= "  + likedPosts.stream().map(Post::getContent).collect(Collectors.toList()) +
+                ", dislikes= "  + dislikedPosts.stream().map(Post::getContent).collect(Collectors.toList()) +
+
+//                ", followers=" + followers +
+//                ", following=" + following +
                 '}';
     }
 }
