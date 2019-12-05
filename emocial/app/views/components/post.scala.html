@@ -29,7 +29,20 @@
                                 </div>
                             </div>
 
-                            <div class ="col">
+
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                @for(line <- post.getContent.split("\n")){
+                                    <p class="card-text" style="font-size: xx-large">
+                                        @line
+                                    </p>
+                                }
+                            </div>
+                                <div class="col-2">
+                                @vote(post, colour)
+                                </div>
+                            <div class ="col-2">
                             @helper.form(action=routes.PostController.deletePost(post.getId)){
                                 @helper.CSRF.formField
 
@@ -40,20 +53,7 @@
                                 }
                             }
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                @for(line <- post.getContent.split("\n")){
-                                    <p class="card-text" style="font-size: xx-large">
-                                        @line
-                                    </p>
-                                }
-                            </div>
-                            @if(!wantButton) {
-                                <div class="col-2">
-                                @vote(post, colour)
-                                </div>
-                            }
+
                         </div>
                     </div>
                 </div>
