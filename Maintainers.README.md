@@ -5,7 +5,7 @@ This document reflects the current architecture of the system.
 ## Overview
 
 - Language: Java
-- Architecture: MVC, Server side rendering
+- Architecture: MVC, Repository pattern, Server side rendering
 - Framework: Play
 - Database: MYSQL
 - Infrastructure: AWS (EC2 + RDS)
@@ -52,6 +52,12 @@ This document reflects the current architecture of the system.
         - DB: 
             - A MYSQL running on localhost with username="username" and password="password" with a database called testDB is used.
 
+## Testing
+
+- Backend
+    - The backend is tested using Junit tests for each model, repository and controller.
+- Frontend
+    - Cypress is used for end to end tests that test the front end as well as the back end. Cypress is configured to test a server running on port 5555. Cypress advocates seeding the server with data to set up each test, this unfortunately fails due to the CSRF filter that Play provides by default. Turning of this filter means that the server code no longer compiles due to the use of "@helper.CSRF.formField" in the Play Templates as part of the view.
     
 
 ## Infrastructure
@@ -88,5 +94,6 @@ The infrastructure consists of an EC2 instance running NGINX and a an RDS instan
 - Budget
     - Under full load the cost of operating the system is projected to be ¥4428.10 per month
 ![Schema](./img/budget.png)
+
 
 
