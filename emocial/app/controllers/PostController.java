@@ -55,8 +55,9 @@ public class PostController extends DefaultController {
                 posts,
                 postIdsThatYouLiked(posts, loggedInUser),
                 postIdsThatYouDisliked(posts, loggedInUser),
-                Post.isByRating(request)
-                ));
+                Post.isByRating(request),
+                username.equals(loggedInUser.getUsername())
+        ));
     }
 
 
@@ -66,9 +67,42 @@ public class PostController extends DefaultController {
     }
 
     public Result deletePost(final Http.Request request, long postId) throws ExecutionException, InterruptedException {
+        System.out.println();
+
         Person loggedInUser = getLoggedInUser(request);
-        loggedInUser.deletePost(postId);
-        repository.update(loggedInUser);
+
+        ArrayList<Person> toUpdate = new ArrayList<>();
+
+        for (Post post : loggedInUser.getPosts()) {
+            if (post.getId() == postId) {
+
+                loggedInUser.deletePost(postId);
+                post.removeLiker(loggedInUser);
+                post.removeDisliker(loggedInUser);
+
+                for (Person liker : post.getLikers()){
+                    post.removeLiker(liker);
+                    liker = repository.findByUsername(liker.getUsername()).toCompletableFuture().get().get();
+                    liker.getLikedPosts().removeIf(p -> p.getId() == postId);
+                    toUpdate.add(liker);
+                }
+
+                for (Person disliker : post.getDislikers()){
+                    post.removeDisliker(disliker);
+                    disliker = repository.findByUsername(disliker.getUsername()).toCompletableFuture().get().get();
+                    disliker.getDislikedPosts().removeIf(p -> p.getId() == postId);
+                    toUpdate.add(disliker);
+                }
+                System.err.println(post);
+                break;
+            }
+        }
+
+        toUpdate.add(loggedInUser);
+        System.err.println(toUpdate);
+
+        toUpdate.forEach(repository::update);
+
         return redirect(routes.PostController.getPosts());
     }
 
@@ -140,9 +174,9 @@ public class PostController extends DefaultController {
         return redirect(routes.PostController.getPostsByPerson(post.getOwner().getUsername()));
     }
 
-    public Result submitOrder(final Http.Request request, boolean byRating){
+    public Result submitOrder(final Http.Request request, boolean byRating) {
 
-        String selectedOrder =  byRating ? "rating" : "time";
+        String selectedOrder = byRating ? "rating" : "time";
 
         if (request.session().getOptional("oldURI").orElse("home").contains("home")) {
             return redirect(routes.HomeController.home()).addingToSession(request, "order", selectedOrder);
@@ -150,6 +184,6 @@ public class PostController extends DefaultController {
 
         String[] splitted = request.session().getOptional("oldURI").get().split("/");
 
-        return redirect(routes.PostController.getPostsByPerson(splitted[splitted.length-1])).addingToSession(request, "order", selectedOrder);
+        return redirect(routes.PostController.getPostsByPerson(splitted[splitted.length - 1])).addingToSession(request, "order", selectedOrder);
     }
 }

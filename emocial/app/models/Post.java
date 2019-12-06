@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -120,6 +121,8 @@ public class Post implements Constraints.Validatable<ValidationError> {
                 "id=" + id +
                 ", person=" + owner.getUsername() +
                 ", content='" + content + '\'' +
+                ", likers=" + likers.stream().map(Person::getUsername).collect(Collectors.toList()) +
+                ", dislikers=" + dislikers.stream().map(Person::getUsername).collect(Collectors.toList()) +
                 '}';
     }
 

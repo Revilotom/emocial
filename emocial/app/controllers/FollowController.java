@@ -9,9 +9,7 @@ import repositories.person.PersonRepository;
 import views.html.old.persons;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 
@@ -25,8 +23,9 @@ public class FollowController extends DefaultController {
     private Result getRelevantPeople(final Http.Request request, boolean wantFollowing) throws ExecutionException, InterruptedException {
         Person user = getLoggedInUser(request);
         Set<Person> people = (wantFollowing ? user.getFollowing() : user.getFollowers());
-        return ok(persons.render(new ArrayList<>(people), wantFollowing));
-
+        List<Person> list = new ArrayList<>(people);
+        list.sort((Comparator.comparing(Person::getUsername)));
+        return ok(persons.render(list, wantFollowing));
     }
 
     public Result getFollowing(final Http.Request request) throws ExecutionException, InterruptedException {

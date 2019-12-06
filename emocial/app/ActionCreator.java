@@ -68,19 +68,17 @@ public class ActionCreator implements play.http.ActionCreator {
 
             @Override
             public CompletionStage<Result> call(Http.Request req) {
-
-                Map<String, String[]> bodyMap = request.body().asFormUrlEncoded();
-
-                Map<String, String> newMap = bodyMap == null ? null : bodyMap.entrySet().stream().map(entry ->
-                        new AbstractMap.SimpleEntry<>(entry.getKey(), Arrays.toString(entry.getValue())))
-                        .filter(x -> !x.getKey().equals("csrfToken"))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
                 try {
                     Result r = getResult(req).toCompletableFuture().get();
                     return CompletableFuture.supplyAsync(() -> r.addingToSession(request, "oldURI", request.uri()));
 
                 } catch (Exception e) {
+                    Map<String, String[]> bodyMap = request.body().asFormUrlEncoded();
+
+                    Map<String, String> newMap = bodyMap == null ? null : bodyMap.entrySet().stream().map(entry ->
+                            new AbstractMap.SimpleEntry<>(entry.getKey(), Arrays.toString(entry.getValue())))
+                            .filter(x -> !x.getKey().equals("csrfToken"))
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
                     log.error(
                             "{} {} {} {}",
                             request.method(),

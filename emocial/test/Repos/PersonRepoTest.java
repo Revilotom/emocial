@@ -9,8 +9,10 @@ import models.Person;
 import org.junit.Before;
 import org.junit.Test;
 import play.test.WithApplication;
+import repositories.post.JPAPostRepository;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -22,10 +24,12 @@ import static org.junit.Assert.assertFalse;
 
 public class PersonRepoTest extends WithApplication {
     private JPAPersonRepository repo;
+    private JPAPostRepository postRepo;
 
     @Before
     public void before() throws ExecutionException, InterruptedException {
         repo = TestHelper.setup(app);
+        postRepo = app.injector().instanceOf(JPAPostRepository.class);
     }
 
     @After
@@ -112,8 +116,64 @@ public class PersonRepoTest extends WithApplication {
     }
 
     @Test
+    public void testPostsAreRemovedEvenIfLiked() throws ExecutionException, InterruptedException {
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        Post p = new ArrayList<>(person.getPosts()).get(0);
+        person.likePost(p);
+//        person.deletePost(p.getId());
+        repo.update(person).toCompletableFuture().get();
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+
+//        p = new ArrayList<>(person.getPosts()).get(0);
+//        p.setDislikers(new HashSet<>());
+//        p.setLikers(new HashSet<>());
+//        postRepo.update(p).toCompletableFuture().get();
+
+//       for (Post post: person.getPosts()){
+//            if (post.getId() == 4){
+//                post.setLikers(new HashSet<>());
+//                post.setDislikers(new HashSet<>());
+//            }
+//        }
+
+//       person.setLikedPosts(new HashSet<>());
+
+        person.deletePost(p.getId());
+
+
+        repo.update(person).toCompletableFuture().get();
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        System.out.println(person.getPosts());
+
+        MatcherAssert.assertThat(person.getPosts().size(), is(0));
+    }
+
+    @Test
+    public void testPostsisDisliked() throws ExecutionException, InterruptedException {
+        Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+
+        Post post = new ArrayList<>(person.getPosts()).get(0);
+
+        Person kunal = repo.findByUsername("usekk").toCompletableFuture().get().get();
+
+        kunal.likePost(post);
+
+        repo.update(kunal).toCompletableFuture().get();
+
+        person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        System.out.println();
+
+
+
+    }
+
+    @Test
     public void testPostsAreAdded() throws ExecutionException, InterruptedException {
         Person person = repo.findByUsername("revilotom").toCompletableFuture().get().get();
+        Post p = new ArrayList<>(person.getPosts()).get(0);
+        person.dislikePost(p);
+
+
         MatcherAssert.assertThat(person.getPosts().size(), is(1));
         Post post = new ArrayList<>(person.getPosts()).get(0);
         MatcherAssert.assertThat(post.getContent(), is("Hello"));

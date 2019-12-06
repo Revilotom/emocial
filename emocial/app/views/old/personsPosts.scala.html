@@ -1,7 +1,7 @@
 @import views.html.components._
 
 @import helpers.EmojiHelper
-@(username: String, ps: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean)
+@(username: String, ps: List[Post], likedIds: List[Long], dislikedIds: List[Long], order:Boolean, deleteButton: Boolean)
 @main(username + "'s posts") {
     @navbar("")
 
@@ -16,5 +16,5 @@
         </div>
     }
 
-    @posts(ps, likedIds, dislikedIds, order)
+    @posts(ps, likedIds, dislikedIds, order, deleteButton)
 }
